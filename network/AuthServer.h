@@ -14,9 +14,9 @@ class AuthServer : public NetworkManager
         AuthServer();
 
     private:
-        void onNewClient(SOCKET ClientSocket);
-        void onCloseClient(Client client, int number);
-        void onDataReceive(Client client, char *buffer, int sizeBuffer);
+        void onClientConnected(SOCKET ClientSocket);
+        void onClientDisconnected(Client client, int number);
+        void onDataReceive(Client client, char *buffer, int bufferSize);
 };
 
 #endif // AUTH_SERVER_H

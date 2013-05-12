@@ -32,6 +32,8 @@ void NetworkManager::end(void)
 
 bool NetworkManager::start(unsigned short port, unsigned short maxClients)
 {
+    clients = new Client[maxClients];
+
     SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
     SOCKET ClientSocket;
     SOCKADDR_IN ssin = {0};
@@ -39,7 +41,7 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
     nbClients = 0;
     fd_set rdfs;
     char buffer[1024];
-    int sizeBuffer = 0;
+    int bufferSize = 0;
 
     if(ServerSocket == INVALID_SOCKET)
     {
@@ -105,7 +107,7 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
             max = ClientSocket > max ? ClientSocket : max;
             FD_SET(ClientSocket, &rdfs);
 
-            onNewClient(ClientSocket);
+            onClientConnected(ClientSocket);
         }
         else
         {
@@ -114,21 +116,21 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
                 if(FD_ISSET(clients[i].sock, &rdfs))
                 {
                     Client client = clients[i];
-                    sizeBuffer = 0;
+                    bufferSize = 0;
 
-                    if((sizeBuffer = recv(client.sock, buffer, sizeBuffer - 1, 0)) < 0)
+                    if((bufferSize = recv(client.sock, buffer, bufferSize - 1, 0)) < 0)
                     {
                         perror("recv()");
                     }
 
-                    if(sizeBuffer == 0)
+                    if(bufferSize == 0)
                     {
-                        onCloseClient(client, i);
+                        onClientDisconnected(client, i);
                     }
                     else
                     {
-                        buffer[sizeBuffer] = '\0';
-                        onDataReceive(client, buffer, sizeBuffer);
+                        buffer[bufferSize] = '\0';
+                        onDataReceive(client, buffer, bufferSize);
                     }
 
                     break;

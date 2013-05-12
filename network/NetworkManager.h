@@ -44,8 +44,8 @@ class NetworkManager
         ~NetworkManager();
         bool start(unsigned short port, unsigned short maxClients);
 
-        virtual void onNewClient(SOCKET ClientSocket) = 0;
-        virtual void onCloseClient(Client client, int number) = 0;
+        virtual void onClientConnected(SOCKET ClientSocket) = 0;
+        virtual void onClientDisconnected(Client client, int number) = 0;
         virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
     private:
         void init();
@@ -54,7 +54,7 @@ class NetworkManager
     protected:
         char* getClientIP(SOCKET ClientSocket);
 
-        Client clients[200];
+        Client *clients;
         int nbClients;
 };
 
