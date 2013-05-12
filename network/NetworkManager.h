@@ -44,14 +44,18 @@ class NetworkManager
         ~NetworkManager();
         bool start(unsigned short port, unsigned short maxClients);
 
-        virtual void onNewClient() = 0;
-        virtual void onCloseClient() = 0;
-        virtual void onDataReceive() = 0;
+        virtual void onNewClient(SOCKET ClientSocket) = 0;
+        virtual void onCloseClient(Client client, int number) = 0;
+        virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
     private:
         void init();
         void end();
 
+    protected:
+        char* getClientIP(SOCKET ClientSocket);
+
         Client clients[200];
+        int nbClients;
 };
 
 #endif // NETWORK_MANAGER_H

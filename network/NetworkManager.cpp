@@ -35,8 +35,11 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
     SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
     SOCKET ClientSocket;
     SOCKADDR_IN ssin = {0};
-    int i, nbClients = 0;
+    int i;
+    nbClients = 0;
     fd_set rdfs;
+    char buffer[1024];
+    int sizeBuffer = 0;
 
     if(ServerSocket == INVALID_SOCKET)
     {
@@ -99,15 +102,10 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
             // Read here
             // continue;
 
-            onNewClient();
-
             max = ClientSocket > max ? ClientSocket : max;
-
             FD_SET(ClientSocket, &rdfs);
 
-            Client c = {ClientSocket};
-            clients[nbClients] = c;
-            nbClients++;
+            onNewClient(ClientSocket);
         }
         else
         {
@@ -116,12 +114,22 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
                 if(FD_ISSET(clients[i].sock, &rdfs))
                 {
                     Client client = clients[i];
+                    sizeBuffer = 0;
 
-                    // Read here
-                    // if redv = 0, client disconnected.
-                    // else, analyse packet (and broadcast ?)
+                    if((sizeBuffer = recv(client.sock, buffer, sizeBuffer - 1, 0)) < 0)
+                    {
+                        perror("recv()");
+                    }
 
-                    onDataReceive();
+                    if(sizeBuffer == 0)
+                    {
+                        onCloseClient(client, i);
+                    }
+                    else
+                    {
+                        buffer[sizeBuffer] = '\0';
+                        onDataReceive(client, buffer, sizeBuffer);
+                    }
 
                     break;
                 }
@@ -132,4 +140,16 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
     closesocket(ServerSocket);
 
     return true;
+}
+
+char* NetworkManager::getClientIP(SOCKET ClientSocket)
+{
+    SOCKADDR_IN csin;
+    socklen_t len = sizeof(csin);
+    char *addressIp = new char[16];
+
+    getpeername(ClientSocket,(struct sockaddr*)&csin, &len);
+    addressIp = inet_ntoa(csin.sin_addr);
+
+    return addressIp;
 }

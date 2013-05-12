@@ -2,6 +2,8 @@
 #define AUTH_SERVER_H
 
 #include <iostream>
+#include <cstring>
+
 #include "NetworkManager.h"
 
 using namespace std;
@@ -12,9 +14,9 @@ class AuthServer : public NetworkManager
         AuthServer();
 
     private:
-        void onNewClient();
-        void onCloseClient();
-        void onDataReceive();
+        void onNewClient(SOCKET ClientSocket);
+        void onCloseClient(Client client, int number);
+        void onDataReceive(Client client, char *buffer, int sizeBuffer);
 };
 
 #endif // AUTH_SERVER_H
