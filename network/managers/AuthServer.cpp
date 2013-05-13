@@ -2,7 +2,7 @@
 
 AuthServer::AuthServer()
 {
-    Log(DEBUG, "Start AuthServer");
+    Log(INFO, "Start AuthServer");
 }
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
