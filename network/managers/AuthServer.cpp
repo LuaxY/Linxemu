@@ -25,7 +25,5 @@ void AuthServer::onClientDisconnected(Client client, int number)
 
 void AuthServer::onDataReceive(Client client, char *buffer, int bufferSize)
 {
-    Log(DEBUG, "Packet X");
-    cout << hex << buffer << endl;
-    cout << "length: " << bufferSize << endl;
+    Log(DEBUG, "Packet receive");
 }
