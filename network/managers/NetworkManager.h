@@ -31,6 +31,9 @@ typedef struct in_addr IN_ADDR;
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string>
+
+using namespace std;
 
 typedef struct Client
 {
@@ -53,7 +56,7 @@ class NetworkManager
         virtual void onClientDisconnected(Client client, int number) = 0;
         virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
 
-        char* getClientIP(SOCKET ClientSocket);
+        string getClientIP(SOCKET ClientSocket);
 
         Client *clients;
         int nbClients;

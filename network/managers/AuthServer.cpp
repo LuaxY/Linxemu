@@ -11,12 +11,12 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     clients[nbClients] = c;
     nbClients++;
 
-    Log(INFO, "New client, IP address: " + string(getClientIP(ClientSocket)));
+    Log(INFO, "New client, IP address: " + getClientIP(ClientSocket));
 }
 
 void AuthServer::onClientDisconnected(Client client, int number)
 {
-    Log(INFO, "Close client, IP address: " + string(getClientIP(client.sock)));
+    Log(INFO, "Close client, IP address: " + getClientIP(client.sock));
 
     closesocket(client.sock);
     memmove(clients + number, clients + number + 1, (nbClients - number - 1) * sizeof(Client));

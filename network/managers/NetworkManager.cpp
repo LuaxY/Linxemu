@@ -144,11 +144,11 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
     return true;
 }
 
-char* NetworkManager::getClientIP(SOCKET ClientSocket)
+string NetworkManager::getClientIP(SOCKET ClientSocket)
 {
     SOCKADDR_IN csin;
     socklen_t len = sizeof(csin);
-    char *addressIp = new char[16];
+    string addressIp;
 
     getpeername(ClientSocket,(struct sockaddr*)&csin, &len);
     addressIp = inet_ntoa(csin.sin_addr);
