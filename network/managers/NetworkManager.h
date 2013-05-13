@@ -44,14 +44,15 @@ class NetworkManager
         ~NetworkManager();
         bool start(unsigned short port, unsigned short maxClients);
 
-        virtual void onClientConnected(SOCKET ClientSocket) = 0;
-        virtual void onClientDisconnected(Client client, int number) = 0;
-        virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
     private:
         void init();
         void end();
 
     protected:
+        virtual void onClientConnected(SOCKET ClientSocket) = 0;
+        virtual void onClientDisconnected(Client client, int number) = 0;
+        virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
+
         char* getClientIP(SOCKET ClientSocket);
 
         Client *clients;

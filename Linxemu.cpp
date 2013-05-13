@@ -1,5 +1,5 @@
 #include "config/AuthConfig.h"
-#include "network/AuthServer.h"
+#include "network/managers/AuthServer.h"
 
 int main()
 {
