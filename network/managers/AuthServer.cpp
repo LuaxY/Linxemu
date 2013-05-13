@@ -2,7 +2,7 @@
 
 AuthServer::AuthServer()
 {
-    cout << "Start AuthServer" << endl;
+    Log(DEBUG, "Start AuthServer");
 }
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
@@ -11,12 +11,12 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     clients[nbClients] = c;
     nbClients++;
 
-    cout << "New client, IP address: " << getClientIP(ClientSocket) << endl;
+    Log(INFO, "New client, IP address: " + string(getClientIP(ClientSocket)));
 }
 
 void AuthServer::onClientDisconnected(Client client, int number)
 {
-    cout << "Close client, IP address: " << getClientIP(client.sock) << endl;
+    Log(INFO, "Close client, IP address: " + string(getClientIP(client.sock)));
 
     closesocket(client.sock);
     memmove(clients + number, clients + number + 1, (nbClients - number - 1) * sizeof(Client));
@@ -25,6 +25,7 @@ void AuthServer::onClientDisconnected(Client client, int number)
 
 void AuthServer::onDataReceive(Client client, char *buffer, int bufferSize)
 {
+    Log(DEBUG, "Packet X");
     cout << hex << buffer << endl;
     cout << "length: " << bufferSize << endl;
 }

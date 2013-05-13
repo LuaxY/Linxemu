@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 
+#include "../../common/Logger.h"
 #include "NetworkManager.h"
 
 using namespace std;
