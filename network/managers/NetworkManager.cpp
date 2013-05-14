@@ -2,32 +2,10 @@
 
 NetworkManager::NetworkManager()
 {
-    init();
 }
 
 NetworkManager::~NetworkManager()
 {
-    end();
-}
-
-void NetworkManager::init(void)
-{
-    #ifdef WIN32
-    WSADATA wsa;
-    int err = WSAStartup(MAKEWORD(2, 2), &wsa);
-    if(err < 0)
-    {
-        puts("WSAStartup failed !");
-        exit(EXIT_FAILURE);
-    }
-    #endif
-}
-
-void NetworkManager::end(void)
-{
-    #ifdef WIN32
-    WSACleanup();
-    #endif
 }
 
 void NetworkManager::start(unsigned short port, unsigned short maxClients)
