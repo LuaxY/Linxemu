@@ -1,20 +1,31 @@
 #include "Logger.h"
 
-void Log(LOG_NAME logName, string message)
+bool Logger::isDebugLogEnabled()
 {
+    return debugLog;
+}
+
+void Logger::Log(LOG_NAME logName, string message, bool newLine)
+{
+    if(logName == DEBUG && !debugLog)
+        return;
+
     switch(logName)
     {
         case DEBUG:
-            cout << "[DEBUG] ";
+            cout << "[\033[1;36mDEBUG\033[0m] ";
             break;
         case ERROR:
-            cout << "[ERROR] ";
+            cout << "[\033[1;31mERROR\033[0m] ";
             break;
         case INFO:
         default:
-            cout << "[INFO] ";
+            cout << "[\033[1;33mINFO\033[0m] ";
             break;
     }
 
-    cout << message << endl;
+    cout << message;
+
+    if(newLine)
+        cout << endl;
 }

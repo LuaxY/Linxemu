@@ -13,6 +13,14 @@ enum LOG_NAME
     ERROR
 };
 
-void Log(LOG_NAME logName, string message);
+class Logger
+{
+    public:
+        static void Log(LOG_NAME logName, string message, bool newLine = true);
+        static bool isDebugLogEnabled();
+
+    private:
+        static const bool debugLog = true;
+};
 
 #endif // LOGGER_H
