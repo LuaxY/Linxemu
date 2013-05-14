@@ -33,6 +33,9 @@ typedef struct in_addr IN_ADDR;
 #include <errno.h>
 #include <string>
 
+#include "../../utils/MessageReader.h"
+#include "../../utils/MessageWriter.h"
+
 using namespace std;
 
 typedef struct Client
@@ -45,11 +48,12 @@ class NetworkManager
     public:
         NetworkManager();
         ~NetworkManager();
-        bool start(unsigned short port, unsigned short maxClients);
+        void start(unsigned short port, unsigned short maxClients);
 
     private:
         void init();
         void end();
+        void PacketParser();
 
     protected:
         virtual void onClientConnected(SOCKET ClientSocket) = 0;

@@ -30,7 +30,7 @@ void NetworkManager::end(void)
     #endif
 }
 
-bool NetworkManager::start(unsigned short port, unsigned short maxClients)
+void NetworkManager::start(unsigned short port, unsigned short maxClients)
 {
     clients = new Client[maxClients];
 
@@ -101,9 +101,6 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
                 continue;
             }
 
-            // Read here
-            // continue;
-
             max = ClientSocket > max ? ClientSocket : max;
             FD_SET(ClientSocket, &rdfs);
 
@@ -130,6 +127,9 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
                     else
                     {
                         buffer[bufferSize] = '\0';
+
+                        // Parse packet here
+
                         onDataReceive(client, buffer, bufferSize);
                     }
 
@@ -140,8 +140,6 @@ bool NetworkManager::start(unsigned short port, unsigned short maxClients)
     }
 
     closesocket(ServerSocket);
-
-    return true;
 }
 
 string NetworkManager::getClientIP(SOCKET ClientSocket)
@@ -154,4 +152,9 @@ string NetworkManager::getClientIP(SOCKET ClientSocket)
     addressIp = inet_ntoa(csin.sin_addr);
 
     return addressIp;
+}
+
+void NetworkManager::PacketParser()
+{
+
 }
