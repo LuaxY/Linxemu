@@ -1,0 +1,4 @@
+#ifndef MESSAGE_RECEIVER_H
+#define MESSAGE_RECEIVER_H
+
+#endif // MESSAGE_RECEIVER_H
