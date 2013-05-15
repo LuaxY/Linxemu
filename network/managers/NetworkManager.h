@@ -15,8 +15,7 @@
 #include <string>
 #include <iostream>
 
-#include "../../utils/MessageReader.h"
-#include "../../utils/MessageWriter.h"
+#include "../../utils/utils.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1

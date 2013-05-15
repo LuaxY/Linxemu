@@ -27,4 +27,6 @@ void AuthServer::onDataReceive(Client client, Packet packet)
 {
     Logger::Log(DEBUG, "[RCV] Message ID ", false);
     cout << packet.messageId << ", length " << packet.messageLength << endl;
+
+    // send packet to messagesQueue (for thread worker)
 }
