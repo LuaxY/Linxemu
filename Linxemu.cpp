@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "config/AuthConfig.h"
+#include "messages/Worker.h"
 #include "network/managers/AuthServer.h"
 
 using namespace std;
@@ -13,6 +14,7 @@ int main()
 
     AuthConfig authConfig;
     AuthServer authServer;
+    Worker worker;
 
     authServer.start(authConfig.getPort(), authConfig.getMaxClients());
 

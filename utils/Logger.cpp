@@ -42,7 +42,7 @@ string Logger::getCurrentTime()
 
     tmp << now->tm_hour << ':'
         << now->tm_min << ':'
-        <<  now->tm_sec;
+        << now->tm_sec;
 
     currentTime = tmp.str();
 

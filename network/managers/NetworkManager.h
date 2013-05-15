@@ -7,7 +7,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
-//#include <pthread.h>
 
 #include <stdio.h>
 #include <stdlib.h>
