@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "config/AuthConfig.h"
-#include "messages/Worker.h"
+#include "network/messages/Worker.h"
 #include "network/managers/AuthServer.h"
 
 using namespace std;
@@ -14,7 +14,9 @@ int main()
 
     AuthConfig authConfig;
     AuthServer authServer;
-    Worker worker;
+    //Worker worker;
+
+    //worker.run();
 
     authServer.start(authConfig.getPort(), authConfig.getMaxClients());
 
@@ -23,5 +25,5 @@ int main()
 
 void displayTitle()
 {
-    cout << "Linxemu (ALPHA) par Sorrow." << endl << endl;
+    cout << "Linxemu (DEV) par Sorrow." << endl << endl;
 }
