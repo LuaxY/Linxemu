@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string>
+#include <iostream>
 
 #include "../../utils/MessageReader.h"
 #include "../../utils/MessageWriter.h"
@@ -33,6 +34,13 @@ typedef struct Client
    SOCKET sock;
 };
 
+typedef struct Packet
+{
+    unsigned short messageId;
+    unsigned short messageLength;
+    char* buffer;
+};
+
 class NetworkManager
 {
     public:
@@ -41,14 +49,14 @@ class NetworkManager
         void start(unsigned short port, unsigned short maxClients);
 
     private:
-        void init();
-        void end();
-        void PacketParser();
+        void PacketParser(Client client, char *buffer, int bufferSize);
+        unsigned short getMessageId(unsigned short firstOctet);
+        unsigned short readMessageLength(unsigned short staticHeader, MessageReader *packet);
 
     protected:
         virtual void onClientConnected(SOCKET ClientSocket) = 0;
         virtual void onClientDisconnected(Client client, int number) = 0;
-        virtual void onDataReceive(Client client, char *buffer, int sizeBuffer) = 0;
+        virtual void onDataReceive(Client client, Packet packet) = 0;
 
         string getClientIP(SOCKET ClientSocket);
 

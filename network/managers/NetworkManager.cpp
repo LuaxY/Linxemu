@@ -107,8 +107,9 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
                         buffer[bufferSize] = '\0';
 
                         // Parse packet here
+                        PacketParser(client, buffer, bufferSize);
 
-                        onDataReceive(client, buffer, bufferSize);
+
                     }
 
                     break;
@@ -132,7 +133,55 @@ string NetworkManager::getClientIP(SOCKET ClientSocket)
     return addressIp;
 }
 
-void NetworkManager::PacketParser()
+void NetworkManager::PacketParser(Client client, char *buffer, int bufferSize)
 {
+    unsigned short staticHeader = 0;
+    unsigned short messageId = 0;
+    unsigned short messageLength = 0;
 
+    MessageReader *packets = new MessageReader(buffer);
+
+    while(packets->bytesAvailable() > 0)
+    {
+        staticHeader = packets->ReadUShort();
+        messageId = getMessageId(staticHeader);
+        messageLength = readMessageLength(staticHeader, packets);
+
+        Packet packet;
+        packet.messageId = messageId;
+        packet.messageLength = messageLength;
+        packet.buffer = packets->ReadBytes(messageLength);
+
+        onDataReceive(client, packet);
+    }
+
+    delete packets;
+}
+
+unsigned short NetworkManager::getMessageId(unsigned short firstOctet)
+{
+	return firstOctet >> 2;
+}
+
+unsigned short NetworkManager::readMessageLength(unsigned short staticHeader, MessageReader *packet)
+{
+	unsigned int byteLenDynamicHeader = staticHeader & 3;
+	unsigned short messageLength = 0;
+
+	switch(byteLenDynamicHeader)
+	{
+		case 0:
+			break;
+		case 1:
+			messageLength = packet->ReadByte();
+			break;
+		case 2:
+			messageLength = packet->ReadUShort();
+			break;
+		case 3:
+			messageLength = ((packet->ReadByte() & 255) << 16) + ((packet->ReadByte() & 255) << 8) + (packet->ReadByte() & 255);
+			break;
+	}
+
+	return messageLength;
 }

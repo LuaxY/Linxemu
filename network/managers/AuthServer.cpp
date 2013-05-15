@@ -23,8 +23,8 @@ void AuthServer::onClientDisconnected(Client client, int number)
     nbClients--;
 }
 
-void AuthServer::onDataReceive(Client client, char *buffer, int bufferSize)
+void AuthServer::onDataReceive(Client client, Packet packet)
 {
-    Logger::Log(DEBUG, "Packet receive, lenght: ", false);
-    cout << bufferSize << endl;
+    Logger::Log(DEBUG, "[RCV] Message ID ", false);
+    cout << packet.messageId << ", length " << packet.messageLength << endl;
 }
