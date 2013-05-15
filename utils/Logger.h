@@ -2,7 +2,9 @@
 #define LOGGER_H
 
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -20,7 +22,9 @@ class Logger
         static bool isDebugLogEnabled();
 
     private:
+        static string getCurrentTime();
         static const bool debugLog = true;
+        static const bool timeLog = true;
 };
 
 #endif // LOGGER_H

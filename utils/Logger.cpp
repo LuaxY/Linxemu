@@ -24,8 +24,27 @@ void Logger::Log(LOG_NAME logName, string message, bool newLine)
             break;
     }
 
+    if(timeLog)
+        cout << "[" << Logger::getCurrentTime() << "] ";
+
     cout << message;
 
     if(newLine)
         cout << endl;
+}
+
+string Logger::getCurrentTime()
+{
+    time_t t = time(0);
+    struct tm *now = localtime(&t);
+    string currentTime;
+    stringstream tmp;
+
+    tmp << now->tm_hour << ':'
+        << now->tm_min << ':'
+        <<  now->tm_sec;
+
+    currentTime = tmp.str();
+
+    return currentTime;
 }
