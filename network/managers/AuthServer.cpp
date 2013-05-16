@@ -31,7 +31,7 @@ void AuthServer::onDataReceive(Client client, Packet packet)
     cout << packet.messageId << ", length " << packet.messageLength << endl;
 
     // unpack packet
-    // send packet to messagesQueue (for thread worker)
-
     rawParser.parse(packet);
+
+    // send packet to messagesQueue (for thread worker)
 }

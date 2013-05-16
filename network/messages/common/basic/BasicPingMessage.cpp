@@ -1,9 +1,5 @@
 #include "BasicPingMessage.h"
 
-/*BasicPingMessage::BasicPingMessage() : _isInitialized(false)
-{
-}*/
-
 NetworkMessage* BasicPingMessage::getInstance() const
 {
     return new BasicPingMessage(*this);
@@ -36,6 +32,8 @@ void BasicPingMessage::unpack(char *buffer)
     MessageReader *input = new MessageReader(buffer);
 
 	quiet = input->ReadBool();
+
+	delete input;
 }
 
 void BasicPingMessage::reset()

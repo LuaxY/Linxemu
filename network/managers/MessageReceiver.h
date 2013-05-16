@@ -3,8 +3,7 @@
 
 #include "NetworkManager.h"
 #include "../messages/NetworkMessage.h"
-
-#include "../messages/common/basic/BasicPingMessage.h"
+#include "../messages/messagesList.h"
 
 class MessageReceiver
 {
@@ -16,8 +15,8 @@ class MessageReceiver
 class Factory
 {
     public:
-        static void registerClass(const int protocolId, NetworkMessage* obj);
-        NetworkMessage* getClass(const int protocolId) const;
+        static void registerClass(int protocolId, NetworkMessage* obj);
+        NetworkMessage* getClass(int protocolId);
 
     private:
         static map<int, NetworkMessage*> messagesTypes;

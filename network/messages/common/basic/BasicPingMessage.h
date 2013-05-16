@@ -7,7 +7,6 @@
 class BasicPingMessage : public NetworkMessage
 {
     public:
-        //BasicPingMessage();
         NetworkMessage* getInstance() const;
         void initBasicPingMessage(bool _quiet);
 
@@ -19,7 +18,7 @@ class BasicPingMessage : public NetworkMessage
 
         static const int protocolId = 182;
 
-        // variables of message
+        /******* VARIABLES LIST *******/
         bool quiet;
 
     private:
