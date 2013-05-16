@@ -31,7 +31,30 @@ void AuthServer::onDataReceive(Client client, Packet packet)
     cout << packet.messageId << ", length " << packet.messageLength << endl;
 
     // unpack packet
-    rawParser.parse(packet);
+    NetworkMessage *tmp;
+    tmp = rawParser.parse(packet);
+
+    /** Gros code a l'arrache **/
+    if(tmp->getMessageId() == 182)
+    {
+        BasicPongMessage *pong = new BasicPongMessage;
+        pong->initBasicPongMessage(true);
+
+        MessageWriter *data = new MessageWriter();
+        pong->pack(data);
+
+        MessageWriter *answer = new MessageWriter();
+        writePacket(answer, pong->getMessageId(), data->getBuffer(), data->getPosition());
+
+        send(client.sock, answer->getBuffer(), answer->getPosition(), 0);
+
+        delete pong;
+        delete data;
+        delete answer;
+    }
+    /** Fin du gros code à l'arrache **/
 
     // send packet to messagesQueue (for thread worker)
+
+
 }
