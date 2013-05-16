@@ -6,11 +6,9 @@
 
 using namespace std;
 
-void displayTitle();
-
 int main()
 {
-    displayTitle();
+    cout << "Linxemu (DEV) by Sorrow." << endl << endl;
 
     AuthConfig authConfig;
     AuthServer authServer;
@@ -21,9 +19,4 @@ int main()
     authServer.start(authConfig.getPort(), authConfig.getMaxClients());
 
     return 0;
-}
-
-void displayTitle()
-{
-    cout << "Linxemu (DEV) par Sorrow." << endl << endl;
 }
