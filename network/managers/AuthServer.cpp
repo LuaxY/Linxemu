@@ -13,12 +13,12 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     clients[nbClients] = c;
     nbClients++;
 
-    Logger::Log(INFO, "New client, IP address: " + getClientIP(ClientSocket));
+    Logger::Log(INFO, "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")");
 }
 
 void AuthServer::onClientDisconnected(Client client, int number)
 {
-    Logger::Log(INFO, "Close client, IP address: " + getClientIP(client.sock));
+    Logger::Log(INFO, "Client disconnected (" + getClientIP(client.sock) + ":" + getClientPort(client.sock) + ")");
 
     closesocket(client.sock);
     memmove(clients + number, clients + number + 1, (nbClients - number - 1) * sizeof(Client));

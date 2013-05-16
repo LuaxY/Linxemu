@@ -133,6 +133,21 @@ string NetworkManager::getClientIP(SOCKET ClientSocket)
     return addressIp;
 }
 
+string NetworkManager::getClientPort(SOCKET ClientSocket)
+{
+    SOCKADDR_IN csin;
+    socklen_t len = sizeof(csin);
+    short port;
+
+    getpeername(ClientSocket,(struct sockaddr*)&csin, &len);
+    port = csin.sin_port;
+
+    stringstream portString;
+    portString << port;
+
+    return portString.str();
+}
+
 void NetworkManager::PacketParser(Client client, char *buffer, int bufferSize)
 {
     unsigned short staticHeader = 0;

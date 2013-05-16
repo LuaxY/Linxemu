@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include "../../utils/utils.h"
 
@@ -57,6 +58,7 @@ class NetworkManager
         virtual void onDataReceive(Client client, Packet packet) = 0;
 
         string getClientIP(SOCKET ClientSocket);
+        string getClientPort(SOCKET ClientSocket);
 
         Client *clients;
         int nbClients;
