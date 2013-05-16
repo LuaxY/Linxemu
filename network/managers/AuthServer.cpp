@@ -3,6 +3,8 @@
 AuthServer::AuthServer()
 {
     Logger::Log(INFO, "Start AuthServer");
+
+    rawParser.Register();
 }
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
@@ -30,4 +32,6 @@ void AuthServer::onDataReceive(Client client, Packet packet)
 
     // unpack packet
     // send packet to messagesQueue (for thread worker)
+
+    rawParser.parse(packet);
 }

@@ -1,1 +1,39 @@
 #include "MessageReceiver.h"
+
+map<int, NetworkMessage*> Factory::messagesTypes = map<int, NetworkMessage*>();
+
+void Factory::registerClass(const int protocolId, NetworkMessage* obj)
+{
+    if(messagesTypes.find(protocolId) == messagesTypes.end())
+    {
+        messagesTypes[protocolId] = obj;
+    }
+}
+
+NetworkMessage* Factory::getClass(const int protocolId) const
+{
+    NetworkMessage* tmp = 0;
+    map<int, NetworkMessage*>::const_iterator it = messagesTypes.find(protocolId);
+
+    if(it != messagesTypes.end())
+    {
+        tmp = ((*it).second)->getInstance();
+    }
+
+    return tmp;
+}
+
+void MessageReceiver::Register()
+{
+    Factory::registerClass(182, new BasicPingMessage);
+}
+
+NetworkMessage* MessageReceiver::parse(Packet packet)
+{
+    Factory storeDataManager;
+    NetworkMessage *message = storeDataManager.getClass(packet.messageId);
+
+    message->unpack(packet.buffer);
+
+    return message;
+}

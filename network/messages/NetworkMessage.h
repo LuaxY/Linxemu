@@ -1,7 +1,11 @@
 #ifndef NETWORK_MESSAGE_H
 #define NETWORK_MESSAGE_H
 
+#include <map>
+
 #include "../../utils/utils.h"
+
+using namespace std;
 
 template <class T> class Prototype
  {
@@ -16,7 +20,7 @@ class NetworkMessage : public Prototype<NetworkMessage>
         virtual int getMessageId() = 0;
         virtual bool isInitialized() = 0;
         virtual void pack(MessageWriter *output) = 0;
-        virtual void unpack(MessageReader *input) = 0;
+        virtual void unpack(char *buffer) = 0;
         virtual void reset() = 0;
 };
 

@@ -7,22 +7,23 @@
 class BasicPingMessage : public NetworkMessage
 {
     public:
-        BasicPingMessage();
+        //BasicPingMessage();
         NetworkMessage* getInstance() const;
         void initBasicPingMessage(bool _quiet);
 
         int getMessageId();
         bool isInitialized();
         void pack(MessageWriter *output);
-        void unpack(MessageReader *input);
+        void unpack(char *buffer);
         void reset();
 
         static const int protocolId = 182;
 
+        // variables of message
+        bool quiet;
+
     private:
         bool _isInitialized;
-
-        bool quiet;
 };
 
 #endif // BASIC_PING_MESSAGE_H
