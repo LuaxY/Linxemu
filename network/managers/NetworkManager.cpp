@@ -200,3 +200,44 @@ unsigned short NetworkManager::readMessageLength(unsigned short staticHeader, Me
 
 	return messageLength;
 }
+
+void NetworkManager::writePacket(MessageWriter *output, int msgId, char* data, unsigned int len)
+{
+    unsigned int typeLen = computeTypeLen(len);
+    output->WriteShort(subComputeStaticHeader(msgId, typeLen));
+
+    switch(typeLen)
+    {
+        case 0:
+            return;
+            break;
+        case 1:
+            output->WriteByte(len);
+            break;
+        case 2:
+            output->WriteShort(len);
+            break;
+        case 3:
+            // Motherfucker
+            break;
+    }
+
+    output->WriteBytes(data, len);
+}
+
+unsigned int NetworkManager::computeTypeLen(unsigned int len)
+{
+    if(len > 65535)
+        return 3;
+    if(len > 255)
+        return 2;
+    if(len > 0)
+        return 1;
+
+    return 0;
+}
+
+unsigned int NetworkManager::subComputeStaticHeader(unsigned int msgId, unsigned int typeLen)
+{
+    return msgId << 2 | typeLen;
+}

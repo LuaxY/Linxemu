@@ -60,6 +60,10 @@ class NetworkManager
         string getClientIP(SOCKET ClientSocket);
         string getClientPort(SOCKET ClientSocket);
 
+        void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
+        unsigned int computeTypeLen(unsigned int len);
+        unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
+
         Client *clients;
         int nbClients;
 };
