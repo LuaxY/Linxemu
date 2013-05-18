@@ -16,5 +16,5 @@ int main()
 
     authServer.start(authConfig.getPort(), authConfig.getMaxClients());
 
-    return 0;
+    return 42;
 }
