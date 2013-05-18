@@ -133,6 +133,7 @@ string NetworkManager::getClientIP(SOCKET ClientSocket)
     return addressIp;
 }
 
+// Port négatif
 string NetworkManager::getClientPort(SOCKET ClientSocket)
 {
     SOCKADDR_IN csin;

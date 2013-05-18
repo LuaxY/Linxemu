@@ -30,12 +30,11 @@ void AuthServer::onDataReceive(Client client, Packet packet)
     Logger::Log(DEBUG, "[RCV] Message ID ", false);
     cout << packet.messageId << ", length " << packet.messageLength << endl;
 
-    // unpack packet
     NetworkMessage *tmp;
     tmp = rawParser.parse(packet);
 
     /** Gros code a l'arrache **/
-    if(tmp->getMessageId() == 182)
+    /*if(tmp->getMessageId() == 182)
     {
         BasicPongMessage *pong = new BasicPongMessage;
         pong->initBasicPongMessage(true);
@@ -51,10 +50,14 @@ void AuthServer::onDataReceive(Client client, Packet packet)
         delete pong;
         delete data;
         delete answer;
-    }
+    }*/
     /** Fin du gros code à l'arrache **/
 
-    // send packet to messagesQueue (for thread worker)
+    if(!Worker::addMessage(client, packet.messageId, packet.messageLength, tmp))
+    {
+        Logger::Log(ERROR, "Unable to add message ", false);
+        cout << packet.messageId << " in MessagesQueue" << endl;
+    }
 
 
 }

@@ -18,6 +18,9 @@ void Logger::Log(LOG_NAME logName, string message, bool newLine)
         case ERROR:
             cout << "[\033[1;31mERROR\033[0m] ";
             break;
+        case THREAD:
+            cout << "[\033[1;32mTHREAD\033[0m] ";
+            break;
         case INFO:
         default:
             cout << "[\033[1;33mINFO\033[0m] ";

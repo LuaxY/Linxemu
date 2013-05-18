@@ -12,9 +12,7 @@ int main()
 
     AuthConfig authConfig;
     AuthServer authServer;
-    //Worker worker;
-
-    //worker.run();
+    Worker worker;
 
     authServer.start(authConfig.getPort(), authConfig.getMaxClients());
 
