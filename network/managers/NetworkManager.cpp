@@ -133,15 +133,14 @@ string NetworkManager::getClientIP(SOCKET ClientSocket)
     return addressIp;
 }
 
-// Port négatif
 string NetworkManager::getClientPort(SOCKET ClientSocket)
 {
     SOCKADDR_IN csin;
     socklen_t len = sizeof(csin);
-    short port;
+    unsigned short port;
 
     getpeername(ClientSocket,(struct sockaddr*)&csin, &len);
-    port = csin.sin_port;
+    port = ntohs(csin.sin_port);
 
     stringstream portString;
     portString << port;
