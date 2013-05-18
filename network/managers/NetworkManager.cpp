@@ -106,10 +106,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
                     {
                         buffer[bufferSize] = '\0';
 
-                        // Parse packet here
                         PacketParser(client, buffer, bufferSize);
-
-
                     }
 
                     break;

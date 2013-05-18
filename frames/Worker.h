@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <iostream>
 
-#include "../../utils/utils.h"
-#include "../managers/NetworkManager.h"
-#include "NetworkMessage.h"
+#include "../utils/utils.h"
+#include "../network/managers/NetworkManager.h"
+#include "../network/messages/NetworkMessage.h"
 
 using namespace std;
 

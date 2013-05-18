@@ -7,7 +7,7 @@
 #include "../../utils/utils.h"
 #include "NetworkManager.h"
 #include "MessageReceiver.h"
-#include "../messages/Worker.h"
+#include "../../frames/Worker.h"
 
 using namespace std;
 
