@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    cout << "Linxemu (DEV) by Sorrow." << endl << endl;
+    cout << "Linxemu (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
 
     AuthConfig authConfig;
     AuthServer authServer;

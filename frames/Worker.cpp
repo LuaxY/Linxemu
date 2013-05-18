@@ -12,6 +12,7 @@ Worker::Worker()
 void* Worker::thread(void *ptr)
 {
     Logger::Log(INFO, "Thread Worker started successfully");
+    //cout << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__) << ":" << __LINE__ << ":" << __FUNCTION__ << "()" << endl;
 
     Worker *wok = (Worker*)&ptr;
     int i = 0;
