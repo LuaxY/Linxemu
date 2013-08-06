@@ -14,12 +14,15 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <queue>
 
 #include "../../utils/utils.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define closesocket(s) close(s)
+
+#define PACKET_MAX_SIZE 1024
 
 typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
@@ -28,9 +31,16 @@ typedef struct in_addr IN_ADDR;
 
 using namespace std;
 
+enum State { NEW_PACKET, HEADER_OK, LENGTH_OK };
+
 typedef struct Client
 {
-   SOCKET sock;
+    SOCKET sock;
+    State phase;
+    queue<char> bufferQueue;
+    unsigned short lastMessageId;
+    unsigned short lastMessageLengthType;
+    unsigned short lastMessageLength;
 };
 
 typedef struct Packet
@@ -48,9 +58,11 @@ class NetworkManager
         void start(unsigned short port, unsigned short maxClients);
 
     private:
-        void PacketParser(Client client, char *buffer, int bufferSize);
+        //void PacketParser(Client client, char *buffer, int bufferSize);
+        void PacketParser(Client client);
         unsigned short getMessageId(unsigned short firstOctet);
-        unsigned short readMessageLength(unsigned short staticHeader, MessageReader *packet);
+        unsigned short getMessageLengthType(unsigned short firstOctet);
+        unsigned short readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet);
 
     protected:
         virtual void onClientConnected(SOCKET ClientSocket) = 0;

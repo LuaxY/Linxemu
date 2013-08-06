@@ -15,10 +15,10 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
     SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
     SOCKET ClientSocket;
     SOCKADDR_IN ssin = {0};
-    int i;
+    int i, j;
     nbClients = 0;
     fd_set rdfs;
-    char buffer[1024];
+    char buffer[PACKET_MAX_SIZE];
     int bufferSize = 0;
 
     if(ServerSocket == INVALID_SOCKET)
@@ -54,6 +54,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
         for(i = 0; i < nbClients; i++)
         {
             FD_SET(clients[i].sock, &rdfs);
+            FD_SET(clients[i].phase, &rdfs);
         }
 
         if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1)
@@ -90,7 +91,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
             {
                 if(FD_ISSET(clients[i].sock, &rdfs))
                 {
-                    Client client = clients[i];
+                    Client client = clients[i]; // leak memory à verifié ?
                     bufferSize = 0;
 
                     if((bufferSize = recv(client.sock, buffer, bufferSize - 1, 0)) < 0)
@@ -106,7 +107,10 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
                     {
                         buffer[bufferSize] = '\0';
 
-                        PacketParser(client, buffer, bufferSize);
+                        for(j = 0; j <= bufferSize; j++){ client.bufferQueue.push(buffer[j]); }
+
+                        //PacketParser(client, buffer, bufferSize);
+                        PacketParser(client);
                     }
 
                     break;
@@ -145,29 +149,96 @@ string NetworkManager::getClientPort(SOCKET ClientSocket)
     return portString.str();
 }
 
-void NetworkManager::PacketParser(Client client, char *buffer, int bufferSize)
+//void NetworkManager::PacketParser(Client client, char *buffer, int bufferSize)
+void NetworkManager::PacketParser(Client client) // Multi packets non fait
 {
-    unsigned short staticHeader = 0;
-    unsigned short messageId = 0;
-    unsigned short messageLength = 0;
-
-    MessageReader *packets = new MessageReader(buffer);
-
-    while(packets->bytesAvailable() > 0)
+    if(client.phase == NEW_PACKET && client.bufferQueue.size() >= 2)
     {
-        staticHeader = packets->ReadUShort();
-        messageId = getMessageId(staticHeader);
-        messageLength = readMessageLength(staticHeader, packets);
+        unsigned short staticHeader = 0;
+        char header[2];
 
-        Packet packet;
-        packet.messageId = messageId;
-        packet.messageLength = messageLength;
-        packet.buffer = packets->ReadBytes(messageLength);
+        header[0] = client.bufferQueue.front();
+        client.bufferQueue.pop();
+        header[1] = client.bufferQueue.front();
+        client.bufferQueue.pop();
 
-        onDataReceive(client, packet);
+        MessageReader *headerReader = new MessageReader(header);
+
+        staticHeader = headerReader->ReadUShort();
+        client.lastMessageId = getMessageId(staticHeader);
+        client.lastMessageLengthType = getMessageLengthType(staticHeader);
+        client.phase = HEADER_OK;
+
+        delete headerReader;
     }
 
-    delete packets;
+    if(client.phase == HEADER_OK && client.bufferQueue.size() >= client.lastMessageLengthType)
+    {
+        char length[client.lastMessageLengthType];
+
+        switch(client.lastMessageLengthType)
+        {
+            case 1:
+                length[0] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                break;
+            case 2:
+                length[0] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                length[1] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                break;
+            case 3:
+                length[0] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                length[1] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                length[2] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+                break;
+            case 0:
+            default:
+                break;
+        }
+
+        MessageReader *lengthReader = new MessageReader(length);
+
+        client.lastMessageLength = readMessageLength(client.lastMessageLengthType, lengthReader);
+        client.phase = LENGTH_OK;
+
+        delete lengthReader;
+    }
+
+    if(client.phase == LENGTH_OK && client.bufferQueue.size() >= client.lastMessageLength)
+    {
+        int i;
+        char data[PACKET_MAX_SIZE];
+
+        for(i = 0; i < client.lastMessageLength; i++)
+        {
+            data[i] = client.bufferQueue.front();
+            client.bufferQueue.pop();
+        }
+
+        data[i] = '\0';
+
+        MessageReader *dataReader = new MessageReader(data);
+
+        Packet packet;
+        packet.messageId = client.lastMessageId;
+        packet.messageLength = client.lastMessageLength;
+        packet.buffer = dataReader->ReadBytes(client.lastMessageLength);
+
+        onDataReceive(client, packet);
+
+        delete dataReader;
+
+        /** Clear state **/
+        client.lastMessageId = 0;
+        client.lastMessageLength = 0;
+        client.lastMessageLengthType = 0;
+        client.phase = NEW_PACKET;
+    }
 }
 
 unsigned short NetworkManager::getMessageId(unsigned short firstOctet)
@@ -175,15 +246,17 @@ unsigned short NetworkManager::getMessageId(unsigned short firstOctet)
 	return firstOctet >> 2;
 }
 
-unsigned short NetworkManager::readMessageLength(unsigned short staticHeader, MessageReader *packet)
+unsigned short NetworkManager::getMessageLengthType(unsigned short firstOctet)
 {
-	unsigned int byteLenDynamicHeader = staticHeader & 3;
+	return firstOctet & 3;
+}
+
+unsigned short NetworkManager::readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet)
+{
 	unsigned short messageLength = 0;
 
 	switch(byteLenDynamicHeader)
 	{
-		case 0:
-			break;
 		case 1:
 			messageLength = packet->ReadByte();
 			break;
@@ -192,6 +265,9 @@ unsigned short NetworkManager::readMessageLength(unsigned short staticHeader, Me
 			break;
 		case 3:
 			messageLength = ((packet->ReadByte() & 255) << 16) + ((packet->ReadByte() & 255) << 8) + (packet->ReadByte() & 255);
+			break;
+        case 0:
+        default:
 			break;
 	}
 

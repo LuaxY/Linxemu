@@ -58,6 +58,4 @@ void AuthServer::onDataReceive(Client client, Packet packet)
         Logger::Log(ERROR, "Unable to add message ", false);
         cout << packet.messageId << " in MessagesQueue" << endl;
     }
-
-
 }
