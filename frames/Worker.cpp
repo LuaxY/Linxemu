@@ -12,7 +12,7 @@ Worker::Worker()
 void* Worker::thread(void *ptr)
 {
     Logger::Log(INFO, "Thread Worker started successfully");
-    //cout << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__) << ":" << __LINE__ << ":" << __FUNCTION__ << "()" << endl;
+    //positionLog();
 
     Worker *wok = (Worker*)&ptr;
     int i = 0;
@@ -26,10 +26,12 @@ void* Worker::thread(void *ptr)
 
             //process in frames
 
-            MessagesQueue *process = messagesQueue[i];
+            /** seg fault a partir d'ici | rempalcer la map par une queue **/
+
+            /*MessagesQueue *process = messagesQueue[i];
 
             wok->removeMessage(i);
-            i++;
+            i++;*/
         }
 
         usleep(30*1000);
@@ -54,6 +56,7 @@ bool Worker::addMessage(Client client, unsigned short messageId, unsigned short 
 
 void Worker::removeMessage(int id)
 {
+    delete messagesQueue[id]->datas;
     delete messagesQueue[id];
 }
 
