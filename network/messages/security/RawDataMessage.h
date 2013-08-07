@@ -8,7 +8,7 @@ class RawDataMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
-        void initRawDataMessage(unsigned short _length, char* _content);
+        void initRawDataMessage(char* _content, unsigned short _length);
 
         int getMessageId();
         bool isInitialized();
@@ -19,8 +19,8 @@ class RawDataMessage : public NetworkMessage
         static const int protocolId = 6253;
 
         /******* VARIABLES LIST *******/
-        unsigned short length;
         char* content;
+        unsigned short length;
 
     private:
         bool _isInitialized;

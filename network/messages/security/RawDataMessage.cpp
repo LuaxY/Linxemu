@@ -5,10 +5,10 @@ NetworkMessage* RawDataMessage::getInstance() const
     return new RawDataMessage(*this);
 }
 
-void RawDataMessage::initRawDataMessage(unsigned short _length, char* _content)
+void RawDataMessage::initRawDataMessage(char* _content, unsigned short _length)
 {
-	length = _length;
 	content = _content;
+	length = _length;
 
 	_isInitialized = true;
 }

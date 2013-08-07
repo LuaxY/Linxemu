@@ -1,4 +1,5 @@
 #include "Worker.h"
+#include <fstream>
 
 pthread_t Worker::threadPtr = 0;
 queue<Message*> Worker::messagesQueue = queue<Message*>();
@@ -37,7 +38,7 @@ void* Worker::handler(void *ptr)
 
             if(!netMessage)
             {
-                Logger::Log(ERROR, sLog(), "Unknown packet Id ", true, false);
+                Logger::Log(ERROR, sLog(), "Unknown packet ID: ", true, false);
                 cout << message->packet->messageId << endl;
             }
             else
@@ -60,6 +61,36 @@ void* Worker::handler(void *ptr)
                     delete data;
                     delete answer;
                 }
+            }
+
+            if(message->packet->messageId == 4)
+            {
+                Logger::Log(DEBUG, sLog(), "Send ClearIdentificationMessage request");
+
+                MessageWriter *data = new MessageWriter();
+                MessageWriter *packet = new MessageWriter();
+
+                ifstream::pos_type size;
+                char *newPacket;
+
+                ifstream packetSWF("authentificator_v2.swf", ios::in | ios::binary | ios::ate);
+                if(packetSWF.is_open())
+                {
+                    size = packetSWF.tellg();
+                    newPacket = new char[size];
+                    packetSWF.seekg(0, ios::beg);
+                    packetSWF.read(newPacket, size);
+                    packetSWF.close();
+                }
+                else
+                    Logger::Log(ERROR, sLog(), "Unable to open authentificator_v2.swf");
+
+                RawDataMessage rawDataMessage;
+                rawDataMessage.initRawDataMessage(newPacket, size);
+                rawDataMessage.pack(data);
+
+                NetworkManager::writePacket(packet, rawDataMessage.getMessageId(), data->getBuffer(), data->getPosition());
+                send(message->client.sock, packet->getBuffer(), packet->getPosition(), 0);
             }
 
             /** Delete packet **/
