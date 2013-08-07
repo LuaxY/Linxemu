@@ -4,6 +4,7 @@ void MessageReceiver::Register()
 {
     Factory::registerClass(182, new BasicPingMessage);
     Factory::registerClass(183, new BasicPongMessage);
+    Factory::registerClass(6253, new RawDataMessage);
 }
 
 NetworkMessage* MessageReceiver::parse(Packet* packet)
