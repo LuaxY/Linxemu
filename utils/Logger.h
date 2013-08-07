@@ -20,7 +20,7 @@ enum LOG_NAME
 class Logger
 {
     public:
-        static void Log(LOG_NAME logName, string message, bool newLine = true);
+        static void Log(LOG_NAME logName, string location, string message, bool displayLoc = false, bool newLine = true);
         static bool isDebugLogEnabled();
 
     private:
