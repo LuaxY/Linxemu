@@ -17,7 +17,9 @@ void* Worker::handler(void *ptr)
     rawParser.Register();
     Worker *worker = (Worker*)&ptr;
 
-    for(int i = 0; true; i++)
+    int i = 0;
+
+    while(true)
     {
         if(!messagesQueue.empty())
         {
@@ -25,17 +27,15 @@ void* Worker::handler(void *ptr)
             cout << i << endl;
 
             pthread_mutex_lock(&mutex_stock);
-                Message *process = messagesQueue.front();
+                Message *message = messagesQueue.front();
                 messagesQueue.pop();
             pthread_mutex_unlock(&mutex_stock);
 
-            /** Analyse packegt here **/
-
+            /** Pakcet parser **/
             NetworkMessage *tmp;
-            tmp = rawParser.parse(process->packet);
+            tmp = rawParser.parse(message->packet);
 
-            /** search frame here **/
-
+            /** Frames dispatcher **/
             if(tmp->getMessageId() == 182)
             {
                 BasicPongMessage *pong = new BasicPongMessage;
@@ -47,7 +47,7 @@ void* Worker::handler(void *ptr)
                 MessageWriter *answer = new MessageWriter();
                 NetworkManager::writePacket(answer, pong->getMessageId(), data->getBuffer(), data->getPosition());
 
-                send(process->client.sock, answer->getBuffer(), answer->getPosition(), 0);
+                send(message->client.sock, answer->getBuffer(), answer->getPosition(), 0);
 
                 delete pong;
                 delete data;
@@ -55,7 +55,9 @@ void* Worker::handler(void *ptr)
             }
 
             /** Delete packet **/
-            worker->removeMessage(tmp, process);
+            worker->removeMessage(tmp, message);
+
+            i++;
         }
 
         usleep(30*1000);
@@ -64,15 +66,15 @@ void* Worker::handler(void *ptr)
 
 bool Worker::addMessage(Client client, unsigned short messageId, unsigned short messageLength, Packet* packet)
 {
-    Message *msg = new Message;
+    Message *message = new Message;
 
-    msg->client = client;
-    msg->messageId = messageId;
-    msg->messageLength = messageLength;
-    msg->packet = packet;
+    message->client = client;
+    message->messageId = messageId;
+    message->messageLength = messageLength;
+    message->packet = packet;
 
     pthread_mutex_lock(&mutex_stock);
-        messagesQueue.push(msg);
+        messagesQueue.push(message);
     pthread_mutex_unlock(&mutex_stock);
 
     return true;
@@ -88,10 +90,14 @@ void Worker::removeMessage(NetworkMessage* packet, Message* message)
 
 void Worker::clearMessagesQueue()
 {
-    /*for(int i = 0; messagesQueue.find(i) != messagesQueue.end(); i++)
+    while(!messagesQueue.empty())
     {
-        delete messagesQueue[i];
-    }
+        pthread_mutex_lock(&mutex_stock);
+            Message *message = messagesQueue.front();
+            messagesQueue.pop();
+        pthread_mutex_unlock(&mutex_stock);
 
-    lastId = 0;*/
+        delete message->packet;
+        delete message;
+    }
 }

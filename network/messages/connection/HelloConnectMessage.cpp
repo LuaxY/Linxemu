@@ -5,10 +5,11 @@ NetworkMessage* HelloConnectMessage::getInstance() const
     return new HelloConnectMessage(*this);
 }
 
-void HelloConnectMessage::initHelloConnectMessage(char* _salt, vector<int> _key)
+void HelloConnectMessage::initHelloConnectMessage(char* _salt, char* _key, int _keyLen)
 {
-	salt = _salt;
+    salt = _salt;
     key = _key;
+    keyLen = _keyLen;
 
 	_isInitialized = true;
 }
@@ -26,8 +27,8 @@ int HelloConnectMessage::getMessageId()
 void HelloConnectMessage::pack(MessageWriter *output)
 {
 	output->WriteUTF(salt);
-	output->WriteUShort(key.size());
-	for(int i = 0; i < key.size(); i++)
+    output->WriteUShort(keyLen);
+    for(int i = 0; i < keyLen; i++)
         output->WriteByte(key[i]);
 }
 
@@ -40,10 +41,7 @@ void HelloConnectMessage::unpack(char *buffer)
 	char byteKey = 0;
 
 	for(int i = 0; i < keyLen; i++)
-	{
-        byteKey = input->ReadByte();
-        key.push_back(byteKey);
-	}
+        key[i] =  input->ReadByte();
 
 	delete input;
 }
@@ -51,7 +49,7 @@ void HelloConnectMessage::unpack(char *buffer)
 void HelloConnectMessage::reset()
 {
 	salt = NULL;
-	key.clear();
+	key = NULL;
 
 	_isInitialized = false;
 }

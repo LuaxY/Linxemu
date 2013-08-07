@@ -2,7 +2,7 @@
 
 MessageWriter::MessageWriter(): position(0)
 {
-    buffer = new char[256];
+    buffer = new char[8126];
 }
 
 MessageWriter::MessageWriter(int len): position(0)
@@ -19,7 +19,7 @@ void MessageWriter::reset()
 {
     delete[] buffer;
 
-    buffer = new char[256];
+    buffer = new char[8126];
     position = 0;
 }
 

@@ -1,7 +1,5 @@
 #include "AuthServer.h"
-#include <vector>
-#include <stdio.h>
-#include <time.h>
+#include <fstream>
 
 AuthServer::AuthServer()
 {
@@ -31,24 +29,31 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     data->reset();
     packet->reset();
 
-    /** HelloConnectMessage **/
-    vector<int> noRSA;
+    /** HelloConnectMessage (à optimiser) **/
+    ifstream::pos_type size;
+    char *key;
 
-    srand(time(NULL));
-
-    for(int i = 0; i < 127; i++)
-	{
-        noRSA.push_back(((int)rand())%256);
-	}
+    ifstream keyFile("key.bin", ios::in | ios::binary | ios::ate);
+    if(keyFile.is_open())
+    {
+        size = keyFile.tellg();
+        key = new char[size];
+        keyFile.seekg(0, ios::beg);
+        keyFile.read(key, size);
+        keyFile.close();
+    }
+    else
+        Logger::Log(ERROR, sLog(), "Unable to open key.bin", true);
 
     HelloConnectMessage helloConnectMessage;
-    helloConnectMessage.initHelloConnectMessage("2k2dhdRI9ueBwtZl5ImJpDiahw31jpK1", noRSA);
+    helloConnectMessage.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
     helloConnectMessage.pack(data);
 
     NetworkManager::writePacket(packet, helloConnectMessage.getMessageId(), data->getBuffer(), data->getPosition());
     send(c.sock, packet->getBuffer(), packet->getPosition(), 0);
 
     /** Delete packet **/
+    delete[] key;
     delete data;
     delete packet;
 }

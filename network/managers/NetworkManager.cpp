@@ -1,4 +1,6 @@
 #include "NetworkManager.h"
+#include <stdio.h>
+#include <time.h>
 
 NetworkManager::NetworkManager()
 {
@@ -26,6 +28,11 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
         perror("socket()");
         exit(errno);
     }
+
+    srand(time(NULL));
+
+    port = ((int)rand()) % 3 + port;
+    cout << port << endl;
 
     ssin.sin_addr.s_addr = htonl(INADDR_ANY);
     ssin.sin_family = AF_INET;

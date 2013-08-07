@@ -1,8 +1,6 @@
 #ifndef HELLO_CONNECT_MESSAGE_H
 #define HELLO_CONNECT_MESSAGE_H
 
-#include <vector>
-
 #include "../../../utils/utils.h"
 #include "../NetworkMessage.h"
 
@@ -10,7 +8,7 @@ class HelloConnectMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
-        void initHelloConnectMessage(char* _salt, vector<int> _key);
+        void initHelloConnectMessage(char* _salt, char* _key, int _keyLen);
 
         int getMessageId();
         bool isInitialized();
@@ -22,7 +20,8 @@ class HelloConnectMessage : public NetworkMessage
 
         /******* VARIABLES LIST *******/
         char* salt;
-        vector<int> key;
+        char* key;
+        int keyLen;
 
     private:
         bool _isInitialized;
