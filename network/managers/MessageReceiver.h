@@ -17,6 +17,7 @@ class Factory
     public:
         static void registerClass(int protocolId, NetworkMessage* obj);
         NetworkMessage* getClass(int protocolId);
+        bool isPacketExist(int protocolId);
 
     private:
         static map<int, NetworkMessage*> messagesTypes;

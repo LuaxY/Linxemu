@@ -17,7 +17,7 @@ void* Worker::handler(void *ptr)
     rawParser.Register();
     Worker *worker = (Worker*)&ptr;
 
-    int i = 0;
+    int i = 1;
 
     while(true)
     {
@@ -32,30 +32,38 @@ void* Worker::handler(void *ptr)
             pthread_mutex_unlock(&mutex_stock);
 
             /** Pakcet parser **/
-            NetworkMessage *tmp;
-            tmp = rawParser.parse(message->packet);
+            NetworkMessage *netMessage;
+            netMessage = rawParser.parse(message->packet);
 
-            /** Frames dispatcher **/
-            if(tmp->getMessageId() == 182)
+            if(!netMessage)
             {
-                BasicPongMessage *pong = new BasicPongMessage;
-                pong->initBasicPongMessage(true);
+                Logger::Log(ERROR, sLog(), "Unknown packet Id ", true, false);
+                cout << message->packet->messageId << endl;
+            }
+            else
+            {
+                /** Frames dispatcher **/
+                if(netMessage->getMessageId() == 182)
+                {
+                    BasicPongMessage *pong = new BasicPongMessage;
+                    pong->initBasicPongMessage(true);
 
-                MessageWriter *data = new MessageWriter();
-                pong->pack(data);
+                    MessageWriter *data = new MessageWriter();
+                    pong->pack(data);
 
-                MessageWriter *answer = new MessageWriter();
-                NetworkManager::writePacket(answer, pong->getMessageId(), data->getBuffer(), data->getPosition());
+                    MessageWriter *answer = new MessageWriter();
+                    NetworkManager::writePacket(answer, pong->getMessageId(), data->getBuffer(), data->getPosition());
 
-                send(message->client.sock, answer->getBuffer(), answer->getPosition(), 0);
+                    send(message->client.sock, answer->getBuffer(), answer->getPosition(), 0);
 
-                delete pong;
-                delete data;
-                delete answer;
+                    delete pong;
+                    delete data;
+                    delete answer;
+                }
             }
 
             /** Delete packet **/
-            worker->removeMessage(tmp, message);
+            worker->removeMessage(netMessage, message);
 
             i++;
         }
@@ -80,10 +88,9 @@ bool Worker::addMessage(Client client, unsigned short messageId, unsigned short 
     return true;
 }
 
-void Worker::removeMessage(NetworkMessage* packet, Message* message)
+void Worker::removeMessage(NetworkMessage* netMessage, Message* message)
 {
-    pLog();
-    delete packet;
+    delete netMessage;
     delete message->packet;
     delete message;
 }

@@ -1,5 +1,7 @@
 #include "MessageReceiver.h"
 
+map<int, NetworkMessage*> Factory::messagesTypes = map<int, NetworkMessage*>();
+
 void MessageReceiver::Register()
 {
     Factory::registerClass(1, new ProtocolRequired);
@@ -12,16 +14,16 @@ void MessageReceiver::Register()
 NetworkMessage* MessageReceiver::parse(Packet* packet)
 {
     Factory storeDataManager;
-    NetworkMessage *message = storeDataManager.getClass(packet->messageId);
 
-    message->unpack(packet->buffer);
+    if(storeDataManager.isPacketExist(packet->messageId))
+    {
+        NetworkMessage *message = storeDataManager.getClass(packet->messageId);
+        message->unpack(packet->buffer);
+        return message;
+    }
 
-    return message;
+    return false;
 }
-
-/********************************/
-
-map<int, NetworkMessage*> Factory::messagesTypes = map<int, NetworkMessage*>();
 
 void Factory::registerClass(int protocolId, NetworkMessage* obj)
 {
@@ -42,4 +44,12 @@ NetworkMessage* Factory::getClass(int protocolId)
     }
 
     return tmp;
+}
+
+bool Factory::isPacketExist(int protocolId)
+{
+    if(messagesTypes.find(protocolId) != messagesTypes.end())
+        return true;
+    else
+        return false;
 }

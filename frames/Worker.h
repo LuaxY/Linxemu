@@ -31,7 +31,7 @@ class Worker
         static queue<Message*> messagesQueue;
     private:
         void clearMessagesQueue();
-        void removeMessage(NetworkMessage* packet, Message* message);
+        void removeMessage(NetworkMessage* netMessage, Message* message);
 
         static void* handler(void *ptr);
         static pthread_t threadPtr;
