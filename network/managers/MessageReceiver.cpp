@@ -3,6 +3,7 @@
 void MessageReceiver::Register()
 {
     Factory::registerClass(1, new ProtocolRequired);
+    Factory::registerClass(3, new HelloConnectMessage);
     Factory::registerClass(182, new BasicPingMessage);
     Factory::registerClass(183, new BasicPongMessage);
     Factory::registerClass(6253, new RawDataMessage);
