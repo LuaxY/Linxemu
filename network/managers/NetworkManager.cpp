@@ -91,7 +91,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
             {
                 if(FD_ISSET(clients[i].sock, &rdfs))
                 {
-                    Client client = clients[i]; // leak memory à verifié ?
+                    Client client = clients[i];
                     bufferSize = 0;
 
                     if((bufferSize = recv(client.sock, buffer, bufferSize - 1, 0)) < 0)
@@ -109,7 +109,6 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
                         for(j = 0; j <= bufferSize; j++){ client.bufferQueue.push(buffer[j]); }
 
-                        //PacketParser(client, buffer, bufferSize);
                         PacketParser(client);
                     }
 
@@ -149,7 +148,6 @@ string NetworkManager::getClientPort(SOCKET ClientSocket)
     return portString.str();
 }
 
-//void NetworkManager::PacketParser(Client client, char *buffer, int bufferSize)
 void NetworkManager::PacketParser(Client client) // Multi packets non fait
 {
     if(client.phase == NEW_PACKET && client.bufferQueue.size() >= 2)
@@ -224,10 +222,10 @@ void NetworkManager::PacketParser(Client client) // Multi packets non fait
 
         MessageReader *dataReader = new MessageReader(data);
 
-        Packet packet;
-        packet.messageId = client.lastMessageId;
-        packet.messageLength = client.lastMessageLength;
-        packet.buffer = dataReader->ReadBytes(client.lastMessageLength);
+        Packet *packet = new Packet();
+        packet->messageId = client.lastMessageId;
+        packet->messageLength = client.lastMessageLength;
+        packet->buffer = dataReader->ReadBytes(client.lastMessageLength);
 
         onDataReceive(client, packet);
 
@@ -241,14 +239,14 @@ void NetworkManager::PacketParser(Client client) // Multi packets non fait
     }
 }
 
-unsigned short NetworkManager::getMessageId(unsigned short firstOctet)
+unsigned short NetworkManager::getMessageId(unsigned short firstByte)
 {
-	return firstOctet >> 2;
+	return firstByte >> 2;
 }
 
-unsigned short NetworkManager::getMessageLengthType(unsigned short firstOctet)
+unsigned short NetworkManager::getMessageLengthType(unsigned short firstByte)
 {
-	return firstOctet & 3;
+	return firstByte & 3;
 }
 
 unsigned short NetworkManager::readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet)

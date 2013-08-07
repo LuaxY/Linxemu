@@ -57,24 +57,27 @@ class NetworkManager
         ~NetworkManager();
         void start(unsigned short port, unsigned short maxClients);
 
+        static void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
+        static unsigned int computeTypeLen(unsigned int len);
+        static unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
+
     private:
         //void PacketParser(Client client, char *buffer, int bufferSize);
         void PacketParser(Client client);
-        unsigned short getMessageId(unsigned short firstOctet);
-        unsigned short getMessageLengthType(unsigned short firstOctet);
+        unsigned short getMessageId(unsigned short firstByte);
+        unsigned short getMessageLengthType(unsigned short firstByte);
         unsigned short readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet);
 
     protected:
         virtual void onClientConnected(SOCKET ClientSocket) = 0;
         virtual void onClientDisconnected(Client client, int number) = 0;
-        virtual void onDataReceive(Client client, Packet packet) = 0;
+        virtual void onDataReceive(Client client, Packet* packet) = 0;
 
         string getClientIP(SOCKET ClientSocket);
         string getClientPort(SOCKET ClientSocket);
 
-        void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
-        unsigned int computeTypeLen(unsigned int len);
-        unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
+
+
 
         Client *clients;
         int nbClients;

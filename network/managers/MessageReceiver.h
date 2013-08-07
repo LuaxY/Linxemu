@@ -9,7 +9,7 @@ class MessageReceiver
 {
     public:
         void Register();
-        NetworkMessage* parse(Packet packet);
+        NetworkMessage* parse(Packet* packet);
 };
 
 class Factory

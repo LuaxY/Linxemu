@@ -6,12 +6,12 @@ void MessageReceiver::Register()
     Factory::registerClass(183, new BasicPongMessage);
 }
 
-NetworkMessage* MessageReceiver::parse(Packet packet)
+NetworkMessage* MessageReceiver::parse(Packet* packet)
 {
     Factory storeDataManager;
-    NetworkMessage *message = storeDataManager.getClass(packet.messageId);
+    NetworkMessage *message = storeDataManager.getClass(packet->messageId);
 
-    message->unpack(packet.buffer);
+    message->unpack(packet->buffer);
 
     return message;
 }
