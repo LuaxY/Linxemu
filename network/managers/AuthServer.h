@@ -20,8 +20,6 @@ class AuthServer : public NetworkManager
         void onClientConnected(SOCKET ClientSocket);
         void onClientDisconnected(Client client, int number);
         void onDataReceive(Client client, Packet* packet);
-
-        //MessageReceiver rawParser;
 };
 
 #endif // AUTH_SERVER_H

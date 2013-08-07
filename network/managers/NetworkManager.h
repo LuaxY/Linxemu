@@ -76,9 +76,6 @@ class NetworkManager
         string getClientIP(SOCKET ClientSocket);
         string getClientPort(SOCKET ClientSocket);
 
-
-
-
         Client *clients;
         int nbClients;
 };

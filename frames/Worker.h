@@ -18,7 +18,6 @@ typedef struct Message
     Client client;
     unsigned short messageId;
     unsigned short messageLength;
-    //NetworkMessage* datas;
     Packet* packet;
 };
 
@@ -27,13 +26,12 @@ class Worker
     public:
         Worker();
         void run();
-        //static bool addMessage(Client client, unsigned short messageId, unsigned short messageLength, NetworkMessage* datas);
         static bool addMessage(Client client, unsigned short messageId, unsigned short messageLength, Packet* packet);
 
-        static queue<Message> messagesQueue;
+        static queue<Message*> messagesQueue;
     private:
         void clearMessagesQueue();
-        void removeMessage(Message* lastMessage);
+        void removeMessage(NetworkMessage* packet, Message* message);
 
         static void* handler(void *ptr);
         static pthread_t threadPtr;

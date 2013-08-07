@@ -3,7 +3,6 @@
 AuthServer::AuthServer()
 {
     Logger::Log(INFO, sLog(), "Start AuthServer ", true);
-    //rawParser.Register();
 }
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
@@ -13,6 +12,8 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     nbClients++;
 
     Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
+
+    /** Add check version client here **/
 }
 
 void AuthServer::onClientDisconnected(Client client, int number)
@@ -29,10 +30,6 @@ void AuthServer::onDataReceive(Client client, Packet* packet)
     Logger::Log(DEBUG, sLog(), "[RCV] Message ID ", true, false);
     cout << packet->messageId << ", length " << packet->messageLength << endl;
 
-    /*NetworkMessage *tmp;
-    tmp = rawParser.parse(packet);*/
-
-    //if(!Worker::addMessage(client, packet.messageId, packet.messageLength, tmp))
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {
         Logger::Log(ERROR, sLog(), "Unable to add message ", true, false);
