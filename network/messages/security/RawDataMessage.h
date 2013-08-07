@@ -26,4 +26,4 @@ class RawDataMessage : public NetworkMessage
         bool _isInitialized;
 };
 
-#endif // BASIC_PING_MESSAGE_H
+#endif // RAW_DATA_MESSAGE_H

@@ -14,6 +14,7 @@ public:
     MessageWriter(int);
     ~MessageWriter();
 
+    void    reset();
     int     getPosition();
     char*   getBuffer();
 

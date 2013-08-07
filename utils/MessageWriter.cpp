@@ -15,6 +15,14 @@ MessageWriter::~MessageWriter()
     delete[] buffer;
 }
 
+void MessageWriter::reset()
+{
+    delete[] buffer;
+
+    buffer = new char[256];
+    position = 0;
+}
+
 int MessageWriter::getPosition()
 {
     return position;

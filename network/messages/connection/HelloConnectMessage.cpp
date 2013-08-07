@@ -8,7 +8,7 @@ NetworkMessage* HelloConnectMessage::getInstance() const
 void HelloConnectMessage::initHelloConnectMessage(char* _salt, vector<int> _key)
 {
 	salt = _salt;
-	key = _key;
+    key = _key;
 
 	_isInitialized = true;
 }

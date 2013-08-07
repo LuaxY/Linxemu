@@ -1,4 +1,7 @@
 #include "AuthServer.h"
+#include <vector>
+#include <stdio.h>
+#include <time.h>
 
 AuthServer::AuthServer()
 {
@@ -13,7 +16,41 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
 
     Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
 
-    /** Add check version client here **/
+    MessageWriter *data = new MessageWriter();
+    MessageWriter *packet = new MessageWriter();
+
+    /** ProtocolRequired **/
+    ProtocolRequired protocolRequired;
+    protocolRequired.initProtocolRequired(1542, 1547);
+    protocolRequired.pack(data);
+
+    NetworkManager::writePacket(packet, protocolRequired.getMessageId(), data->getBuffer(), data->getPosition());
+    send(c.sock, packet->getBuffer(), packet->getPosition(), 0);
+
+    /** Clear packet **/
+    data->reset();
+    packet->reset();
+
+    /** HelloConnectMessage **/
+    vector<int> noRSA;
+
+    srand(time(NULL));
+
+    for(int i = 0; i < 127; i++)
+	{
+        noRSA.push_back(((int)rand())%256);
+	}
+
+    HelloConnectMessage helloConnectMessage;
+    helloConnectMessage.initHelloConnectMessage("2k2dhdRI9ueBwtZl5ImJpDiahw31jpK1", noRSA);
+    helloConnectMessage.pack(data);
+
+    NetworkManager::writePacket(packet, helloConnectMessage.getMessageId(), data->getBuffer(), data->getPosition());
+    send(c.sock, packet->getBuffer(), packet->getPosition(), 0);
+
+    /** Delete packet **/
+    delete data;
+    delete packet;
 }
 
 void AuthServer::onClientDisconnected(Client client, int number)
