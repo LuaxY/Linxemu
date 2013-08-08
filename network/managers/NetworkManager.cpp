@@ -155,94 +155,107 @@ string NetworkManager::getClientPort(SOCKET ClientSocket)
     return portString.str();
 }
 
-void NetworkManager::PacketParser(Client client) // Multi packets non fait
+void NetworkManager::PacketParser(Client client)
 {
-    if(client.phase == NEW_PACKET && client.bufferQueue.size() >= 2)
+    bool newPacket = true;
+
+    while(newPacket)
     {
-        unsigned short staticHeader = 0;
-        char header[2];
-
-        header[0] = client.bufferQueue.front();
-        client.bufferQueue.pop();
-        header[1] = client.bufferQueue.front();
-        client.bufferQueue.pop();
-
-        MessageReader *headerReader = new MessageReader(header);
-
-        staticHeader = headerReader->ReadUShort();
-        client.lastMessageId = getMessageId(staticHeader);
-        client.lastMessageLengthType = getMessageLengthType(staticHeader);
-        client.phase = HEADER_OK;
-
-        delete headerReader;
-    }
-
-    if(client.phase == HEADER_OK && client.bufferQueue.size() >= client.lastMessageLengthType)
-    {
-        char length[client.lastMessageLengthType];
-
-        switch(client.lastMessageLengthType)
+        if(client.phase == NEW_PACKET && client.bufferQueue.size() >= 2)
         {
-            case 1:
-                length[0] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                break;
-            case 2:
-                length[0] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                length[1] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                break;
-            case 3:
-                length[0] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                length[1] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                length[2] = client.bufferQueue.front();
-                client.bufferQueue.pop();
-                break;
-            case 0:
-            default:
-                break;
-        }
+            unsigned short staticHeader = 0;
+            char header[2];
 
-        MessageReader *lengthReader = new MessageReader(length);
-
-        client.lastMessageLength = readMessageLength(client.lastMessageLengthType, lengthReader);
-        client.phase = LENGTH_OK;
-
-        delete lengthReader;
-    }
-
-    if(client.phase == LENGTH_OK && client.bufferQueue.size() >= client.lastMessageLength)
-    {
-        int i;
-        char data[PACKET_MAX_SIZE];
-
-        for(i = 0; i < client.lastMessageLength; i++)
-        {
-            data[i] = client.bufferQueue.front();
+            header[0] = client.bufferQueue.front();
             client.bufferQueue.pop();
+            header[1] = client.bufferQueue.front();
+            client.bufferQueue.pop();
+
+            MessageReader *headerReader = new MessageReader(header);
+
+            staticHeader = headerReader->ReadUShort();
+            client.lastMessageId = getMessageId(staticHeader);
+            client.lastMessageLengthType = getMessageLengthType(staticHeader);
+            client.phase = HEADER_OK;
+
+            delete headerReader;
         }
 
-        data[i] = '\0';
+        if(client.phase == HEADER_OK && client.bufferQueue.size() >= client.lastMessageLengthType)
+        {
+            char length[client.lastMessageLengthType];
 
-        MessageReader *dataReader = new MessageReader(data);
+            switch(client.lastMessageLengthType)
+            {
+                case 1:
+                    length[0] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    break;
+                case 2:
+                    length[0] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    length[1] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    break;
+                case 3:
+                    length[0] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    length[1] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    length[2] = client.bufferQueue.front();
+                    client.bufferQueue.pop();
+                    break;
+                case 0:
+                default:
+                    break;
+            }
 
-        Packet *packet = new Packet();
-        packet->messageId = client.lastMessageId;
-        packet->messageLength = client.lastMessageLength;
-        packet->buffer = dataReader->ReadBytes(client.lastMessageLength);
+            MessageReader *lengthReader = new MessageReader(length);
 
-        onDataReceive(client, packet);
+            client.lastMessageLength = readMessageLength(client.lastMessageLengthType, lengthReader);
+            client.phase = LENGTH_OK;
 
-        delete dataReader;
+            delete lengthReader;
+        }
 
-        /** Clear state **/
-        client.lastMessageId = 0;
-        client.lastMessageLength = 0;
-        client.lastMessageLengthType = 0;
-        client.phase = NEW_PACKET;
+        if(client.phase == LENGTH_OK && client.bufferQueue.size() >= client.lastMessageLength)
+        {
+            int i;
+            char data[PACKET_MAX_SIZE];
+
+            for(i = 0; i < client.lastMessageLength; i++)
+            {
+                data[i] = client.bufferQueue.front();
+                client.bufferQueue.pop();
+            }
+
+            data[i] = '\0';
+
+            MessageReader *dataReader = new MessageReader(data);
+
+            Packet *packet = new Packet();
+            packet->messageId = client.lastMessageId;
+            packet->messageLength = client.lastMessageLength;
+            packet->buffer = dataReader->ReadBytes(client.lastMessageLength);
+
+            onDataReceive(client, packet);
+
+            delete dataReader;
+
+            /** Clear state **/
+            client.lastMessageId = 0;
+            client.lastMessageLength = 0;
+            client.lastMessageLengthType = 0;
+            client.phase = NEW_PACKET;
+
+            if(client.bufferQueue.size() >= 2)
+            {
+                newPacket = true;
+                continue;
+            }
+        }
+
+        newPacket = false;
     }
 }
 
