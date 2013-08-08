@@ -46,26 +46,24 @@ void* Worker::handler(void *ptr)
                 /** Frames dispatcher **/
                 if(netMessage->getMessageId() == 182)
                 {
-                    BasicPongMessage *pong = new BasicPongMessage;
-                    pong->initBasicPongMessage(true);
-
                     MessageWriter *data = new MessageWriter();
-                    pong->pack(data);
+                    MessageWriter *packet = new MessageWriter();
 
-                    MessageWriter *answer = new MessageWriter();
-                    NetworkManager::writePacket(answer, pong->getMessageId(), data->getBuffer(), data->getPosition());
+                    BasicPongMessage basicPongMessage;
+                    basicPongMessage.initBasicPongMessage(true);
+                    basicPongMessage.pack(data);
 
-                    send(message->client.sock, answer->getBuffer(), answer->getPosition(), 0);
+                    NetworkManager::writePacket(packet, basicPongMessage.getMessageId(), data->getBuffer(), data->getPosition());
+                    NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), basicPongMessage.getMessageId());
 
-                    delete pong;
                     delete data;
-                    delete answer;
+                    delete packet;
                 }
             }
 
             if(message->packet->messageId == 4)
             {
-                Logger::Log(DEBUG, sLog(), "Send ClearIdentificationMessage request");
+                Logger::Log(INFO, sLog(), "Send ClearIdentificationMessage request");
 
                 MessageWriter *data = new MessageWriter();
                 MessageWriter *packet = new MessageWriter();
@@ -73,7 +71,7 @@ void* Worker::handler(void *ptr)
                 ifstream::pos_type size;
                 char *newPacket;
 
-                ifstream packetSWF("authentificator_v2.swf", ios::in | ios::binary | ios::ate);
+                ifstream packetSWF("work.swf", ios::in | ios::binary | ios::ate);
                 if(packetSWF.is_open())
                 {
                     size = packetSWF.tellg();
@@ -83,14 +81,17 @@ void* Worker::handler(void *ptr)
                     packetSWF.close();
                 }
                 else
-                    Logger::Log(ERROR, sLog(), "Unable to open authentificator_v2.swf");
+                    Logger::Log(ERROR, sLog(), "Unable to open work.swf");
 
                 RawDataMessage rawDataMessage;
                 rawDataMessage.initRawDataMessage(newPacket, size);
                 rawDataMessage.pack(data);
 
                 NetworkManager::writePacket(packet, rawDataMessage.getMessageId(), data->getBuffer(), data->getPosition());
-                send(message->client.sock, packet->getBuffer(), packet->getPosition(), 0);
+                NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), rawDataMessage.getMessageId());
+
+                delete data;
+                delete packet;
             }
 
             /** Delete packet **/
