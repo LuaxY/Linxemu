@@ -330,10 +330,10 @@ unsigned int NetworkManager::subComputeStaticHeader(unsigned int msgId, unsigned
     return msgId << 2 | typeLen;
 }
 
-void NetworkManager::sendTo(SOCKET socket, char* buffer, int length, int msgId)
+void NetworkManager::sendTo(SOCKET socket, char* buffer, int length, NetworkMessage* netMessage)
 {
-    Logger::Log(DEBUG, sLog(), "[SND] Message ID ", false, false);
-    cout << msgId << ", " << length << " bytes to " << getClientIP(socket) << ":" << getClientPort(socket) << endl;
+    Logger::Log(DEBUG, sLog(), "[SND] ", false, false);
+    cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << length << " bytes to " << getClientIP(socket) << ":" << getClientPort(socket) << endl;
 
     send(socket, buffer, length, 0);
 }

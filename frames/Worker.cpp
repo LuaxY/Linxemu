@@ -24,8 +24,8 @@ void* Worker::handler(void *ptr)
     {
         if(!messagesQueue.empty())
         {
-            Logger::Log(WORKER, sLog(), "Messsages queue: ", true, false);
-            cout << i << endl;
+            /*Logger::Log(WORKER, sLog(), "Messsages queue: ", true, false);
+            cout << i << endl;*/
 
             pthread_mutex_lock(&mutex_stock);
                 Message *message = messagesQueue.front();
@@ -43,6 +43,9 @@ void* Worker::handler(void *ptr)
             }
             else
             {
+                Logger::Log(DEBUG, sLog(), "[RCV] ", false, false);
+                cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << message->messageLength << " bytes from " << NetworkManager::getClientIP(message->client.sock) << ":" << NetworkManager::getClientPort(message->client.sock) << endl;
+
                 /** Frames dispatcher **/
 
                 MessageWriter *data = new MessageWriter();
@@ -52,8 +55,6 @@ void* Worker::handler(void *ptr)
                 {
                     case 4: // IdentificationMessage
                     {
-                        Logger::Log(INFO, sLog(), "Send ClearIdentificationMessage request");
-
                         ifstream::pos_type size;
                         char *newPacket;
 
@@ -75,7 +76,7 @@ void* Worker::handler(void *ptr)
                         rdm.pack(data);
 
                         NetworkManager::writePacket(packet, rdm.getMessageId(), data->getBuffer(), data->getPosition());
-                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), rdm.getMessageId());
+                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), rdm.getInstance());
                         break;
                     }
 
@@ -86,7 +87,7 @@ void* Worker::handler(void *ptr)
                         bpm.pack(data);
 
                         NetworkManager::writePacket(packet, bpm.getMessageId(), data->getBuffer(), data->getPosition());
-                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), bpm.getMessageId());
+                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), bpm.getInstance());
                         break;
                     }
 

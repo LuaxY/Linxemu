@@ -23,7 +23,7 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     pr.pack(data);
 
     writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), pr.getMessageId());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), pr.getInstance());
 
     /** Clear packet **/
     data->reset();
@@ -50,7 +50,7 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     hcm.pack(data);
 
     writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), hcm.getMessageId());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), hcm.getInstance());
 
     /** Delete packet **/
     delete[] key;
@@ -69,9 +69,6 @@ void AuthServer::onClientDisconnected(Client client, int number)
 
 void AuthServer::onDataReceive(Client client, Packet* packet)
 {
-    Logger::Log(DEBUG, sLog(), "[RCV] Message ID ", false, false);
-    cout << packet->messageId << ", " << packet->messageLength << " bytes from " << getClientIP(client.sock) << ":" << getClientPort(client.sock) << endl;
-
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {
         Logger::Log(ERROR, sLog(), "Unable to add message ", true, false);
