@@ -8,9 +8,11 @@ class RawDataMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
+        RawDataMessage(){};
         void initRawDataMessage(char* _content, unsigned short _length);
 
         int getMessageId();
+        char* getMessageName();
         bool isInitialized();
         void pack(MessageWriter *output);
         void unpack(char *buffer);

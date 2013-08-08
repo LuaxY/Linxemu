@@ -1,15 +1,16 @@
-#ifndef HELLO_CONNECT_MESSAGE_H
-#define HELLO_CONNECT_MESSAGE_H
+#ifndef IDENTIFICATION_MESSAGE_H
+#define IDENTIFICATION_MESSAGE_H
 
 #include "../../../utils/utils.h"
 #include "../NetworkMessage.h"
 
-class HelloConnectMessage : public NetworkMessage
+class IdentificationMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
-        HelloConnectMessage(){};
-        void initHelloConnectMessage(char* _salt, char* _key, int _keyLen);
+        IdentificationMessage(){};
+        IdentificationMessage(IdentificationMessage* message);
+        void initIdentificationMessage();
 
         int getMessageId();
         char* getMessageName();
@@ -18,15 +19,13 @@ class HelloConnectMessage : public NetworkMessage
         void unpack(char *buffer);
         void reset();
 
-        static const int protocolId = 3;
+        static const int protocolId = 4;
 
         /******* VARIABLES LIST *******/
-        char* salt;
-        char* key;
-        int keyLen;
+
 
     private:
         bool _isInitialized;
 };
 
-#endif // HELLO_CONNECT_MESSAGE_H
+#endif // IDENTIFICATION_MESSAGE_H

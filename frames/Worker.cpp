@@ -24,7 +24,7 @@ void* Worker::handler(void *ptr)
     {
         if(!messagesQueue.empty())
         {
-            Logger::Log(THREAD, sLog(), "Messsages queue: ", true, false);
+            Logger::Log(WORKER, sLog(), "Messsages queue: ", true, false);
             cout << i << endl;
 
             pthread_mutex_lock(&mutex_stock);
@@ -44,58 +44,59 @@ void* Worker::handler(void *ptr)
             else
             {
                 /** Frames dispatcher **/
-                if(netMessage->getMessageId() == 182)
-                {
-                    MessageWriter *data = new MessageWriter();
-                    MessageWriter *packet = new MessageWriter();
-
-                    BasicPongMessage basicPongMessage;
-                    basicPongMessage.initBasicPongMessage(true);
-                    basicPongMessage.pack(data);
-
-                    NetworkManager::writePacket(packet, basicPongMessage.getMessageId(), data->getBuffer(), data->getPosition());
-                    NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), basicPongMessage.getMessageId());
-
-                    delete data;
-                    delete packet;
-                }
-
-                if(netMessage->getMessageId() == 888)
-                {
-                    ClearIdentificationMessage *clearIdentificationMessage = (ClearIdentificationMessage*)netMessage;
-                    cout << clearIdentificationMessage->user << " " << clearIdentificationMessage->password << endl;
-                }
-            }
-
-            if(message->packet->messageId == 4)
-            {
-                Logger::Log(INFO, sLog(), "Send ClearIdentificationMessage request");
 
                 MessageWriter *data = new MessageWriter();
                 MessageWriter *packet = new MessageWriter();
 
-                ifstream::pos_type size;
-                char *newPacket;
-
-                // Merci à Munrek pour le SWF
-                ifstream packetSWF("DofusAuthentificator.swf", ios::in | ios::binary | ios::ate);
-                if(packetSWF.is_open())
+                switch(netMessage->getMessageId())
                 {
-                    size = packetSWF.tellg();
-                    newPacket = new char[size];
-                    packetSWF.seekg(0, ios::beg);
-                    packetSWF.read(newPacket, size);
-                    packetSWF.close();
+                    case 4: // IdentificationMessage
+                    {
+                        Logger::Log(INFO, sLog(), "Send ClearIdentificationMessage request");
+
+                        ifstream::pos_type size;
+                        char *newPacket;
+
+                        // Merci à Munrek pour le SWF
+                        ifstream packetSWF("DofusAuthentificator.swf", ios::in | ios::binary | ios::ate);
+                        if(packetSWF.is_open())
+                        {
+                            size = packetSWF.tellg();
+                            newPacket = new char[size];
+                            packetSWF.seekg(0, ios::beg);
+                            packetSWF.read(newPacket, size);
+                            packetSWF.close();
+                        }
+                        else
+                            Logger::Log(ERROR, sLog(), "Unable to open DofusAuthentificator.swf");
+
+                        RawDataMessage rdm;
+                        rdm.initRawDataMessage(newPacket, size);
+                        rdm.pack(data);
+
+                        NetworkManager::writePacket(packet, rdm.getMessageId(), data->getBuffer(), data->getPosition());
+                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), rdm.getMessageId());
+                        break;
+                    }
+
+                    case 182: // BasicPingMessage
+                    {
+                        BasicPongMessage bpm;
+                        bpm.initBasicPongMessage(true);
+                        bpm.pack(data);
+
+                        NetworkManager::writePacket(packet, bpm.getMessageId(), data->getBuffer(), data->getPosition());
+                        NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), bpm.getMessageId());
+                        break;
+                    }
+
+                    case 888: // ClearIdentificationMessage
+                    {
+                        ClearIdentificationMessage cim((ClearIdentificationMessage*)netMessage);
+                        cout << cim.user << " " << cim.password << endl;
+                        break;
+                    }
                 }
-                else
-                    Logger::Log(ERROR, sLog(), "Unable to open DofusAuthentificator.swf");
-
-                RawDataMessage rawDataMessage;
-                rawDataMessage.initRawDataMessage(newPacket, size);
-                rawDataMessage.pack(data);
-
-                NetworkManager::writePacket(packet, rawDataMessage.getMessageId(), data->getBuffer(), data->getPosition());
-                NetworkManager::sendTo(message->client.sock, packet->getBuffer(), packet->getPosition(), rawDataMessage.getMessageId());
 
                 delete data;
                 delete packet;

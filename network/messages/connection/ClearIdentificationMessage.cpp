@@ -5,6 +5,12 @@ NetworkMessage* ClearIdentificationMessage::getInstance() const
     return new ClearIdentificationMessage(*this);
 }
 
+ClearIdentificationMessage::ClearIdentificationMessage(ClearIdentificationMessage* message)
+{
+    user = message->user;
+    password = message->password;
+}
+
 void ClearIdentificationMessage::initClearIdentificationMessage(char* _user, char* _password)
 {
     user = _user;
@@ -21,6 +27,11 @@ bool ClearIdentificationMessage::isInitialized()
 int ClearIdentificationMessage::getMessageId()
 {
 	return protocolId;
+}
+
+char* ClearIdentificationMessage::getMessageName()
+{
+	return "ClearIdentificationMessage";
 }
 
 void ClearIdentificationMessage::pack(MessageWriter *output)

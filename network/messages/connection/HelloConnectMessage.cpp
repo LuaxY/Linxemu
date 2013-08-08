@@ -24,6 +24,11 @@ int HelloConnectMessage::getMessageId()
 	return protocolId;
 }
 
+char* HelloConnectMessage::getMessageName()
+{
+	return "HelloConnectMessage";
+}
+
 void HelloConnectMessage::pack(MessageWriter *output)
 {
 	output->WriteUTF(salt);

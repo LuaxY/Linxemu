@@ -8,9 +8,12 @@ class ClearIdentificationMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
+        ClearIdentificationMessage(){};
+        ClearIdentificationMessage(ClearIdentificationMessage* message);
         void initClearIdentificationMessage(char* _user, char* _password);
 
         int getMessageId();
+        char* getMessageName();
         bool isInitialized();
         void pack(MessageWriter *output);
         void unpack(char *buffer);

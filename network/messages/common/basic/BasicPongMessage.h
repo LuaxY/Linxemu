@@ -8,9 +8,11 @@ class BasicPongMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
+        BasicPongMessage(){};
         void initBasicPongMessage(bool _quiet);
 
         int getMessageId();
+        char* getMessageName();
         bool isInitialized();
         void pack(MessageWriter *output);
         void unpack(char *buffer);

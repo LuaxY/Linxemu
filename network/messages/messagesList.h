@@ -3,6 +3,7 @@
 
 #include "handshake/ProtocolRequired.h" // 1
 #include "connection/HelloConnectMessage.h" // 3
+#include "connection/IdentificationMessage.h" // 4
 #include "common/basic/BasicPingMessage.h" // 182
 #include "common/basic/BasicPongMessage.h" // 183
 #include "connection/ClearIdentificationMessage.h" // 888

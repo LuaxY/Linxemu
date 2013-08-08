@@ -23,6 +23,11 @@ int ProtocolRequired::getMessageId()
 	return protocolId;
 }
 
+char* ProtocolRequired::getMessageName()
+{
+	return "ProtocolRequired";
+}
+
 void ProtocolRequired::pack(MessageWriter *output)
 {
 	output->WriteUInt(requiredVersion);

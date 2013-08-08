@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <queue>
+#include <typeinfo>
 
 #include "../utils/utils.h"
 #include "../network/managers/NetworkManager.h"

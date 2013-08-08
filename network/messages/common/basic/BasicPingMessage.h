@@ -8,9 +8,11 @@ class BasicPingMessage : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
+        BasicPingMessage(){};
         void initBasicPingMessage(bool _quiet);
 
         int getMessageId();
+        char* getMessageName();
         bool isInitialized();
         void pack(MessageWriter *output);
         void unpack(char *buffer);

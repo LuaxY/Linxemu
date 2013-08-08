@@ -8,9 +8,11 @@ class ProtocolRequired : public NetworkMessage
 {
     public:
         NetworkMessage* getInstance() const;
+        ProtocolRequired(){};
         void initProtocolRequired(unsigned int _requiredVersion, unsigned int _currentVersion);
 
         int getMessageId();
+        char* getMessageName();
         bool isInitialized();
         void pack(MessageWriter *output);
         void unpack(char *buffer);

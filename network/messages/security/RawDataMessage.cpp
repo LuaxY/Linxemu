@@ -23,6 +23,11 @@ int RawDataMessage::getMessageId()
 	return protocolId;
 }
 
+char* RawDataMessage::getMessageName()
+{
+	return "RawDataMessage";
+}
+
 void RawDataMessage::pack(MessageWriter *output)
 {
 	output->WriteUShort(length);

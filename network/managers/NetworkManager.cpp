@@ -249,10 +249,7 @@ void NetworkManager::PacketParser(Client client)
             client.phase = NEW_PACKET;
 
             if(client.bufferQueue.size() >= 2)
-            {
-                newPacket = true;
                 continue;
-            }
         }
 
         newPacket = false;

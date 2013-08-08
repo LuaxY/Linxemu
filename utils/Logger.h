@@ -14,7 +14,7 @@ enum LOG_NAME
     DEBUG,
     INFO,
     ERROR,
-    THREAD
+    WORKER
 };
 
 class Logger

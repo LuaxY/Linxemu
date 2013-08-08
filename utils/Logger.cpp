@@ -18,8 +18,8 @@ void Logger::Log(LOG_NAME logName, string location, string message, bool display
         case ERROR:
             cout << "[\033[1;31mERROR\033[0m] ";
             break;
-        case THREAD:
-            cout << "[\033[1;32mTHREAD\033[0m] ";
+        case WORKER:
+            cout << "[\033[1;32mWORKER\033[0m] ";
             break;
         case INFO:
         default:

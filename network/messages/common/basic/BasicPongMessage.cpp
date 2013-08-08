@@ -22,6 +22,11 @@ int BasicPongMessage::getMessageId()
 	return protocolId;
 }
 
+char* BasicPongMessage::getMessageName()
+{
+	return "BasicPongMessage";
+}
+
 void BasicPongMessage::pack(MessageWriter *output)
 {
 	output->WriteBool(quiet);

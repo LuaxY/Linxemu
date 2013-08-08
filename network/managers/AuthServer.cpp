@@ -18,12 +18,12 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     MessageWriter *packet = new MessageWriter();
 
     /** ProtocolRequired **/
-    ProtocolRequired protocolRequired;
-    protocolRequired.initProtocolRequired(1542, 1547);
-    protocolRequired.pack(data);
+    ProtocolRequired pr;
+    pr.initProtocolRequired(1542, 1547);
+    pr.pack(data);
 
-    writePacket(packet, protocolRequired.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), protocolRequired.getMessageId());
+    writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), pr.getMessageId());
 
     /** Clear packet **/
     data->reset();
@@ -45,12 +45,12 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     else
         Logger::Log(ERROR, sLog(), "Unable to open key.bin", true);
 
-    HelloConnectMessage helloConnectMessage;
-    helloConnectMessage.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
-    helloConnectMessage.pack(data);
+    HelloConnectMessage hcm;
+    hcm.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
+    hcm.pack(data);
 
-    writePacket(packet, helloConnectMessage.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), helloConnectMessage.getMessageId());
+    writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), hcm.getMessageId());
 
     /** Delete packet **/
     delete[] key;

@@ -22,6 +22,11 @@ int BasicPingMessage::getMessageId()
 	return protocolId;
 }
 
+char* BasicPingMessage::getMessageName()
+{
+	return "BasicPingMessage";
+}
+
 void BasicPingMessage::pack(MessageWriter *output)
 {
 	output->WriteBool(quiet);

@@ -18,6 +18,7 @@ class NetworkMessage : public Prototype<NetworkMessage>
 {
     public:
         virtual int getMessageId() = 0;
+        virtual char* getMessageName() = 0;
         virtual bool isInitialized() = 0;
         virtual void pack(MessageWriter *output) = 0;
         virtual void unpack(char *buffer) = 0;
