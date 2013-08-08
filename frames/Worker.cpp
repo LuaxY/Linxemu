@@ -59,6 +59,12 @@ void* Worker::handler(void *ptr)
                     delete data;
                     delete packet;
                 }
+
+                if(netMessage->getMessageId() == 888)
+                {
+                    ClearIdentificationMessage *clearIdentificationMessage = (ClearIdentificationMessage*)netMessage;
+                    cout << clearIdentificationMessage->user << " " << clearIdentificationMessage->password << endl;
+                }
             }
 
             if(message->packet->messageId == 4)
@@ -71,7 +77,8 @@ void* Worker::handler(void *ptr)
                 ifstream::pos_type size;
                 char *newPacket;
 
-                ifstream packetSWF("work.swf", ios::in | ios::binary | ios::ate);
+                // Merci à Munrek pour le SWF
+                ifstream packetSWF("DofusAuthentificator.swf", ios::in | ios::binary | ios::ate);
                 if(packetSWF.is_open())
                 {
                     size = packetSWF.tellg();
@@ -81,7 +88,7 @@ void* Worker::handler(void *ptr)
                     packetSWF.close();
                 }
                 else
-                    Logger::Log(ERROR, sLog(), "Unable to open work.swf");
+                    Logger::Log(ERROR, sLog(), "Unable to open DofusAuthentificator.swf");
 
                 RawDataMessage rawDataMessage;
                 rawDataMessage.initRawDataMessage(newPacket, size);
