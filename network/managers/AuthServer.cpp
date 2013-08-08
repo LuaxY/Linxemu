@@ -22,8 +22,8 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     protocolRequired.initProtocolRequired(1542, 1547);
     protocolRequired.pack(data);
 
-    NetworkManager::writePacket(packet, protocolRequired.getMessageId(), data->getBuffer(), data->getPosition());
-    send(c.sock, packet->getBuffer(), packet->getPosition(), 0);
+    writePacket(packet, protocolRequired.getMessageId(), data->getBuffer(), data->getPosition());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), protocolRequired.getMessageId());
 
     /** Clear packet **/
     data->reset();
@@ -49,8 +49,8 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     helloConnectMessage.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
     helloConnectMessage.pack(data);
 
-    NetworkManager::writePacket(packet, helloConnectMessage.getMessageId(), data->getBuffer(), data->getPosition());
-    send(c.sock, packet->getBuffer(), packet->getPosition(), 0);
+    writePacket(packet, helloConnectMessage.getMessageId(), data->getBuffer(), data->getPosition());
+    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), helloConnectMessage.getMessageId());
 
     /** Delete packet **/
     delete[] key;
@@ -69,8 +69,8 @@ void AuthServer::onClientDisconnected(Client client, int number)
 
 void AuthServer::onDataReceive(Client client, Packet* packet)
 {
-    Logger::Log(DEBUG, sLog(), "[RCV] Message ID ", true, false);
-    cout << packet->messageId << ", length " << packet->messageLength << endl;
+    Logger::Log(DEBUG, sLog(), "[RCV] Message ID ", false, false);
+    cout << packet->messageId << ", " << packet->messageLength << " bytes from " << getClientIP(client.sock) << ":" << getClientPort(client.sock) << endl;
 
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {
