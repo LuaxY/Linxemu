@@ -5,7 +5,7 @@ bool Logger::isDebugLogEnabled()
     return debugLog;
 }
 
-void Logger::Log(LOG_NAME logName, string location, string message, bool displayLoc, bool newLine)
+void Logger::Log(LOG_NAME logName, string location, string message, bool newLine)
 {
     if(logName == DEBUG && !debugLog)
         return;
@@ -30,7 +30,7 @@ void Logger::Log(LOG_NAME logName, string location, string message, bool display
     if(timeLog)
         cout << "[" << Logger::getCurrentTime() << "] ";
 
-    if(displayLoc && false)
+    if(logName == ERROR)
         cout << "[" << location << "] ";
 
     cout << message;

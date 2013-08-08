@@ -43,7 +43,7 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
         keyFile.close();
     }
     else
-        Logger::Log(ERROR, sLog(), "Unable to open key.bin", true);
+        Logger::Log(ERROR, sLog(), "Unable to open key.bin");
 
     HelloConnectMessage hcm;
     hcm.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
@@ -60,7 +60,7 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
 
 void AuthServer::onClientDisconnected(Client client, int number)
 {
-    Logger::Log(INFO, sLog(), "Client disconnected (" + getClientIP(client.sock) + ":" + getClientPort(client.sock) + ")", true);
+    Logger::Log(INFO, sLog(), "Client disconnected (" + getClientIP(client.sock) + ":" + getClientPort(client.sock) + ")");
 
     closesocket(client.sock);
     memmove(clients + number, clients + number + 1, (nbClients - number - 1) * sizeof(Client));
@@ -71,7 +71,7 @@ void AuthServer::onDataReceive(Client client, Packet* packet)
 {
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {
-        Logger::Log(ERROR, sLog(), "Unable to add message ", true, false);
+        Logger::Log(ERROR, sLog(), "Unable to add message ", false);
         cout << packet->messageId << " in MessagesQueue" << endl;
     }
 }

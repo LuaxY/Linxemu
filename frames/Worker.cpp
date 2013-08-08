@@ -38,12 +38,12 @@ void* Worker::handler(void *ptr)
 
             if(!netMessage)
             {
-                Logger::Log(ERROR, sLog(), "Unknown packet ID: ", true, false);
+                Logger::Log(ERROR, sLog(), "Unknown packet ID: ", false);
                 cout << message->packet->messageId << endl;
             }
             else
             {
-                Logger::Log(DEBUG, sLog(), "[RCV] ", false, false);
+                Logger::Log(DEBUG, sLog(), "[RCV] ", false);
                 cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << message->messageLength << " bytes from " << NetworkManager::getClientIP(message->client.sock) << ":" << NetworkManager::getClientPort(message->client.sock) << endl;
 
                 /** Frames dispatcher **/

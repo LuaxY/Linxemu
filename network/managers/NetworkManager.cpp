@@ -332,7 +332,7 @@ unsigned int NetworkManager::subComputeStaticHeader(unsigned int msgId, unsigned
 
 void NetworkManager::sendTo(SOCKET socket, char* buffer, int length, NetworkMessage* netMessage)
 {
-    Logger::Log(DEBUG, sLog(), "[SND] ", false, false);
+    Logger::Log(DEBUG, sLog(), "[SND] ", false);
     cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << length << " bytes to " << getClientIP(socket) << ":" << getClientPort(socket) << endl;
 
     send(socket, buffer, length, 0);
