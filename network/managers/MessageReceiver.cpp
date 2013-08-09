@@ -1,6 +1,6 @@
 #include "MessageReceiver.h"
 
-map<int, NetworkMessage*> Factory::messagesTypes = map<int, NetworkMessage*>();
+map<int, INetworkMessage*> Factory::messagesTypes = map<int, INetworkMessage*>();
 
 void MessageReceiver::Register()
 {
@@ -13,13 +13,13 @@ void MessageReceiver::Register()
     Factory::registerClass(6253, new RawDataMessage);
 }
 
-NetworkMessage* MessageReceiver::parse(Packet* packet)
+INetworkMessage* MessageReceiver::parse(Packet* packet)
 {
     Factory storeDataManager;
 
     if(storeDataManager.isPacketExist(packet->messageId))
     {
-        NetworkMessage *message = storeDataManager.getClass(packet->messageId);
+        INetworkMessage *message = storeDataManager.getClass(packet->messageId);
         message->unpack(packet->buffer);
         return message;
     }
@@ -27,7 +27,7 @@ NetworkMessage* MessageReceiver::parse(Packet* packet)
     return false;
 }
 
-void Factory::registerClass(int protocolId, NetworkMessage* obj)
+void Factory::registerClass(int protocolId, INetworkMessage* obj)
 {
     if(messagesTypes.find(protocolId) == messagesTypes.end())
     {
@@ -35,10 +35,10 @@ void Factory::registerClass(int protocolId, NetworkMessage* obj)
     }
 }
 
-NetworkMessage* Factory::getClass(int protocolId)
+INetworkMessage* Factory::getClass(int protocolId)
 {
-    NetworkMessage* tmp = 0;
-    map<int, NetworkMessage*>::const_iterator it = messagesTypes.find(protocolId);
+    INetworkMessage* tmp = 0;
+    map<int, INetworkMessage*>::const_iterator it = messagesTypes.find(protocolId);
 
     if(it != messagesTypes.end())
     {

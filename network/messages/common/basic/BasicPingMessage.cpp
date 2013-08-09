@@ -1,6 +1,6 @@
 #include "BasicPingMessage.h"
 
-NetworkMessage* BasicPingMessage::getInstance() const
+INetworkMessage* BasicPingMessage::getInstance() const
 {
     return new BasicPingMessage(*this);
 }

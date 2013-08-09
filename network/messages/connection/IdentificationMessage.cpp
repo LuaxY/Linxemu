@@ -1,6 +1,6 @@
 #include "IdentificationMessage.h"
 
-NetworkMessage* IdentificationMessage::getInstance() const
+INetworkMessage* IdentificationMessage::getInstance() const
 {
     return new IdentificationMessage(*this);
 }

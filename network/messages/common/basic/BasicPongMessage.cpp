@@ -1,6 +1,6 @@
 #include "BasicPongMessage.h"
 
-NetworkMessage* BasicPongMessage::getInstance() const
+INetworkMessage* BasicPongMessage::getInstance() const
 {
     return new BasicPongMessage(*this);
 }

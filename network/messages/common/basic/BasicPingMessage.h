@@ -2,12 +2,12 @@
 #define BASIC_PING_MESSAGE_H
 
 #include "../../../../utils/utils.h"
-#include "../../NetworkMessage.h"
+#include "../../INetworkMessage.h"
 
-class BasicPingMessage : public NetworkMessage
+class BasicPingMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         BasicPingMessage(){};
         void initBasicPingMessage(bool _quiet);
 

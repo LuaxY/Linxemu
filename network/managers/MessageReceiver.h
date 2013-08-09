@@ -2,25 +2,25 @@
 #define MESSAGE_RECEIVER_H
 
 #include "NetworkManager.h"
-#include "../messages/NetworkMessage.h"
+#include "../messages/INetworkMessage.h"
 #include "../messages/messagesList.h"
 
 class MessageReceiver
 {
     public:
         void Register();
-        NetworkMessage* parse(Packet* packet);
+        INetworkMessage* parse(Packet* packet);
 };
 
 class Factory
 {
     public:
-        static void registerClass(int protocolId, NetworkMessage* obj);
-        NetworkMessage* getClass(int protocolId);
+        static void registerClass(int protocolId, INetworkMessage* obj);
+        INetworkMessage* getClass(int protocolId);
         bool isPacketExist(int protocolId);
 
     private:
-        static map<int, NetworkMessage*> messagesTypes;
+        static map<int, INetworkMessage*> messagesTypes;
 };
 
 #endif // MESSAGE_RECEIVER_H

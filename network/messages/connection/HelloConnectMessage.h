@@ -2,12 +2,12 @@
 #define HELLO_CONNECT_MESSAGE_H
 
 #include "../../../utils/utils.h"
-#include "../NetworkMessage.h"
+#include "../INetworkMessage.h"
 
-class HelloConnectMessage : public NetworkMessage
+class HelloConnectMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         HelloConnectMessage(){};
         void initHelloConnectMessage(char* _salt, char* _key, int _keyLen);
 

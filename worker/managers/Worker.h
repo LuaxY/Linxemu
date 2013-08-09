@@ -7,10 +7,12 @@
 #include <queue>
 #include <typeinfo>
 
-#include "../utils/utils.h"
-#include "../network/managers/NetworkManager.h"
-#include "../network/messages/NetworkMessage.h"
-#include "../network/managers/MessageReceiver.h"
+#include "../../utils/utils.h"
+
+#include "../../network/managers/NetworkManager.h"
+#include "../../network/managers/MessageReceiver.h"
+
+#include "../../network/messages/INetworkMessage.h"
 
 using namespace std;
 
@@ -32,7 +34,7 @@ class Worker
         static queue<Message*> messagesQueue;
     private:
         void clearMessagesQueue();
-        void removeMessage(NetworkMessage* netMessage, Message* message);
+        void removeMessage(INetworkMessage* netMessage, Message* message);
 
         static void* handler(void *ptr);
         static pthread_t threadPtr;

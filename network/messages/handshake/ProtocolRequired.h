@@ -2,12 +2,12 @@
 #define PROTOCOL_REQUIRED_H
 
 #include "../../../utils/utils.h"
-#include "../NetworkMessage.h"
+#include "../INetworkMessage.h"
 
-class ProtocolRequired : public NetworkMessage
+class ProtocolRequired : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         ProtocolRequired(){};
         void initProtocolRequired(unsigned int _requiredVersion, unsigned int _currentVersion);
 

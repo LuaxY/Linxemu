@@ -1,5 +1,5 @@
-#ifndef NETWORK_MESSAGE_H
-#define NETWORK_MESSAGE_H
+#ifndef INETWORK_MESSAGE_H
+#define INETWORK_MESSAGE_H
 
 #include <map>
 
@@ -7,14 +7,14 @@
 
 using namespace std;
 
-template <class T> class Prototype
+template <class T> class PrototypeNet
  {
     public:
-        virtual ~Prototype(){}
+        virtual ~PrototypeNet(){}
         virtual T* getInstance() const = 0;
  };
 
-class NetworkMessage : public Prototype<NetworkMessage>
+class INetworkMessage : public PrototypeNet<INetworkMessage>
 {
     public:
         virtual int getMessageId() = 0;
@@ -25,4 +25,4 @@ class NetworkMessage : public Prototype<NetworkMessage>
         virtual void reset() = 0;
 };
 
-#endif // NETWORK_MESSAGE_H
+#endif // INETWORK_MESSAGE_H

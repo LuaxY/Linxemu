@@ -2,12 +2,12 @@
 #define CLEAR_IDENTIFICATION_MESSAGE_H
 
 #include "../../../utils/utils.h"
-#include "../NetworkMessage.h"
+#include "../INetworkMessage.h"
 
-class ClearIdentificationMessage : public NetworkMessage
+class ClearIdentificationMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         ClearIdentificationMessage(){};
         ClearIdentificationMessage(ClearIdentificationMessage* message);
         void initClearIdentificationMessage(char* _user, char* _password);

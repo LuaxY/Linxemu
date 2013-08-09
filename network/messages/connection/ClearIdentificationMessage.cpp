@@ -1,6 +1,6 @@
 #include "ClearIdentificationMessage.h"
 
-NetworkMessage* ClearIdentificationMessage::getInstance() const
+INetworkMessage* ClearIdentificationMessage::getInstance() const
 {
     return new ClearIdentificationMessage(*this);
 }

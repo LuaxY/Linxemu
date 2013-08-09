@@ -1,6 +1,6 @@
 #include "HelloConnectMessage.h"
 
-NetworkMessage* HelloConnectMessage::getInstance() const
+INetworkMessage* HelloConnectMessage::getInstance() const
 {
     return new HelloConnectMessage(*this);
 }

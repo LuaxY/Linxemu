@@ -2,12 +2,12 @@
 #define BASIC_PONG_MESSAGE_H
 
 #include "../../../../utils/utils.h"
-#include "../../NetworkMessage.h"
+#include "../../INetworkMessage.h"
 
-class BasicPongMessage : public NetworkMessage
+class BasicPongMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         BasicPongMessage(){};
         void initBasicPongMessage(bool _quiet);
 

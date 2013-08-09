@@ -1,6 +1,6 @@
 #include "RawDataMessage.h"
 
-NetworkMessage* RawDataMessage::getInstance() const
+INetworkMessage* RawDataMessage::getInstance() const
 {
     return new RawDataMessage(*this);
 }

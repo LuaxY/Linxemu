@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "config/AuthConfig.h"
-#include "frames/Worker.h"
+#include "worker/managers/Worker.h"
 #include "network/managers/AuthServer.h"
 
 using namespace std;

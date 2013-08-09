@@ -17,7 +17,7 @@
 #include <queue>
 
 #include "../../utils/utils.h"
-#include "../messages/NetworkMessage.h"
+#include "../messages/INetworkMessage.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -63,7 +63,7 @@ class NetworkManager
         static void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
         static unsigned int computeTypeLen(unsigned int len);
         static unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
-        static void sendTo(SOCKET socket, char* buffer, int length, NetworkMessage* netMessage);
+        static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
 
     private:
         void PacketParser(Client client);

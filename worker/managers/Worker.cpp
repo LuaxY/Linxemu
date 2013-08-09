@@ -33,7 +33,7 @@ void* Worker::handler(void *ptr)
             pthread_mutex_unlock(&mutex_stock);
 
             /** Pakcet parser **/
-            NetworkMessage *netMessage;
+            INetworkMessage *netMessage;
             netMessage = rawParser.parse(message->packet);
 
             if(!netMessage)
@@ -47,6 +47,8 @@ void* Worker::handler(void *ptr)
                 cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << message->messageLength << " bytes from " << NetworkManager::getClientIP(message->client.sock) << ":" << NetworkManager::getClientPort(message->client.sock) << endl;
 
                 /** Frames dispatcher **/
+
+                //Frames.processMessage(netMessage);
 
                 MessageWriter *data = new MessageWriter();
                 MessageWriter *packet = new MessageWriter();
@@ -94,7 +96,7 @@ void* Worker::handler(void *ptr)
                     case 888: // ClearIdentificationMessage
                     {
                         ClearIdentificationMessage cim((ClearIdentificationMessage*)netMessage);
-                        cout << cim.user << " " << cim.password << endl;
+                        cout << "User: " << cim.user << " Password: " << cim.password << endl;
                         break;
                     }
                 }
@@ -129,7 +131,7 @@ bool Worker::addMessage(Client client, unsigned short messageId, unsigned short 
     return true;
 }
 
-void Worker::removeMessage(NetworkMessage* netMessage, Message* message)
+void Worker::removeMessage(INetworkMessage* netMessage, Message* message)
 {
     delete netMessage;
     delete message->packet;

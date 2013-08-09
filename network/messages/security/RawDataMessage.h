@@ -2,12 +2,12 @@
 #define RAW_DATA_MESSAGE_H
 
 #include "../../../utils/utils.h"
-#include "../NetworkMessage.h"
+#include "../INetworkMessage.h"
 
-class RawDataMessage : public NetworkMessage
+class RawDataMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         RawDataMessage(){};
         void initRawDataMessage(char* _content, unsigned short _length);
 

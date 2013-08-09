@@ -1,6 +1,6 @@
 #include "ProtocolRequired.h"
 
-NetworkMessage* ProtocolRequired::getInstance() const
+INetworkMessage* ProtocolRequired::getInstance() const
 {
     return new ProtocolRequired(*this);
 }

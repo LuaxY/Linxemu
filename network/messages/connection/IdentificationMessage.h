@@ -2,12 +2,12 @@
 #define IDENTIFICATION_MESSAGE_H
 
 #include "../../../utils/utils.h"
-#include "../NetworkMessage.h"
+#include "../INetworkMessage.h"
 
-class IdentificationMessage : public NetworkMessage
+class IdentificationMessage : public INetworkMessage
 {
     public:
-        NetworkMessage* getInstance() const;
+        INetworkMessage* getInstance() const;
         IdentificationMessage(){};
         IdentificationMessage(IdentificationMessage* message);
         void initIdentificationMessage();
