@@ -12,7 +12,7 @@ class MessageReceiver
         INetworkMessage* parse(Packet* packet);
 };
 
-class Factory
+class FactoryMessage
 {
     public:
         static void registerClass(int protocolId, INetworkMessage* obj);
@@ -20,7 +20,7 @@ class Factory
         bool isPacketExist(int protocolId);
 
     private:
-        static map<int, INetworkMessage*> messagesTypes;
+        static map<int, INetworkMessage*> messagesList;
 };
 
 #endif // MESSAGE_RECEIVER_H

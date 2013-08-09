@@ -8,11 +8,12 @@
 #include <typeinfo>
 
 #include "../../utils/utils.h"
-
 #include "../../network/managers/NetworkManager.h"
 #include "../../network/managers/MessageReceiver.h"
-
 #include "../../network/messages/INetworkMessage.h"
+#include "Frames.h"
+#include "../frames/IFrame.h"
+#include "../frames/framesList.h"
 
 using namespace std;
 
@@ -41,6 +42,7 @@ class Worker
         static pthread_mutex_t mutex_stock;
 
         static MessageReceiver rawParser;
+        static Frames frames;
 };
 
 #endif // WORKER_H

@@ -1,25 +1,25 @@
 #include "MessageReceiver.h"
 
-map<int, INetworkMessage*> Factory::messagesTypes = map<int, INetworkMessage*>();
+map<int, INetworkMessage*> FactoryMessage::messagesList = map<int, INetworkMessage*>();
 
 void MessageReceiver::Register()
 {
-    Factory::registerClass(1, new ProtocolRequired);
-    Factory::registerClass(3, new HelloConnectMessage);
-    Factory::registerClass(4, new IdentificationMessage);
-    Factory::registerClass(182, new BasicPingMessage);
-    Factory::registerClass(183, new BasicPongMessage);
-    Factory::registerClass(888, new ClearIdentificationMessage);
-    Factory::registerClass(6253, new RawDataMessage);
+    FactoryMessage::registerClass(1, new ProtocolRequired);
+    FactoryMessage::registerClass(3, new HelloConnectMessage);
+    FactoryMessage::registerClass(4, new IdentificationMessage);
+    FactoryMessage::registerClass(182, new BasicPingMessage);
+    FactoryMessage::registerClass(183, new BasicPongMessage);
+    FactoryMessage::registerClass(888, new ClearIdentificationMessage);
+    FactoryMessage::registerClass(6253, new RawDataMessage);
 }
 
 INetworkMessage* MessageReceiver::parse(Packet* packet)
 {
-    Factory storeDataManager;
+    FactoryMessage fm;
 
-    if(storeDataManager.isPacketExist(packet->messageId))
+    if(fm.isPacketExist(packet->messageId))
     {
-        INetworkMessage *message = storeDataManager.getClass(packet->messageId);
+        INetworkMessage *message = fm.getClass(packet->messageId);
         message->unpack(packet->buffer);
         return message;
     }
@@ -27,20 +27,20 @@ INetworkMessage* MessageReceiver::parse(Packet* packet)
     return false;
 }
 
-void Factory::registerClass(int protocolId, INetworkMessage* obj)
+void FactoryMessage::registerClass(int protocolId, INetworkMessage* obj)
 {
-    if(messagesTypes.find(protocolId) == messagesTypes.end())
+    if(messagesList.find(protocolId) == messagesList.end())
     {
-        messagesTypes[protocolId] = obj;
+        messagesList[protocolId] = obj;
     }
 }
 
-INetworkMessage* Factory::getClass(int protocolId)
+INetworkMessage* FactoryMessage::getClass(int protocolId)
 {
     INetworkMessage* tmp = 0;
-    map<int, INetworkMessage*>::const_iterator it = messagesTypes.find(protocolId);
+    map<int, INetworkMessage*>::const_iterator it = messagesList.find(protocolId);
 
-    if(it != messagesTypes.end())
+    if(it != messagesList.end())
     {
         tmp = ((*it).second)->getInstance();
     }
@@ -48,9 +48,9 @@ INetworkMessage* Factory::getClass(int protocolId)
     return tmp;
 }
 
-bool Factory::isPacketExist(int protocolId)
+bool FactoryMessage::isPacketExist(int protocolId)
 {
-    if(messagesTypes.find(protocolId) != messagesTypes.end())
+    if(messagesList.find(protocolId) != messagesList.end())
         return true;
     else
         return false;
