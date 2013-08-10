@@ -64,12 +64,47 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
         {
             ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
 
-            int reason;
+            /** Temporaire **/
+            sqlite3 *db;
+            sqlite3_stmt *res;
+            int sqlReturn = 0, reason = 99;
 
-            if((strcmp(cim.user, "Sorrow") == 0) && (strcmp(cim.password, "azerty") == 0))
-                reason = 5; // Serveur en maintenance
+            sqlReturn = sqlite3_open("lnx.db", &db);
+
+            if(sqlReturn)
+                Logger::Log(ERROR, sLog(), "Can't open SQLite Database");
+
+            char query[1000];
+            strcpy(query, "SELECT * FROM accounts WHERE login = '");
+            strcat(query, cim.user);
+            strcat(query, "' AND password = '");
+            strcat(query, cim.password);
+            strcat(query, "';");
+
+            sqlReturn = sqlite3_prepare_v2(db, query, -1, &res, 0);
+
+            if(sqlReturn != SQLITE_OK)
+            {
+                Logger::Log(ERROR, sLog(), "SQLite error: ", false);
+                cout << sqlReturn << endl;
+            }
+
+            if(sqlite3_step(res) == SQLITE_ROW)
+            {
+                Logger::Log(WORKER, sLog(), "User '", false);
+                cout << sqlite3_column_text(res, 1) << "' is now logged" << endl;
+
+                reason = 5; // All server in maintenance
+            }
             else
-                reason = 2; // Login/Pass incorrect
+            {
+                Logger::Log(ERROR, sLog(), "Bad login/password");
+                reason = 2; // Bad login/password
+            }
+
+            sqlite3_finalize(res);
+            sqlite3_close(db);
+            /****************/
 
             IdentificationFailedMessage ifm;
             ifm.initIdentificationFailedMessage(reason);
@@ -77,7 +112,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
 
             NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
             NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
-
 
             processState = true;
             break;

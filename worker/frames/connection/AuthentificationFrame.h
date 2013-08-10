@@ -3,6 +3,7 @@
 
 #include "../../../utils/utils.h"
 #include "../IFrame.h"
+#include <sqlite3.h>
 
 class AuthentificationFrame : public IFrame
 {
