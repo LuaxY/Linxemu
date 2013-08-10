@@ -3,7 +3,6 @@
 
 #include <sstream>
 #include "hexdump.h"
-#include "base64.h"
 #include "Logger.h"
 #include "MessageReader.h"
 #include "MessageWriter.h"
