@@ -9,6 +9,7 @@ class HelloConnectMessage : public INetworkMessage
     public:
         INetworkMessage* getInstance() const;
         HelloConnectMessage(){};
+        HelloConnectMessage(HelloConnectMessage* message);
         void initHelloConnectMessage(char* _salt, char* _key, int _keyLen);
 
         int getMessageId();

@@ -63,7 +63,21 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
         case 888: // ClearIdentificationMessage
         {
             ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
-            cout << "User: " << cim.user << " Password: " << cim.password << endl;
+
+            int reason;
+
+            if((strcmp(cim.user, "Sorrow") == 0) && (strcmp(cim.password, "azerty") == 0))
+                reason = 5; // Serveur en maintenance
+            else
+                reason = 2; // Login/Pass incorrect
+
+            IdentificationFailedMessage ifm;
+            ifm.initIdentificationFailedMessage(reason);
+            ifm.pack(data);
+
+            NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+
 
             processState = true;
             break;

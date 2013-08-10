@@ -5,6 +5,13 @@ INetworkMessage* HelloConnectMessage::getInstance() const
     return new HelloConnectMessage(*this);
 }
 
+HelloConnectMessage::HelloConnectMessage(HelloConnectMessage* message)
+{
+    salt = message->salt;
+    key = message->key;
+    keyLen = message->keyLen;
+}
+
 void HelloConnectMessage::initHelloConnectMessage(char* _salt, char* _key, int _keyLen)
 {
     salt = _salt;
