@@ -38,6 +38,14 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
     ssin.sin_family = AF_INET;
     ssin.sin_port = htons(port);
 
+    int option = 1;
+
+    if(setsockopt(ServerSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) < 0)
+    {
+        perror("setsockopt()");
+        exit(errno);
+    }
+
     if(bind(ServerSocket, (SOCKADDR *) &ssin, sizeof ssin) == SOCKET_ERROR)
     {
         perror("bind()");
