@@ -2,8 +2,8 @@
 #define AUTHENTIFICATION_FRAME_H
 
 #include "../../../utils/utils.h"
+#include "../../../database/SQLiteC++.h"
 #include "../IFrame.h"
-#include <sqlite3.h>
 
 class AuthentificationFrame : public IFrame
 {

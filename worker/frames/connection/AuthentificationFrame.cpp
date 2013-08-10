@@ -64,36 +64,17 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
         {
             ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
 
-            /** Temporaire **/
-            sqlite3 *db;
-            sqlite3_stmt *res;
-            int sqlReturn = 0, reason = 99;
+            int reason = 99;
 
-            sqlReturn = sqlite3_open("lnx.db", &db);
+            SQLite::Database db("lnx.db");
+            SQLite::Statement query(db, "SELECT * FROM accounts WHERE login = ? AND password = ?");
+            query.bind(1, cim.user);
+            query.bind(2, cim.password);
 
-            if(sqlReturn)
-                Logger::Log(ERROR, sLog(), "Can't open SQLite Database");
-
-            char query[1000];
-            strcpy(query, "SELECT * FROM accounts WHERE login = '");
-            strcat(query, cim.user);
-            strcat(query, "' AND password = '");
-            strcat(query, cim.password);
-            strcat(query, "';");
-
-            sqlReturn = sqlite3_prepare_v2(db, query, -1, &res, 0);
-
-            if(sqlReturn != SQLITE_OK)
-            {
-                Logger::Log(ERROR, sLog(), "SQLite error: ", false);
-                cout << sqlReturn << endl;
-            }
-
-            if(sqlite3_step(res) == SQLITE_ROW)
+            if(query.executeStep())
             {
                 Logger::Log(WORKER, sLog(), "User '", false);
-                cout << sqlite3_column_text(res, 1) << "' is now logged" << endl;
-
+                cout << query.getColumn(1) << "' is now logged" << endl;
                 reason = 5; // All server in maintenance
             }
             else
@@ -101,10 +82,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
                 Logger::Log(ERROR, sLog(), "Bad login/password");
                 reason = 2; // Bad login/password
             }
-
-            sqlite3_finalize(res);
-            sqlite3_close(db);
-            /****************/
 
             IdentificationFailedMessage ifm;
             ifm.initIdentificationFailedMessage(reason);
