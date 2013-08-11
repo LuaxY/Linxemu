@@ -8,6 +8,8 @@ void MessageReceiver::Register()
     FactoryMessage::registerClass(3, new HelloConnectMessage);
     FactoryMessage::registerClass(4, new IdentificationMessage);
     FactoryMessage::registerClass(20, new IdentificationFailedMessage);
+    FactoryMessage::registerClass(22, new IdentificationSuccessMessage);
+    FactoryMessage::registerClass(30, new ServersListMessage);
     FactoryMessage::registerClass(182, new BasicPingMessage);
     FactoryMessage::registerClass(183, new BasicPongMessage);
     FactoryMessage::registerClass(888, new ClearIdentificationMessage);

@@ -64,6 +64,7 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
         {
             ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
 
+            bool fail = true;
             int reason = 99;
 
             SQLite::Database db("lnx.db");
@@ -73,22 +74,62 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
 
             if(query.executeStep())
             {
-                Logger::Log(WORKER, sLog(), "User '", false);
-                cout << query.getColumn(1) << "' is now logged" << endl;
-                reason = 5; // All server in maintenance
+                int accountId = query.getColumn(0);
+                const char* login = query.getColumn(1);
+                int rank = query.getColumn(3);
+                int banned = query.getColumn(4);
+                int reinitialized = query.getColumn(5);
+                const char* nickname = query.getColumn(6);
+
+                bool isBanned = banned > 0 ? true : false;
+                bool isReinitialized = reinitialized > 0 ? true : false;
+                bool hasRights = rank > 0 ? true : false;
+
+                if(isBanned)
+                    reason = BANNED;
+                else if(isReinitialized)
+                    reason = CREDENTIALS_RESET;
+                else
+                {
+                    fail = false;
+
+                    IdentificationSuccessMessage ism;
+                    ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", 0, false, 0);
+                    ism.pack(data);
+
+                    NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());
+                    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ism.getInstance());
+
+                    data->reset();
+                    packet->reset();
+
+                    vector<GameServerInformations*> servers;
+                    GameServerInformations* test = new GameServerInformations();
+                    test->initGameServerInformations(900, NOJOIN, 0, true, 2, 0); // 900 = serveur test
+                    servers.push_back(test);
+
+                    ServersListMessage slm;
+                    slm.initServersListMessage(servers);
+                    slm.pack(data);
+
+                    NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
+                    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), slm.getInstance());
+
+                    delete test;
+                }
             }
             else
+                reason = WRONG_CREDENTIALS;
+
+            if(fail)
             {
-                Logger::Log(ERROR, sLog(), "Bad login/password");
-                reason = 2; // Bad login/password
+                IdentificationFailedMessage ifm;
+                ifm.initIdentificationFailedMessage(reason);
+                ifm.pack(data);
+
+                NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
+                NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
             }
-
-            IdentificationFailedMessage ifm;
-            ifm.initIdentificationFailedMessage(reason);
-            ifm.pack(data);
-
-            NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
 
             processState = true;
             break;

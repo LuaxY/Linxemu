@@ -4,10 +4,10 @@
 #include <iostream>
 #include <cstring>
 
-#include "../../utils/utils.h"
+#include "../utils/utils.h"
 #include "NetworkManager.h"
 #include "MessageReceiver.h"
-#include "../../worker/managers/Worker.h"
+#include "../worker/Worker.h"
 
 using namespace std;
 

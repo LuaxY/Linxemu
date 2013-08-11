@@ -4,6 +4,10 @@
 #include "../../../utils/utils.h"
 #include "../../../database/SQLiteC++.h"
 #include "../IFrame.h"
+#include "../../enums/IdentificationFailureReasonEnum.h"
+#include "../../enums/ServerStatusEnum.h"
+
+#include <vector>
 
 class AuthentificationFrame : public IFrame
 {

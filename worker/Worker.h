@@ -7,13 +7,13 @@
 #include <queue>
 #include <typeinfo>
 
-#include "../../utils/utils.h"
-#include "../../network/managers/NetworkManager.h"
-#include "../../network/managers/MessageReceiver.h"
-#include "../../network/messages/INetworkMessage.h"
+#include "../utils/utils.h"
+#include "../network/NetworkManager.h"
+#include "../network/MessageReceiver.h"
+#include "../protocol/messages/INetworkMessage.h"
 #include "Frames.h"
-#include "../frames/IFrame.h"
-#include "../frames/framesList.h"
+#include "../protocol/frames/IFrame.h"
+#include "../protocol/frames/framesList.h"
 
 using namespace std;
 

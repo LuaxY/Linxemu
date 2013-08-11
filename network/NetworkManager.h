@@ -16,8 +16,8 @@
 #include <sstream>
 #include <queue>
 
-#include "../../utils/utils.h"
-#include "../messages/INetworkMessage.h"
+#include "../utils/utils.h"
+#include "../protocol/messages/INetworkMessage.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1

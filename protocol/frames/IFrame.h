@@ -4,9 +4,10 @@
 #include <map>
 
 #include "../../utils/utils.h"
-#include "../../network/managers/NetworkManager.h"
-#include "../../network/managers/MessageReceiver.h"
-#include "../../network/messages/INetworkMessage.h"
+#include "../../network/NetworkManager.h"
+#include "../../network/MessageReceiver.h"
+#include "../messages/INetworkMessage.h"
+#include "../types/typesList.h"
 
 using namespace std;
 

@@ -2,8 +2,8 @@
 #define MESSAGE_RECEIVER_H
 
 #include "NetworkManager.h"
-#include "../messages/INetworkMessage.h"
-#include "../messages/messagesList.h"
+#include "../protocol/messages/INetworkMessage.h"
+#include "../protocol/messages/messagesList.h"
 
 class MessageReceiver
 {
