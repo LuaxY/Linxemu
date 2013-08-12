@@ -70,7 +70,7 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
             mysqlpp::Connection db(false);
             db.connect("linxemu", "127.0.0.1", "root", "root");
 
-            mysqlpp::Query queryUser = db.query("SELECT * FROM accounts WHERE login = %0q AND password = %1q");
+            mysqlpp::Query queryUser = db.query("SELECT *, UNIX_TIMESTAMP(subscriptionEndDate) as subEndDate, UNIX_TIMESTAMP(accountCreation) as accCreation FROM accounts WHERE login = %0q AND password = %1q");
             queryUser.parse();
             mysqlpp::StoreQueryResult resUser = queryUser.store(cim.user, cim.password);
 
@@ -82,6 +82,8 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
                 int banned = resUser[0]["banned"];
                 int reinitialized = resUser[0]["reinitialized"];
                 const char* nickname = resUser[0]["nickname"];
+                double subscriptionEndDate = resUser[0]["subEndDate"];
+                double accountCreation = resUser[0]["accCreation"];
 
                 bool isBanned = banned > 0 ? true : false;
                 bool isReinitialized = reinitialized > 0 ? true : false;
@@ -96,7 +98,7 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
                     fail = false;
 
                     IdentificationSuccessMessage ism;
-                    ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", 0xFFFFFFFFFFFFFFFF, false, 0);
+                    ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", subscriptionEndDate*1000, false, accountCreation*1000);
                     ism.pack(data);
 
                     NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());

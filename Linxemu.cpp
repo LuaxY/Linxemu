@@ -10,8 +10,6 @@ int main()
 {
     cout << "Linxemu (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
 
-    cout << sizeof(unsigned long) << endl;
-
     AuthConfig authConfig;
     AuthServer authServer;
     Worker worker;

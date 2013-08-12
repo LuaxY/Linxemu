@@ -18,7 +18,7 @@ IdentificationSuccessMessage::IdentificationSuccessMessage(IdentificationSuccess
     accountCreation = message->accountCreation;
 }
 
-void IdentificationSuccessMessage::initIdentificationSuccessMessage(const char* _login, const char* _nickname, unsigned int _accountId, char _communityId, bool _hasRights, char* _secretQuestion, long _subscriptionEndDate, bool _wasAlreadyConnected, long _accountCreation)
+void IdentificationSuccessMessage::initIdentificationSuccessMessage(const char* _login, const char* _nickname, unsigned int _accountId, char _communityId, bool _hasRights, char* _secretQuestion, double _subscriptionEndDate, bool _wasAlreadyConnected, double _accountCreation)
 {
     login = (char*)_login;
     nickname = (char*)_nickname;
@@ -61,8 +61,8 @@ void IdentificationSuccessMessage::pack(MessageWriter *output)
     output->WriteUInt(accountId);
     output->WriteByte(communityId);
     output->WriteUTF(secretQuestion);
-    output->WriteULong(subscriptionEndDate);
-    output->WriteULong(accountCreation);
+    output->WriteDouble(subscriptionEndDate);
+    output->WriteDouble(accountCreation);
 }
 
 void IdentificationSuccessMessage::unpack(char *buffer)
