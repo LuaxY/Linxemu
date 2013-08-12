@@ -15,6 +15,14 @@ class AuthentificationFrame : public IFrame
         IFrame* getInstance() const;
         char* getFrameName();
         bool process(INetworkMessage* message, Client* client);
+
+    private:
+        MessageWriter *data;
+        MessageWriter *packet;
+
+        void processMessage(IdentificationMessage* message, Client* client);
+        void processMessage(BasicPingMessage* message, Client* client);
+        void processMessage(ClearIdentificationMessage* message, Client* client);
 };
 
 #endif // AUTHENTIFICATION_FRAME_H
