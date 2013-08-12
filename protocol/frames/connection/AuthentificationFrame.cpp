@@ -96,7 +96,7 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
                     fail = false;
 
                     IdentificationSuccessMessage ism;
-                    ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", 0, false, 0);
+                    ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", 0xFFFFFFFFFFFFFFFF, false, 0);
                     ism.pack(data);
 
                     NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());

@@ -10,7 +10,7 @@ GameServerInformations::GameServerInformations(GameServerInformations* message)
     date = message->date;
 }
 
-void GameServerInformations::initGameServerInformations(unsigned short _id, char _status, char _completion, bool _isSelectable, char _charactersCount, double _date)
+void GameServerInformations::initGameServerInformations(unsigned short _id, char _status, char _completion, bool _isSelectable, char _charactersCount, long _date)
 {
     id = _id;
     status = _status;
@@ -32,9 +32,7 @@ void GameServerInformations::pack(MessageWriter *output)
     output->WriteByte(completion);
     output->WriteBool(isSelectable);
     output->WriteByte(charactersCount);
-    // date
-    output->WriteUInt(0);
-    output->WriteUInt(0);
+    output->WriteULong(date);
 }
 
 void GameServerInformations::unpack(char *buffer)

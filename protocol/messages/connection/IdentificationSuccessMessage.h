@@ -10,7 +10,7 @@ class IdentificationSuccessMessage : public INetworkMessage
         INetworkMessage* getInstance() const;
         IdentificationSuccessMessage(){};
         IdentificationSuccessMessage(IdentificationSuccessMessage* message);
-        void initIdentificationSuccessMessage(const char* login, const char* nickname, unsigned int accountId, char communityId, bool hasRights, char* secretQuestion, double subscriptionEndDate, bool wasAlreadyConnected, double accountCreation);
+        void initIdentificationSuccessMessage(const char* login, const char* nickname, unsigned int accountId, char communityId, bool hasRights, char* secretQuestion, long subscriptionEndDate, bool wasAlreadyConnected, long accountCreation);
 
         int getMessageId();
         char* getMessageName();
@@ -28,9 +28,9 @@ class IdentificationSuccessMessage : public INetworkMessage
         char communityId;
         bool hasRights;
         char* secretQuestion;
-        double subscriptionEndDate;
+        long subscriptionEndDate;
         bool wasAlreadyConnected;
-        double accountCreation;
+        long accountCreation;
 
     private:
         bool _isInitialized;

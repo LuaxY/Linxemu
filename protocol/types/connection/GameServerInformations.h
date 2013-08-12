@@ -9,7 +9,7 @@ class GameServerInformations : public INetworkType
     public:
         GameServerInformations(){};
         GameServerInformations(GameServerInformations* message);
-        void initGameServerInformations(unsigned short _id, char _status, char _completion, bool _isSelectable, char _charactersCount, double _date);
+        void initGameServerInformations(unsigned short _id, char _status, char _completion, bool _isSelectable, char _charactersCount, long _date);
 
         int getTypeId();
         void pack(MessageWriter *output);
@@ -24,7 +24,7 @@ class GameServerInformations : public INetworkType
         char completion;
         bool isSelectable;
         char charactersCount;
-        double date;
+        long date;
 };
 
 #endif // GAME_SERVER_INFROMATIONS_H
