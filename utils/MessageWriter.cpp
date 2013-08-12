@@ -33,33 +33,19 @@ char* MessageWriter::getBuffer()
     return buffer;
 }
 
-unsigned short MessageWriter::SwapUShort(unsigned short s)
+short MessageWriter::SwapShort(short s)
 {
     return (s >> 8) | (s << 8);
 }
 
-unsigned int MessageWriter::SwapUInt(unsigned int i)
+int MessageWriter::SwapInt(int i)
 {
     return (i >> 24) | ((i << 8) & 0x00FF0000) | ((i >> 8) & 0x0000FF00) | (i << 24);
 }
 
-unsigned long MessageWriter::SwapULong(unsigned long l)
+long MessageWriter::SwapLong(long l)
 {
     return (l >> 56) | ((l << 40) & 0x00FF000000000000) | ((l << 24) & 0x0000FF0000000000) | ((l << 8) & 0x000000FF00000000) | ((l >> 8) & 0x00000000FF000000) | ((l >> 24) & 0x0000000000FF0000) | ((l >> 40) & 0x000000000000FF00) | (l << 56);
-}
-
-void MessageWriter::WriteShort(short s)
-{
-    s = SwapUShort(s);
-    memcpy(buffer + position, &s, sizeof(s));
-    position += 2;
-}
-
-void MessageWriter::WriteUShort(unsigned short s)
-{
-    s = SwapUShort(s);
-    memcpy(buffer + position, &s, sizeof(s));
-    position += 2;
 }
 
 void MessageWriter::WriteByte(char b)
@@ -78,19 +64,48 @@ void MessageWriter::WriteBytes(char* bs, int len)
     position += i;
 }
 
+void MessageWriter::WriteShort(short s)
+{
+    s = SwapShort(s);
+    memcpy(buffer + position, &s, sizeof(s));
+    position += sizeof(s);
+}
+
+void MessageWriter::WriteUShort(unsigned short s)
+{
+    s = SwapShort(s);
+    memcpy(buffer + position, &s, sizeof(s));
+    position += sizeof(s);
+}
+
 void MessageWriter::WriteInt(int i)
 {
-    i = SwapUInt(i);
+    i = SwapInt(i);
     memcpy(buffer + position, &i, sizeof(i));
-    position += 4;
+    position += sizeof(i);
 }
 
 void MessageWriter::WriteUInt(unsigned int i)
 {
-    i = SwapUInt(i);
+    i = SwapInt(i);
     memcpy(buffer + position, &i, sizeof(i));
-    position += 4;
+    position += sizeof(i);
 }
+
+void MessageWriter::WriteLong(long l)
+{
+    l = SwapLong(l);
+    memcpy(buffer + position, &l, sizeof(l));
+    position += sizeof(l);
+}
+
+void MessageWriter::WriteULong(unsigned long l)
+{
+    l = SwapLong(l);
+    memcpy(buffer + position, &l, sizeof(l));
+    position += sizeof(l);
+}
+
 
 void MessageWriter::WriteUTF(char* str)
 {

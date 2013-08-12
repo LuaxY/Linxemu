@@ -14,20 +14,22 @@ public:
     MessageWriter(int);
     ~MessageWriter();
 
-    void    reset();
-    int     getPosition();
-    char*   getBuffer();
+    void reset();
+    int getPosition();
+    char* getBuffer();
 
-    unsigned short  SwapUShort(unsigned short);
-    unsigned int    SwapUInt(unsigned int);
-    unsigned long   SwapULong(unsigned long);
+    short SwapShort(short);
+    int SwapInt(int);
+    long SwapLong(long);
 
-    void WriteShort(short);
-    void WriteUShort(unsigned short);
     void WriteByte(char);
     void WriteBytes(char*, int);
+    void WriteShort(short);
+    void WriteUShort(unsigned short);
     void WriteInt(int);
     void WriteUInt(unsigned int);
+    void WriteLong(long);
+    void WriteULong(unsigned long);
     void WriteUTF(char*);
     void WriteBool(bool);
 };
