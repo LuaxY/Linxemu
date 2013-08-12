@@ -48,6 +48,16 @@ long MessageWriter::SwapLong(long l)
     return (l >> 56) | ((l << 40) & 0x00FF000000000000) | ((l << 24) & 0x0000FF0000000000) | ((l << 8) & 0x000000FF00000000) | ((l >> 8) & 0x00000000FF000000) | ((l >> 24) & 0x0000000000FF0000) | ((l >> 40) & 0x000000000000FF00) | (l << 56);
 }
 
+double MessageWriter::SwapDouble(double d)
+{
+    int * p = (int*)&d;
+    int tmp = p[0];
+    p[0] = SwapInt(p[1]);
+    p[1] = SwapInt(tmp);
+
+    return d;
+}
+
 void MessageWriter::WriteByte(char b)
 {
     buffer[position] = b;
@@ -106,6 +116,12 @@ void MessageWriter::WriteULong(unsigned long l)
     position += sizeof(l);
 }
 
+void MessageWriter::WriteDouble(double d)
+{
+    d = SwapDouble(d);
+    memcpy(buffer + position, &d, sizeof(d));
+    position += sizeof(d);
+}
 
 void MessageWriter::WriteUTF(char* str)
 {

@@ -21,6 +21,7 @@ public:
     short SwapShort(short);
     int SwapInt(int);
     long SwapLong(long);
+    double SwapDouble(double);
 
     void WriteByte(char);
     void WriteBytes(char*, int);
@@ -30,6 +31,7 @@ public:
     void WriteUInt(unsigned int);
     void WriteLong(long);
     void WriteULong(unsigned long);
+    void WriteDouble(double);
     void WriteUTF(char*);
     void WriteBool(bool);
 };
