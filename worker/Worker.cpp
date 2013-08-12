@@ -26,9 +26,6 @@ void* Worker::handler(void *ptr)
     {
         if(!messagesQueue.empty())
         {
-            /*Logger::Log(WORKER, sLog(), "Messsages queue: ", true, false);
-            cout << i << endl;*/
-
             pthread_mutex_lock(&mutex_stock);
                 Message *message = messagesQueue.front();
                 messagesQueue.pop();

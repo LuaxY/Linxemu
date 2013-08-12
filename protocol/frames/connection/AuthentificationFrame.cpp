@@ -67,19 +67,21 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
             bool fail = true;
             int reason = 99;
 
-            SQLite::Database db("lnx.db");
-            SQLite::Statement query(db, "SELECT * FROM accounts WHERE login = ? AND password = ?");
-            query.bind(1, cim.user);
-            query.bind(2, cim.password);
+            mysqlpp::Connection db(false);
+            db.connect("linxemu", "127.0.0.1", "root", "root");
 
-            if(query.executeStep())
+            mysqlpp::Query queryUser = db.query("SELECT * FROM accounts WHERE login = %0q AND password = %1q");
+            queryUser.parse();
+            mysqlpp::StoreQueryResult resUser = queryUser.store(cim.user, cim.password);
+
+            if(!resUser.empty())
             {
-                int accountId = query.getColumn(0);
-                const char* login = query.getColumn(1);
-                int rank = query.getColumn(3);
-                int banned = query.getColumn(4);
-                int reinitialized = query.getColumn(5);
-                const char* nickname = query.getColumn(6);
+                int accountId = resUser[0]["id"];
+                const char* login = resUser[0]["login"];
+                int rank = resUser[0]["rank"];
+                int banned = resUser[0]["banned"];
+                int reinitialized = resUser[0]["reinitialized"];
+                const char* nickname = resUser[0]["nickname"];
 
                 bool isBanned = banned > 0 ? true : false;
                 bool isReinitialized = reinitialized > 0 ? true : false;
@@ -104,9 +106,23 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
                     packet->reset();
 
                     vector<GameServerInformations*> servers;
-                    GameServerInformations* test = new GameServerInformations();
-                    test->initGameServerInformations(900, NOJOIN, 0, true, 2, 0); // 900 = serveur test
-                    servers.push_back(test);
+
+                    mysqlpp::Query queryServersList = db.query("SELECT * FROM game_servers");
+                    mysqlpp::StoreQueryResult resServersList = queryServersList.store();
+
+                    for(size_t i = 0; i < resServersList.num_rows(); ++i)
+                    {
+                        int serverId = resServersList[i]["id"];
+                        int type = resServersList[i]["type"];
+                        int state = ONLINE;
+
+                        if(type > 0 && !hasRights)
+                            state = NOJOIN;
+
+                        GameServerInformations* gsi= new GameServerInformations();
+                        gsi->initGameServerInformations(serverId, state, 0, true, 1, 0); // 900 = serveur test
+                        servers.push_back(gsi);
+                    }
 
                     ServersListMessage slm;
                     slm.initServersListMessage(servers);
@@ -114,8 +130,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
 
                     NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
                     NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), slm.getInstance());
-
-                    delete test;
                 }
             }
             else

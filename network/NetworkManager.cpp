@@ -1,14 +1,4 @@
 #include "NetworkManager.h"
-#include <stdio.h>
-#include <time.h>
-
-NetworkManager::NetworkManager()
-{
-}
-
-NetworkManager::~NetworkManager()
-{
-}
 
 void NetworkManager::start(unsigned short port, unsigned short maxClients)
 {
@@ -25,14 +15,9 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
     if(ServerSocket == INVALID_SOCKET)
     {
-        perror("socket()");
+        Logger::Log(ERROR, sLog(), strerror(errno));
         exit(errno);
     }
-
-    /*srand(time(NULL));
-
-    port = ((int)rand()) % 3 + port;
-    cout << port << endl;*/
 
     ssin.sin_addr.s_addr = htonl(INADDR_ANY);
     ssin.sin_family = AF_INET;
@@ -42,19 +27,19 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
     if(setsockopt(ServerSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) < 0)
     {
-        perror("setsockopt()");
+        Logger::Log(ERROR, sLog(), strerror(errno));
         exit(errno);
     }
 
     if(bind(ServerSocket, (SOCKADDR *) &ssin, sizeof ssin) == SOCKET_ERROR)
     {
-        perror("bind()");
+        Logger::Log(ERROR, sLog(), strerror(errno));
         exit(errno);
     }
 
     if(listen(ServerSocket, maxClients) == SOCKET_ERROR)
     {
-        perror("listen()");
+        Logger::Log(ERROR, sLog(), strerror(errno));
         exit(errno);
     }
 
@@ -74,7 +59,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
         if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1)
         {
-            perror("select()");
+            Logger::Log(ERROR, sLog(), strerror(errno));
             exit(errno);
         }
 
@@ -91,7 +76,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
             if(ClientSocket == SOCKET_ERROR)
             {
-                perror("accept()");
+                Logger::Log(ERROR, sLog(), strerror(errno));
                 continue;
             }
 
@@ -111,7 +96,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
 
                     if((bufferSize = recv(client.sock, buffer, bufferSize - 1, 0)) < 0)
                     {
-                        perror("recv()");
+                        Logger::Log(ERROR, sLog(), strerror(errno));
                     }
 
                     if(bufferSize == 0)

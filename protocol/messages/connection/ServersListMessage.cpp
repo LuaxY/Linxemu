@@ -35,15 +35,13 @@ char* ServersListMessage::getMessageName()
 void ServersListMessage::pack(MessageWriter *output)
 {
     output->WriteUShort(servers.size());
-    for(int i = 0; i < servers.size(); i++)
+    for(GameServerInformations entry : servers)
     {
-        GameServerInformations* gsi = new GameServerInformations(servers[i]);
-        gsi->pack(output);
-        delete gsi;
+        entry.pack(output);
     }
 }
 
-void ServersListMessage::unpack(char *buffer)
+void ServersListMessage::unpack(char* buffer)
 {
     MessageReader *input = new MessageReader(buffer);
 

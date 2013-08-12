@@ -54,8 +54,8 @@ typedef struct Packet
 class NetworkManager
 {
     public:
-        NetworkManager();
-        ~NetworkManager();
+        NetworkManager(){};
+        ~NetworkManager(){};
         void start(unsigned short port, unsigned short maxClients);
 
         static string getClientIP(SOCKET ClientSocket);
