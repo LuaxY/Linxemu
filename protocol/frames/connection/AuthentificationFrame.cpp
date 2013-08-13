@@ -121,15 +121,26 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                     {
                         int serverId = resServersList[i]["id"];
                         int type = resServersList[i]["type"];
+                        const char* serverDB = resServersList[i]["database"];
                         int state = ONLINE;
+
+                        database->db->select_db(serverDB);
+
+                        mysqlpp::Query queryCountCharacters = database->db->query("SELECT COUNT(*) as count FROM characters WHERE accountId = %0");
+                        queryCountCharacters.parse();
+                        mysqlpp::StoreQueryResult resCountCharacters = queryCountCharacters.store(accountId);
+
+                        int count = resCountCharacters[0]["count"];
 
                         if(type > 0 && !hasRights)
                             state = NOJOIN;
 
                         GameServerInformations* gsi= new GameServerInformations();
-                        gsi->initGameServerInformations(serverId, state, 0, true, 1, 0);
+                        gsi->initGameServerInformations(serverId, state, 0, true, count, 0);
                         servers.push_back(gsi);
                     }
+
+                    database->selectLogin();
 
                     ServersListMessage slm;
                     slm.initServersListMessage(servers);

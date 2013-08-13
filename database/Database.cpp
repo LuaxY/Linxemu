@@ -14,11 +14,21 @@ void Database::init()
 {
     Config* config = Config::Instance();
 
-    const char* database = config->database.c_str();
-    const char* host = config->host.c_str();
-    const char* username = config->username.c_str();
-    const char* password = config->password.c_str();
+    const string database = config->database;
+    const string host = config->host;
+    const string username = config->username;
+    const string password = config->password;
 
-    db = new mysqlpp::Connection(true);
-    db->connect(database, host, username, password);
+    db = new mysqlpp::Connection(false);
+    if(!db->connect(database.c_str(), host.c_str(), username.c_str(), password.c_str()))
+    {
+        Logger::Log(ERROR, sLog(), "Unable to connect to the database '" + database + "' (" + username + ":" + password + "@" + host + ")");
+        exit(1);
+    }
+}
+
+void Database::selectLogin()
+{
+    Config* config = Config::Instance();
+    db->select_db(config->database);
 }

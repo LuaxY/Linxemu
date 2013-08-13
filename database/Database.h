@@ -3,6 +3,7 @@
 
 #include "mysql++.h"
 #include "../config/Config.h"
+#include "../utils/utils.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class Database
     public:
         static Database* Instance();
         void init();
+        void selectLogin();
         mysqlpp::Connection* db;
 
     private:
