@@ -18,6 +18,7 @@
 
 #include "../utils/utils.h"
 #include "../protocol/messages/INetworkMessage.h"
+#include "../config/AuthConfig.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -56,7 +57,7 @@ class NetworkManager
     public:
         NetworkManager(){};
         ~NetworkManager(){};
-        void start(unsigned short port, unsigned short maxClients);
+        void start();
 
         static string getClientIP(SOCKET ClientSocket);
         static string getClientPort(SOCKET ClientSocket);

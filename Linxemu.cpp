@@ -10,11 +10,13 @@ int main()
 {
     cout << "Linxemu (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
 
-    AuthConfig authConfig;
+    AuthConfig* authConfig = AuthConfig::Instance();
+    authConfig->init("config.ini");
+
     AuthServer authServer;
     Worker worker;
 
-    authServer.start(authConfig.getPort(), authConfig.getMaxClients());
+    authServer.start();
 
     return 42;
 }

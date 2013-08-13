@@ -1,8 +1,13 @@
 #include "NetworkManager.h"
 
-void NetworkManager::start(unsigned short port, unsigned short maxClients)
+void NetworkManager::start()
 {
-    clients = new Client[maxClients];
+    AuthConfig* config = AuthConfig::Instance();
+
+    unsigned short port = config->port;
+    unsigned short max_user = config->max_user;
+
+    clients = new Client[max_user];
 
     SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
     SOCKET ClientSocket;
@@ -37,7 +42,7 @@ void NetworkManager::start(unsigned short port, unsigned short maxClients)
         exit(errno);
     }
 
-    if(listen(ServerSocket, maxClients) == SOCKET_ERROR)
+    if(listen(ServerSocket, max_user) == SOCKET_ERROR)
     {
         Logger::Log(ERROR, sLog(), strerror(errno));
         exit(errno);
