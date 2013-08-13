@@ -14,6 +14,8 @@ class Config
         /** auth **/
         unsigned short port;
         unsigned short max_user;
+        unsigned int requiredVersion;
+        unsigned int currentVersion;
 
         /** database **/
         string host;

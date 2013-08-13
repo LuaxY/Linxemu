@@ -20,6 +20,12 @@ class AuthServer : public NetworkManager
         void onClientConnected(SOCKET ClientSocket);
         void onClientDisconnected(Client client, int number);
         void onDataReceive(Client client, Packet* packet);
+
+        unsigned int requiredVersion;
+        unsigned int currentVersion;
+        char *salt;
+        char *key;
+        ifstream::pos_type keySize;
 };
 
 #endif // AUTH_SERVER_H

@@ -4,6 +4,24 @@
 AuthServer::AuthServer()
 {
     Logger::Log(INFO, sLog(), "Start AuthServer ", true);
+
+    Config* config = Config::Instance();
+
+    requiredVersion = config->requiredVersion;
+    currentVersion = config->currentVersion;
+    salt = "hk2zaar9desn'@CD\"G84vF&zEK\")DT!U";
+
+    ifstream keyFile("key.bin", ios::in | ios::binary | ios::ate);
+    if(keyFile.is_open())
+    {
+        keySize = keyFile.tellg();
+        key = new char[keySize];
+        keyFile.seekg(0, ios::beg);
+        keyFile.read(key, keySize);
+        keyFile.close();
+    }
+    else
+        Logger::Log(ERROR, sLog(), "Unable to open key.bin");
 }
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
@@ -19,7 +37,7 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
 
     /** ProtocolRequired **/
     ProtocolRequired pr;
-    pr.initProtocolRequired(1542, 1547);
+    pr.initProtocolRequired(requiredVersion, currentVersion);
     pr.pack(data);
 
     writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
@@ -29,31 +47,15 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     data->reset();
     packet->reset();
 
-    /** HelloConnectMessage (à optimiser) **/
-    ifstream::pos_type size;
-    char *key;
-
-    ifstream keyFile("key.bin", ios::in | ios::binary | ios::ate);
-    if(keyFile.is_open())
-    {
-        size = keyFile.tellg();
-        key = new char[size];
-        keyFile.seekg(0, ios::beg);
-        keyFile.read(key, size);
-        keyFile.close();
-    }
-    else
-        Logger::Log(ERROR, sLog(), "Unable to open key.bin");
-
+    /** HelloConnectMessage **/
     HelloConnectMessage hcm;
-    hcm.initHelloConnectMessage("hk2zaar9desn'@CD\"G84vF&zEK\")DT!U", key, size);
+    hcm.initHelloConnectMessage(salt, key, keySize);
     hcm.pack(data);
 
     writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
     sendTo(c.sock, packet->getBuffer(), packet->getPosition(), hcm.getInstance());
 
     /** Delete packet **/
-    delete[] key;
     delete data;
     delete packet;
 }
