@@ -24,11 +24,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
             state = true;
             break;
 
-        case 182:
-            processMessage((BasicPingMessage*)message, client);
-            state = true;
-            break;
-
         case 888:
             processMessage((ClearIdentificationMessage*)message, client);
             state = true;
@@ -65,16 +60,6 @@ void AuthentificationFrame::processMessage(IdentificationMessage* message, Clien
 
     NetworkManager::writePacket(packet, rdm.getMessageId(), data->getBuffer(), data->getPosition());
     NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), rdm.getInstance());
-}
-
-void AuthentificationFrame::processMessage(BasicPingMessage* message, Client* client)
-{
-    BasicPongMessage bpm;
-    bpm.initBasicPongMessage(true);
-    bpm.pack(data);
-
-    NetworkManager::writePacket(packet, bpm.getMessageId(), data->getBuffer(), data->getPosition());
-    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), bpm.getInstance());
 }
 
 void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, Client* client)

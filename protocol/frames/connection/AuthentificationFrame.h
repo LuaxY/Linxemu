@@ -21,7 +21,6 @@ class AuthentificationFrame : public IFrame
         MessageWriter *packet;
 
         void processMessage(IdentificationMessage* message, Client* client);
-        void processMessage(BasicPingMessage* message, Client* client);
         void processMessage(ClearIdentificationMessage* message, Client* client);
 };
 

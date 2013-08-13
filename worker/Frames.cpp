@@ -3,6 +3,7 @@
 void Frames::Register()
 {
     addFrame(new AuthentificationFrame);
+    addFrame(new LatencyFrame);
 }
 
 bool Frames::processMessage(INetworkMessage* message, Client* client)
