@@ -81,80 +81,93 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
 {
     ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
 
-    bool fail = true;
-    int reason = 99;
+    bool failAuth = true;
+    int reason = UNKNOWN_AUTH_ERROR;
 
-    mysqlpp::Connection db(false);
-    db.connect("linxemu", "127.0.0.1", "root", "root");
+    Database* database = Database::Instance();
 
-    mysqlpp::Query queryUser = db.query("SELECT *, UNIX_TIMESTAMP(subscriptionEndDate) as subEndDate, UNIX_TIMESTAMP(accountCreation) as accCreation FROM accounts WHERE login = %0q AND password = %1q");
-    queryUser.parse();
-    mysqlpp::StoreQueryResult resUser = queryUser.store(cim.user, cim.password);
-
-    if(!resUser.empty())
+    try
     {
-        int accountId = resUser[0]["id"];
-        const char* login = resUser[0]["login"];
-        int rank = resUser[0]["rank"];
-        int banned = resUser[0]["banned"];
-        int reinitialized = resUser[0]["reinitialized"];
-        const char* nickname = resUser[0]["nickname"];
-        double subscriptionEndDate = resUser[0]["subEndDate"];
-        double accountCreation = resUser[0]["accCreation"];
+        mysqlpp::Query queryUser = database->db->query("SELECT *, UNIX_TIMESTAMP(subscriptionEndDate) as subEndDate, UNIX_TIMESTAMP(accountCreation) as accCreation FROM accounts WHERE login = %0q AND password = %1q");
+        queryUser.parse();
+        mysqlpp::StoreQueryResult resUser = queryUser.store(cim.user, cim.password);
 
-        bool isBanned = banned > 0 ? true : false;
-        bool isReinitialized = reinitialized > 0 ? true : false;
-        bool hasRights = rank > 0 ? true : false;
-
-        if(isBanned)
-            reason = BANNED;
-        else if(isReinitialized)
-            reason = CREDENTIALS_RESET;
-        else
+        if(!resUser.empty())
         {
-            fail = false;
+            int accountId = resUser[0]["id"];
+            const char* login = resUser[0]["login"];
+            int rank = resUser[0]["rank"];
+            int banned = resUser[0]["banned"];
+            int reinitialized = resUser[0]["reinitialized"];
+            const char* nickname = resUser[0]["nickname"];
+            double subscriptionEndDate = resUser[0]["subEndDate"];
+            double accountCreation = resUser[0]["accCreation"];
 
-            IdentificationSuccessMessage ism;
-            ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", subscriptionEndDate*1000, false, accountCreation*1000);
-            ism.pack(data);
+            bool isBanned = banned > 0 ? true : false;
+            bool isReinitialized = reinitialized > 0 ? true : false;
+            bool hasRights = rank > 0 ? true : false;
 
-            NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ism.getInstance());
-
-            data->reset();
-            packet->reset();
-
-            vector<GameServerInformations*> servers;
-
-            mysqlpp::Query queryServersList = db.query("SELECT * FROM game_servers");
-            mysqlpp::StoreQueryResult resServersList = queryServersList.store();
-
-            for(size_t i = 0; i < resServersList.num_rows(); ++i)
+            if(isBanned)
+                reason = BANNED;
+            else if(isReinitialized)
+                reason = CREDENTIALS_RESET;
+            else
             {
-                int serverId = resServersList[i]["id"];
-                int type = resServersList[i]["type"];
-                int state = ONLINE;
+                failAuth = false;
 
-                if(type > 0 && !hasRights)
-                    state = NOJOIN;
+                IdentificationSuccessMessage ism;
+                ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", subscriptionEndDate*1000, false, accountCreation*1000);
+                ism.pack(data);
 
-                GameServerInformations* gsi= new GameServerInformations();
-                gsi->initGameServerInformations(serverId, state, 0, true, 1, 0); // 900 = serveur test
-                servers.push_back(gsi);
+                NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());
+                NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ism.getInstance());
+
+                data->reset();
+                packet->reset();
+
+                try
+                {
+                    vector<GameServerInformations*> servers;
+
+                    mysqlpp::Query queryServersList = database->db->query("SELECT * FROM game_servers");
+                    mysqlpp::StoreQueryResult resServersList = queryServersList.store();
+
+                    for(size_t i = 0; i < resServersList.num_rows(); ++i)
+                    {
+                        int serverId = resServersList[i]["id"];
+                        int type = resServersList[i]["type"];
+                        int state = ONLINE;
+
+                        if(type > 0 && !hasRights)
+                            state = NOJOIN;
+
+                        GameServerInformations* gsi= new GameServerInformations();
+                        gsi->initGameServerInformations(serverId, state, 0, true, 1, 0);
+                        servers.push_back(gsi);
+                    }
+
+                    ServersListMessage slm;
+                    slm.initServersListMessage(servers);
+                    slm.pack(data);
+
+                    NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
+                    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), slm.getInstance());
+                }
+                catch(const mysqlpp::BadQuery &e)
+                {
+                    Logger::Log(ERROR, sLog(), e.what());
+                }
             }
-
-            ServersListMessage slm;
-            slm.initServersListMessage(servers);
-            slm.pack(data);
-
-            NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), slm.getInstance());
         }
+        else
+            reason = WRONG_CREDENTIALS;
     }
-    else
-        reason = WRONG_CREDENTIALS;
+    catch(const mysqlpp::BadQuery &e)
+    {
+        Logger::Log(ERROR, sLog(), e.what());
+    }
 
-    if(fail)
+    if(failAuth)
     {
         IdentificationFailedMessage ifm;
         ifm.initIdentificationFailedMessage(reason);

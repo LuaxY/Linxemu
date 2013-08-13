@@ -2,7 +2,7 @@
 
 void NetworkManager::start()
 {
-    AuthConfig* config = AuthConfig::Instance();
+    Config* config = Config::Instance();
 
     unsigned short port = config->port;
     unsigned short max_user = config->max_user;

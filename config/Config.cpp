@@ -1,16 +1,16 @@
-#include "AuthConfig.h"
+#include "Config.h"
 
-AuthConfig* AuthConfig::m_pInstance = NULL;
+Config* Config::m_pInstance = NULL;
 
-AuthConfig* AuthConfig::Instance()
+Config* Config::Instance()
 {
     if(!m_pInstance)
-        m_pInstance = new AuthConfig;
+        m_pInstance = new Config;
 
     return m_pInstance;
 }
 
-void AuthConfig::init(string config_file)
+void Config::init(string config_file)
 {
     INIReader reader(config_file);
 

@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "config/AuthConfig.h"
+#include "config/Config.h"
+#include "database/Database.h"
 #include "worker/Worker.h"
 #include "network/AuthServer.h"
 
@@ -10,8 +11,11 @@ int main()
 {
     cout << "Linxemu (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
 
-    AuthConfig* authConfig = AuthConfig::Instance();
-    authConfig->init("config.ini");
+    Config* config = Config::Instance();
+    config->init("config.ini");
+
+    Database* database = Database::Instance();
+    database->init();
 
     AuthServer authServer;
     Worker worker;

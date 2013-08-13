@@ -18,7 +18,7 @@
 
 #include "../utils/utils.h"
 #include "../protocol/messages/INetworkMessage.h"
-#include "../config/AuthConfig.h"
+#include "../config/Config.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1

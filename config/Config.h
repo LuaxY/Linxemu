@@ -1,14 +1,14 @@
-#ifndef AUTH_CONFIG_H
-#define AUTH_CONFIG_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
 #include "INIReader.h"
 
 using namespace std;
 
-class AuthConfig
+class Config
 {
     public:
-        static AuthConfig* Instance();
+        static Config* Instance();
         void init(string);
 
         /** auth **/
@@ -22,10 +22,10 @@ class AuthConfig
         string database;
 
     private:
-        AuthConfig(){};
-        AuthConfig(AuthConfig const&){};
-        AuthConfig& operator=(AuthConfig const&){};
-        static AuthConfig* m_pInstance;
+        Config(){};
+        Config(Config const&){};
+        Config& operator=(Config const&){};
+        static Config* m_pInstance;
 };
 
-#endif // AUTH_CONFIG_H
+#endif // CONFIG_H

@@ -2,7 +2,7 @@
 #define AUTHENTIFICATION_FRAME_H
 
 #include "../../../utils/utils.h"
-#include "../../../database/mysql++.h"
+#include "../../../database/Database.h"
 #include "../IFrame.h"
 #include "../../enums/IdentificationFailureReasonEnum.h"
 #include "../../enums/ServerStatusEnum.h"
