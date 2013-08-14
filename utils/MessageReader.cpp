@@ -27,7 +27,7 @@ signed short MessageReader::ReadShort()
 {
     signed short s =
     buffer[position] * 256 +
-    buffer[position +1 ];
+    buffer[position + 1];
 
     position += 2;
 
@@ -88,9 +88,9 @@ unsigned int MessageReader::ReadUInt()
 {
     unsigned int i =
         (unsigned char)buffer[position] * 16777216 +
-        (unsigned char)buffer[position+1] * 65536 +
-        (unsigned char)buffer[position+2] * 256 +
-        (unsigned char)buffer[position+3];
+        (unsigned char)buffer[position + 1] * 65536 +
+        (unsigned char)buffer[position + 2] * 256 +
+        (unsigned char)buffer[position + 3];
 
     position += 4;
     return i;

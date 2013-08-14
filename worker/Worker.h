@@ -19,7 +19,7 @@ using namespace std;
 
 typedef struct Message
 {
-    Client client;
+    Client* client;
     unsigned short messageId;
     unsigned short messageLength;
     Packet* packet;
@@ -30,7 +30,7 @@ class Worker
     public:
         Worker();
         void run();
-        static bool addMessage(Client client, unsigned short messageId, unsigned short messageLength, Packet* packet);
+        static bool addMessage(Client* client, unsigned short messageId, unsigned short messageLength, Packet* packet);
 
         static queue<Message*> messagesQueue;
     private:

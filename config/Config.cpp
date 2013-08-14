@@ -17,8 +17,8 @@ void Config::init(string config_file)
     /** auth **/
     port = reader.GetInteger("auth", "port", 1337);
     max_user = reader.GetInteger("auth", "max_user", 200);
-    max_user = reader.GetInteger("auth", "requiredVersion", 0);
-    max_user = reader.GetInteger("auth", "currentVersion", 0);
+    requiredVersion = reader.GetInteger("auth", "requiredVersion", 0);
+    currentVersion = reader.GetInteger("auth", "currentVersion", 0);
 
     /** database **/
     host = reader.Get("database", "host", "127.0.0.1");

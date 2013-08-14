@@ -18,8 +18,8 @@ class AuthServer : public NetworkManager
 
     private:
         void onClientConnected(SOCKET ClientSocket);
-        void onClientDisconnected(Client client, int number);
-        void onDataReceive(Client client, Packet* packet);
+        void onClientDisconnected(Client* client, int i);
+        void onDataReceive(Client* client, Packet* packet);
 
         unsigned int requiredVersion;
         unsigned int currentVersion;

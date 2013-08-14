@@ -38,5 +38,5 @@ void LatencyFrame::processMessage(BasicPingMessage* message, Client* client)
     bpm.pack(data);
 
     NetworkManager::writePacket(packet, bpm.getMessageId(), data->getBuffer(), data->getPosition());
-    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), bpm.getInstance());
+    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), bpm.getInstance());
 }

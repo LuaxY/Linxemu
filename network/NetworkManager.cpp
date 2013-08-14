@@ -5,18 +5,14 @@ void NetworkManager::start()
     Config* config = Config::Instance();
 
     unsigned short port = config->port;
-    unsigned short max_user = config->max_user;
-
-    clients = new Client[max_user];
+    max_user = config->max_user;
 
     SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
     SOCKET ClientSocket;
     SOCKADDR_IN ssin = {0};
-    int i, j;
-    nbClients = 0;
+    int i, j, bufferSize = 0, option = 1;
     fd_set rdfs;
     char buffer[PACKET_MAX_SIZE];
-    int bufferSize = 0;
 
     if(ServerSocket == INVALID_SOCKET)
     {
@@ -27,8 +23,6 @@ void NetworkManager::start()
     ssin.sin_addr.s_addr = htonl(INADDR_ANY);
     ssin.sin_family = AF_INET;
     ssin.sin_port = htons(port);
-
-    int option = 1;
 
     if(setsockopt(ServerSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) < 0)
     {
@@ -56,11 +50,8 @@ void NetworkManager::start()
         FD_SET(STDIN_FILENO, &rdfs);
         FD_SET(ServerSocket, &rdfs);
 
-        for(i = 0; i < nbClients; i++)
-        {
-            FD_SET(clients[i].sock, &rdfs);
-            FD_SET(clients[i].phase, &rdfs);
-        }
+        for(i = 0; i < clients.size(); i++)
+            FD_SET(clients[i]->socket, &rdfs);
 
         if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1)
         {
@@ -69,9 +60,7 @@ void NetworkManager::start()
         }
 
         if(FD_ISSET(STDIN_FILENO, &rdfs))
-        {
             break;
-        }
         else if(FD_ISSET(ServerSocket, &rdfs))
         {
             SOCKADDR_IN csin = {0};
@@ -92,28 +81,21 @@ void NetworkManager::start()
         }
         else
         {
-            for(i = 0; i < nbClients; i++)
+            for(i = 0; i < clients.size(); i++)
             {
-                if(FD_ISSET(clients[i].sock, &rdfs))
+                if(FD_ISSET(clients[i]->socket, &rdfs))
                 {
-                    Client client = clients[i];
+                    Client* client = clients[i];
                     bufferSize = 0;
 
-                    if((bufferSize = recv(client.sock, buffer, bufferSize - 1, 0)) < 0)
-                    {
+                    if((bufferSize = recv(client->socket, buffer, PACKET_MAX_SIZE, 0)) < 0)
                         Logger::Log(ERROR, sLog(), strerror(errno));
-                    }
 
                     if(bufferSize == 0)
-                    {
                         onClientDisconnected(client, i);
-                    }
                     else
                     {
-                        buffer[bufferSize] = '\0';
-
-                        for(j = 0; j <= bufferSize; j++){ client.bufferQueue.push(buffer[j]); }
-
+                        for(j = 0; j <= bufferSize-1; j++){ client->bufferQueue.push(buffer[j]); }
                         PacketParser(client);
                     }
 
@@ -153,55 +135,55 @@ string NetworkManager::getClientPort(SOCKET ClientSocket)
     return portString.str();
 }
 
-void NetworkManager::PacketParser(Client client)
+void NetworkManager::PacketParser(Client* client)
 {
     bool newPacket = true;
 
     while(newPacket)
     {
-        if(client.phase == NEW_PACKET && client.bufferQueue.size() >= 2)
+        if(client->phase == NEW_PACKET && client->bufferQueue.size() >= 2)
         {
             unsigned short staticHeader = 0;
             char header[2];
 
-            header[0] = client.bufferQueue.front();
-            client.bufferQueue.pop();
-            header[1] = client.bufferQueue.front();
-            client.bufferQueue.pop();
+            header[0] = client->bufferQueue.front();
+            client->bufferQueue.pop();
+            header[1] = client->bufferQueue.front();
+            client->bufferQueue.pop();
 
             MessageReader *headerReader = new MessageReader(header);
 
             staticHeader = headerReader->ReadUShort();
-            client.lastMessageId = getMessageId(staticHeader);
-            client.lastMessageLengthType = getMessageLengthType(staticHeader);
-            client.phase = HEADER_OK;
+            client->lastMessageId = getMessageId(staticHeader);
+            client->lastMessageLengthType = getMessageLengthType(staticHeader);
+            client->phase = HEADER_OK;
 
             delete headerReader;
         }
 
-        if(client.phase == HEADER_OK && client.bufferQueue.size() >= client.lastMessageLengthType)
+        if(client->phase == HEADER_OK && client->bufferQueue.size() >= client->lastMessageLengthType)
         {
-            char length[client.lastMessageLengthType];
+            char length[client->lastMessageLengthType];
 
-            switch(client.lastMessageLengthType)
+            switch(client->lastMessageLengthType)
             {
                 case 1:
-                    length[0] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
+                    length[0] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
                     break;
                 case 2:
-                    length[0] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
-                    length[1] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
+                    length[0] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
+                    length[1] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
                     break;
                 case 3:
-                    length[0] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
-                    length[1] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
-                    length[2] = client.bufferQueue.front();
-                    client.bufferQueue.pop();
+                    length[0] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
+                    length[1] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
+                    length[2] = client->bufferQueue.front();
+                    client->bufferQueue.pop();
                     break;
                 case 0:
                 default:
@@ -210,21 +192,21 @@ void NetworkManager::PacketParser(Client client)
 
             MessageReader *lengthReader = new MessageReader(length);
 
-            client.lastMessageLength = readMessageLength(client.lastMessageLengthType, lengthReader);
-            client.phase = LENGTH_OK;
+            client->lastMessageLength = readMessageLength(client->lastMessageLengthType, lengthReader);
+            client->phase = LENGTH_OK;
 
             delete lengthReader;
         }
 
-        if(client.phase == LENGTH_OK && client.bufferQueue.size() >= client.lastMessageLength)
+        if(client->phase == LENGTH_OK && client->bufferQueue.size() >= client->lastMessageLength)
         {
             int i;
             char data[PACKET_MAX_SIZE];
 
-            for(i = 0; i < client.lastMessageLength; i++)
+            for(i = 0; i < client->lastMessageLength; i++)
             {
-                data[i] = client.bufferQueue.front();
-                client.bufferQueue.pop();
+                data[i] = client->bufferQueue.front();
+                client->bufferQueue.pop();
             }
 
             data[i] = '\0';
@@ -232,21 +214,21 @@ void NetworkManager::PacketParser(Client client)
             MessageReader *dataReader = new MessageReader(data);
 
             Packet *packet = new Packet();
-            packet->messageId = client.lastMessageId;
-            packet->messageLength = client.lastMessageLength;
-            packet->buffer = dataReader->ReadBytes(client.lastMessageLength);
+            packet->messageId = client->lastMessageId;
+            packet->messageLength = client->lastMessageLength;
+            packet->buffer = dataReader->ReadBytes(client->lastMessageLength);
 
             onDataReceive(client, packet);
 
             delete dataReader;
 
             /** Clear state **/
-            client.lastMessageId = 0;
-            client.lastMessageLength = 0;
-            client.lastMessageLengthType = 0;
-            client.phase = NEW_PACKET;
+            client->lastMessageId = 0;
+            client->lastMessageLength = 0;
+            client->lastMessageLengthType = 0;
+            client->phase = NEW_PACKET;
 
-            if(client.bufferQueue.size() >= 2)
+            if(client->bufferQueue.size() >= 2)
                 continue;
         }
 

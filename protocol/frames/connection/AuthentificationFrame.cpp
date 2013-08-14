@@ -59,7 +59,7 @@ void AuthentificationFrame::processMessage(IdentificationMessage* message, Clien
     rdm.pack(data);
 
     NetworkManager::writePacket(packet, rdm.getMessageId(), data->getBuffer(), data->getPosition());
-    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), rdm.getInstance());
+    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), rdm.getInstance());
 }
 
 void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, Client* client)
@@ -101,11 +101,11 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                 failAuth = false;
 
                 IdentificationSuccessMessage ism;
-                ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", subscriptionEndDate*1000, false, accountCreation*1000);
+                ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", hasRights ? 0 : subscriptionEndDate*1000, false, accountCreation*1000);
                 ism.pack(data);
 
                 NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());
-                NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ism.getInstance());
+                NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ism.getInstance());
 
                 data->reset();
                 packet->reset();
@@ -122,22 +122,29 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                         int serverId = resServersList[i]["id"];
                         int type = resServersList[i]["type"];
                         const char* serverDB = resServersList[i]["database"];
-                        int state = ONLINE;
+                        int status = resServersList[i]["status"];
 
-                        database->db->select_db(serverDB);
+                        try
+                        {
+                            database->db->select_db(serverDB);
 
-                        mysqlpp::Query queryCountCharacters = database->db->query("SELECT COUNT(*) as count FROM characters WHERE accountId = %0");
-                        queryCountCharacters.parse();
-                        mysqlpp::StoreQueryResult resCountCharacters = queryCountCharacters.store(accountId);
+                            mysqlpp::Query queryCountCharacters = database->db->query("SELECT COUNT(*) as count FROM characters WHERE accountId = %0");
+                            queryCountCharacters.parse();
+                            mysqlpp::StoreQueryResult resCountCharacters = queryCountCharacters.store(accountId);
 
-                        int count = resCountCharacters[0]["count"];
+                            int count = resCountCharacters[0]["count"];
 
-                        if(type > 0 && !hasRights)
-                            state = NOJOIN;
+                            if(type > 0 && !hasRights)
+                                status = NOJOIN;
 
-                        GameServerInformations* gsi= new GameServerInformations();
-                        gsi->initGameServerInformations(serverId, state, 0, true, count, 0);
-                        servers.push_back(gsi);
+                            GameServerInformations* gsi= new GameServerInformations();
+                            gsi->initGameServerInformations(serverId, status, 0, true, count, 0);
+                            servers.push_back(gsi);
+                        }
+                        catch(const mysqlpp::BadQuery &e)
+                        {
+                            Logger::Log(ERROR, sLog(), e.what());
+                        }
                     }
 
                     database->selectLogin();
@@ -147,7 +154,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                     slm.pack(data);
 
                     NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
-                    NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), slm.getInstance());
+                    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), slm.getInstance());
                 }
                 catch(const mysqlpp::BadQuery &e)
                 {
@@ -170,6 +177,6 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
         ifm.pack(data);
 
         NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
-        NetworkManager::sendTo(client->sock, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+        NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
     }
 }

@@ -18,7 +18,7 @@ void* Worker::handler(void *ptr)
 
     rawParser.Register();
     frames.Register();
-    Worker *worker = (Worker*)&ptr;
+    Worker* worker = (Worker*)&ptr;
 
     int i = 1;
 
@@ -43,10 +43,10 @@ void* Worker::handler(void *ptr)
             else
             {
                 Logger::Log(DEBUG, sLog(), "[RCV] ", false);
-                cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << message->messageLength << " bytes from " << NetworkManager::getClientIP(message->client.sock) << ":" << NetworkManager::getClientPort(message->client.sock) << endl;
+                cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << message->messageLength << " bytes from " << NetworkManager::getClientIP(message->client->socket) << ":" << NetworkManager::getClientPort(message->client->socket) << endl;
 
                 /** Frames dispatcher **/
-                if(!frames.processMessage(netMessage, &(message->client)))
+                if(!frames.processMessage(netMessage, message->client))
                     Logger::Log(ERROR, sLog(), "No frame could not resolve the message");
             }
 
@@ -60,9 +60,9 @@ void* Worker::handler(void *ptr)
     }
 }
 
-bool Worker::addMessage(Client client, unsigned short messageId, unsigned short messageLength, Packet* packet)
+bool Worker::addMessage(Client* client, unsigned short messageId, unsigned short messageLength, Packet* packet)
 {
-    Message *message = new Message;
+    Message* message = new Message;
 
     message->client = client;
     message->messageId = messageId;

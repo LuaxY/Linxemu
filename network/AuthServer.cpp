@@ -26,50 +26,61 @@ AuthServer::AuthServer()
 
 void AuthServer::onClientConnected(SOCKET ClientSocket)
 {
-    Client c = {ClientSocket};
-    clients[nbClients] = c;
-    nbClients++;
-
-    Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
-
     MessageWriter *data = new MessageWriter();
     MessageWriter *packet = new MessageWriter();
 
-    /** ProtocolRequired **/
-    ProtocolRequired pr;
-    pr.initProtocolRequired(requiredVersion, currentVersion);
-    pr.pack(data);
+    if(clients.size() >= max_user)
+    {
+        IdentificationFailedMessage ifm;
+        ifm.initIdentificationFailedMessage(5);
+        ifm.pack(data);
 
-    writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), pr.getInstance());
+        writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
+        sendTo(ClientSocket, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+    }
+    else
+    {
+        Client *newClient = new Client;
+        newClient->socket = ClientSocket;
+        clients.push_back(newClient);
 
-    /** Clear packet **/
-    data->reset();
-    packet->reset();
+        Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
 
-    /** HelloConnectMessage **/
-    HelloConnectMessage hcm;
-    hcm.initHelloConnectMessage(salt, key, keySize);
-    hcm.pack(data);
+        /** ProtocolRequired **/
+        ProtocolRequired pr;
+        pr.initProtocolRequired(requiredVersion, currentVersion);
+        pr.pack(data);
 
-    writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
-    sendTo(c.sock, packet->getBuffer(), packet->getPosition(), hcm.getInstance());
+        writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
+        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), pr.getInstance());
 
-    /** Delete packet **/
-    delete data;
-    delete packet;
+        /** Clear packet **/
+        data->reset();
+        packet->reset();
+
+        /** HelloConnectMessage **/
+        HelloConnectMessage hcm;
+        hcm.initHelloConnectMessage(salt, key, keySize);
+        hcm.pack(data);
+
+        writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
+        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), hcm.getInstance());
+
+        /** Delete packet **/
+        delete data;
+        delete packet;
+    }
 }
 
-void AuthServer::onClientDisconnected(Client client, int number)
+void AuthServer::onClientDisconnected(Client* client, int i)
 {
-    Logger::Log(INFO, sLog(), "Client disconnected (" + getClientIP(client.sock) + ":" + getClientPort(client.sock) + ")");
+    Logger::Log(INFO, sLog(), "Client disconnected (" + getClientIP(client->socket) + ":" + getClientPort(client->socket) + ")");
 
-    closesocket(client.sock);
-    memmove(clients + number, clients + number + 1, (nbClients - number - 1) * sizeof(Client));
-    nbClients--;
+    closesocket(client->socket);
+    clients.erase(clients.begin()+i);
 }
 
-void AuthServer::onDataReceive(Client client, Packet* packet)
+void AuthServer::onDataReceive(Client* client, Packet* packet)
 {
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {

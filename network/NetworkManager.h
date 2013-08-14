@@ -15,10 +15,12 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
+#include <vector>
 
 #include "../utils/utils.h"
 #include "../protocol/messages/INetworkMessage.h"
 #include "../config/Config.h"
+#include "../common/Client.h"
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -33,9 +35,7 @@ typedef struct in_addr IN_ADDR;
 
 using namespace std;
 
-enum State { NEW_PACKET, HEADER_OK, LENGTH_OK };
-
-typedef struct Client
+/*typedef struct Client
 {
     SOCKET sock;
     State phase;
@@ -43,7 +43,7 @@ typedef struct Client
     unsigned short lastMessageId;
     unsigned short lastMessageLengthType;
     unsigned short lastMessageLength;
-};
+};*/
 
 typedef struct Packet
 {
@@ -67,18 +67,19 @@ class NetworkManager
         static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
 
     private:
-        void PacketParser(Client client);
+        void PacketParser(Client* client);
         unsigned short getMessageId(unsigned short firstByte);
         unsigned short getMessageLengthType(unsigned short firstByte);
         unsigned short readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet);
 
     protected:
         virtual void onClientConnected(SOCKET ClientSocket) = 0;
-        virtual void onClientDisconnected(Client client, int number) = 0;
-        virtual void onDataReceive(Client client, Packet* packet) = 0;
+        virtual void onClientDisconnected(Client* client, int i) = 0;
+        virtual void onDataReceive(Client* client, Packet* packet) = 0;
 
-        Client *clients;
-        int nbClients;
+        //Client *clients; // OLD
+        vector<Client*> clients;
+        unsigned short max_user;
 };
 
 #endif // NETWORK_MANAGER_H
