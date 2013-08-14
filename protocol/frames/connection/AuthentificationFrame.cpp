@@ -24,6 +24,11 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
             state = true;
             break;
 
+        case 40:
+            processMessage((ServerSelectionMessage*)message, client);
+            state = true;
+            break;
+
         case 888:
             processMessage((ClearIdentificationMessage*)message, client);
             state = true;
@@ -64,8 +69,6 @@ void AuthentificationFrame::processMessage(IdentificationMessage* message, Clien
 
 void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, Client* client)
 {
-    ClearIdentificationMessage cim((ClearIdentificationMessage*)message);
-
     bool failAuth = true;
     int reason = UNKNOWN_AUTH_ERROR;
 
@@ -75,7 +78,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
     {
         mysqlpp::Query queryUser = database->db->query("SELECT *, UNIX_TIMESTAMP(subscriptionEndDate) as subEndDate, UNIX_TIMESTAMP(accountCreation) as accCreation FROM accounts WHERE login = %0q AND password = %1q");
         queryUser.parse();
-        mysqlpp::StoreQueryResult resUser = queryUser.store(cim.user, cim.password);
+        mysqlpp::StoreQueryResult resUser = queryUser.store(message->user, message->password);
 
         if(!resUser.empty())
         {
@@ -137,7 +140,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                             if(type > 0 && !hasRights)
                                 status = NOJOIN;
 
-                            GameServerInformations* gsi= new GameServerInformations();
+                            GameServerInformations* gsi = new GameServerInformations();
                             gsi->initGameServerInformations(serverId, status, 0, true, count, 0);
                             servers.push_back(gsi);
                         }
@@ -178,5 +181,43 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
 
         NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
         NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+    }
+}
+
+void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Client* client)
+{
+    Database* database = Database::Instance();
+
+    try
+    {
+        mysqlpp::Query querySelectedServer = database->db->query("SELECT * FROM game_servers WHERE id = %0");
+        querySelectedServer.parse();
+        mysqlpp::StoreQueryResult resSelectedServer = querySelectedServer.store(message->serverId);
+
+        if(!resSelectedServer.empty())
+        {
+            const char* serverIP = resSelectedServer[0]["ip"];
+            unsigned short serverPort = resSelectedServer[0]["port"];
+
+            SelectedServerDataMessage ssdm;
+            ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, "abc");
+            ssdm.pack(data);
+
+            NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssdm.getInstance());
+        }
+        else
+        {
+            SelectedServerRefusedMessage ssrm;
+            ssrm.initSelectedServerRefusedMessage(message->serverId, SERVER_CONNECTION_ERROR_NO_REASON, STATUS_UNKNOWN);
+            ssrm.pack(data);
+
+            NetworkManager::writePacket(packet, ssrm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssrm.getInstance());
+        }
+    }
+    catch(const mysqlpp::BadQuery &e)
+    {
+        Logger::Log(ERROR, sLog(), e.what());
     }
 }

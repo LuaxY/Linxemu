@@ -10,6 +10,9 @@ void MessageReceiver::Register()
     FactoryMessage::registerClass(20, new IdentificationFailedMessage);
     FactoryMessage::registerClass(22, new IdentificationSuccessMessage);
     FactoryMessage::registerClass(30, new ServersListMessage);
+    FactoryMessage::registerClass(40, new ServerSelectionMessage);
+    FactoryMessage::registerClass(41, new SelectedServerRefusedMessage);
+    FactoryMessage::registerClass(42, new SelectedServerDataMessage);
     FactoryMessage::registerClass(182, new BasicPingMessage);
     FactoryMessage::registerClass(183, new BasicPongMessage);
     FactoryMessage::registerClass(888, new ClearIdentificationMessage);
