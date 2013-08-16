@@ -11,7 +11,7 @@ class Config
         static Config* Instance();
         void init(string);
 
-        /** auth **/
+        /** game **/
         unsigned short port;
         unsigned short max_user;
 

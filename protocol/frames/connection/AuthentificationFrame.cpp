@@ -205,6 +205,8 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
 
             NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
             NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssdm.getInstance());
+
+            shutdown(client->socket, 2);
         }
         else
         {
