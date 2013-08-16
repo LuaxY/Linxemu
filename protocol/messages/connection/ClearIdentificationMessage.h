@@ -6,27 +6,19 @@
 
 class ClearIdentificationMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        ClearIdentificationMessage(){};
-        ClearIdentificationMessage(ClearIdentificationMessage* message);
-        void initClearIdentificationMessage(char* _user, char* _password);
+	public:
+		INetworkMessage* getInstance() const;
+		void initClearIdentificationMessage(char* _user, char* _password);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 888;
+		static const int protocolId = 888;
 
-        /******* VARIABLES LIST *******/
-        char* user;
-        char* password;
-
-    private:
-        bool _isInitialized;
+		char* user;
+		char* password;
 };
 
 #endif // CLEAR_IDENTIFICATION_MESSAGE_H

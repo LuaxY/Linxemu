@@ -2,26 +2,13 @@
 
 INetworkMessage* ClearIdentificationMessage::getInstance() const
 {
-    return new ClearIdentificationMessage(*this);
-}
-
-ClearIdentificationMessage::ClearIdentificationMessage(ClearIdentificationMessage* message)
-{
-    user = message->user;
-    password = message->password;
+	return new ClearIdentificationMessage(*this);
 }
 
 void ClearIdentificationMessage::initClearIdentificationMessage(char* _user, char* _password)
 {
-    user = _user;
-    password = _password;
-
-	_isInitialized = true;
-}
-
-bool ClearIdentificationMessage::isInitialized()
-{
-	return _isInitialized;
+	user = _user;
+	password = _password;
 }
 
 int ClearIdentificationMessage::getMessageId()
@@ -42,18 +29,10 @@ void ClearIdentificationMessage::pack(MessageWriter *output)
 
 void ClearIdentificationMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	user = input->ReadUTF();
 	password = input->ReadUTF();
 
 	delete input;
-}
-
-void ClearIdentificationMessage::reset()
-{
-	user = NULL;
-	password = NULL;
-
-	_isInitialized = false;
 }

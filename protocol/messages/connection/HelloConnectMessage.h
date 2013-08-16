@@ -6,28 +6,20 @@
 
 class HelloConnectMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        HelloConnectMessage(){};
-        HelloConnectMessage(HelloConnectMessage* message);
-        void initHelloConnectMessage(char* _salt, char* _key, int _keyLen);
+	public:
+		INetworkMessage* getInstance() const;
+		void initHelloConnectMessage(char* _salt, char* _key, unsigned short _length);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 3;
+		static const int protocolId = 3;
 
-        /******* VARIABLES LIST *******/
-        char* salt;
-        char* key;
-        int keyLen;
-
-    private:
-        bool _isInitialized;
+		char* salt;
+		char* key;
+		unsigned short length;
 };
 
 #endif // HELLO_CONNECT_MESSAGE_H

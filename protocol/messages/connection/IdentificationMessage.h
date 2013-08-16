@@ -6,26 +6,17 @@
 
 class IdentificationMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        IdentificationMessage(){};
-        IdentificationMessage(IdentificationMessage* message);
-        void initIdentificationMessage();
+	public:
+		INetworkMessage* getInstance() const;
+		void initIdentificationMessage();
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 4;
+		static const int protocolId = 4;
 
-        /******* VARIABLES LIST *******/
-
-
-    private:
-        bool _isInitialized;
 };
 
 #endif // IDENTIFICATION_MESSAGE_H

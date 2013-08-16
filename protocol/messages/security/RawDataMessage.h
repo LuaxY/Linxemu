@@ -6,26 +6,19 @@
 
 class RawDataMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        RawDataMessage(){};
-        void initRawDataMessage(char* _content, unsigned short _length);
+	public:
+		INetworkMessage* getInstance() const;
+		void initRawDataMessage(char* _content, unsigned short _length);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 6253;
+		static const int protocolId = 6253;
 
-        /******* VARIABLES LIST *******/
-        char* content;
-        unsigned short length;
-
-    private:
-        bool _isInitialized;
+		char* content;
+		unsigned short length;
 };
 
 #endif // RAW_DATA_MESSAGE_H

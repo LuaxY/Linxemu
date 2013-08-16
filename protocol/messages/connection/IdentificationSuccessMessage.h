@@ -6,34 +6,26 @@
 
 class IdentificationSuccessMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        IdentificationSuccessMessage(){};
-        IdentificationSuccessMessage(IdentificationSuccessMessage* message);
-        void initIdentificationSuccessMessage(const char* login, const char* nickname, unsigned int accountId, char communityId, bool hasRights, char* secretQuestion, double subscriptionEndDate, bool wasAlreadyConnected, double accountCreation);
+	public:
+		INetworkMessage* getInstance() const;
+		void initIdentificationSuccessMessage(const char* _login, const char* _nickname, unsigned int _accountId, char _communityId, bool _hasRights, const char* _secretQuestion, double _subscriptionEndDate, bool _wasAlreadyConnected, double _accountCreation);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 22;
+		static const int protocolId = 22;
 
-        /******* VARIABLES LIST *******/
-        char* login;
-        char* nickname;
-        unsigned int accountId;
-        char communityId;
-        bool hasRights;
-        char* secretQuestion;
-        double subscriptionEndDate;
-        bool wasAlreadyConnected;
-        double accountCreation;
-
-    private:
-        bool _isInitialized;
+		char* login;
+		char* nickname;
+		unsigned int accountId;
+		char communityId;
+		bool hasRights;
+		char* secretQuestion;
+		double subscriptionEndDate;
+		bool wasAlreadyConnected;
+		double accountCreation;
 };
 
 #endif // IDENTIFICATION_SUCCESS_MESSAGE_H

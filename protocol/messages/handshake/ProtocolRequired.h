@@ -6,26 +6,19 @@
 
 class ProtocolRequired : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        ProtocolRequired(){};
-        void initProtocolRequired(unsigned int _requiredVersion, unsigned int _currentVersion);
+	public:
+		INetworkMessage* getInstance() const;
+		void initProtocolRequired(unsigned int _requiredVersion, unsigned int _currentVersion);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 1;
+		static const int protocolId = 1;
 
-        /******* VARIABLES LIST *******/
-        unsigned int requiredVersion;
-        unsigned int currentVersion;
-
-    private:
-        bool _isInitialized;
+		unsigned int requiredVersion;
+		unsigned int currentVersion;
 };
 
 #endif // PROTOCOL_REQUIRED_H

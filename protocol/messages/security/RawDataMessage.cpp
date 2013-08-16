@@ -2,20 +2,13 @@
 
 INetworkMessage* RawDataMessage::getInstance() const
 {
-    return new RawDataMessage(*this);
+	return new RawDataMessage(*this);
 }
 
 void RawDataMessage::initRawDataMessage(char* _content, unsigned short _length)
 {
 	content = _content;
 	length = _length;
-
-	_isInitialized = true;
-}
-
-bool RawDataMessage::isInitialized()
-{
-	return _isInitialized;
 }
 
 int RawDataMessage::getMessageId()
@@ -36,18 +29,10 @@ void RawDataMessage::pack(MessageWriter *output)
 
 void RawDataMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	length = input->ReadUShort();
 	content = input->ReadBytes(length);
 
 	delete input;
-}
-
-void RawDataMessage::reset()
-{
-	length = 0;
-	content = NULL;
-
-	_isInitialized = false;
 }

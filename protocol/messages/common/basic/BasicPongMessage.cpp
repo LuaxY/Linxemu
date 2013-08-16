@@ -2,19 +2,12 @@
 
 INetworkMessage* BasicPongMessage::getInstance() const
 {
-    return new BasicPongMessage(*this);
+	return new BasicPongMessage(*this);
 }
 
 void BasicPongMessage::initBasicPongMessage(bool _quiet)
 {
 	quiet = _quiet;
-
-	_isInitialized = true;
-}
-
-bool BasicPongMessage::isInitialized()
-{
-	return _isInitialized;
 }
 
 int BasicPongMessage::getMessageId()
@@ -34,17 +27,9 @@ void BasicPongMessage::pack(MessageWriter *output)
 
 void BasicPongMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	quiet = input->ReadBool();
 
 	delete input;
 }
-
-void BasicPongMessage::reset()
-{
-	quiet = false;
-
-	_isInitialized = false;
-}
-

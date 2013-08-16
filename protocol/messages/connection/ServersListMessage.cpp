@@ -2,24 +2,12 @@
 
 INetworkMessage* ServersListMessage::getInstance() const
 {
-    return new ServersListMessage(*this);
-}
-
-ServersListMessage::ServersListMessage(ServersListMessage* message)
-{
-    servers = message->servers;
+	return new ServersListMessage(*this);
 }
 
 void ServersListMessage::initServersListMessage(vector<GameServerInformations*> _servers)
 {
-    servers = _servers;
-
-	_isInitialized = true;
-}
-
-bool ServersListMessage::isInitialized()
-{
-	return _isInitialized;
+	servers = _servers;
 }
 
 int ServersListMessage::getMessageId()
@@ -34,23 +22,16 @@ char* ServersListMessage::getMessageName()
 
 void ServersListMessage::pack(MessageWriter *output)
 {
-    output->WriteUShort(servers.size());
+	output->WriteUShort(servers.size());
     for(GameServerInformations entry : servers)
     {
         entry.pack(output);
     }
 }
 
-void ServersListMessage::unpack(char* buffer)
+void ServersListMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	delete input;
-}
-
-void ServersListMessage::reset()
-{
-    servers.clear();
-
-	_isInitialized = false;
 }

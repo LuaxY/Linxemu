@@ -2,24 +2,12 @@
 
 INetworkMessage* IdentificationFailedMessage::getInstance() const
 {
-    return new IdentificationFailedMessage(*this);
-}
-
-IdentificationFailedMessage::IdentificationFailedMessage(IdentificationFailedMessage* message)
-{
-    reason = message->reason;
+	return new IdentificationFailedMessage(*this);
 }
 
 void IdentificationFailedMessage::initIdentificationFailedMessage(char _reason)
 {
-    reason = _reason;
-
-	_isInitialized = true;
-}
-
-bool IdentificationFailedMessage::isInitialized()
-{
-	return _isInitialized;
+	reason = _reason;
 }
 
 int IdentificationFailedMessage::getMessageId()
@@ -39,16 +27,9 @@ void IdentificationFailedMessage::pack(MessageWriter *output)
 
 void IdentificationFailedMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	reason = input->ReadByte();
 
 	delete input;
-}
-
-void IdentificationFailedMessage::reset()
-{
-	reason = '\99';
-
-	_isInitialized = false;
 }

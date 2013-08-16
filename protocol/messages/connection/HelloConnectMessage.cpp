@@ -2,28 +2,14 @@
 
 INetworkMessage* HelloConnectMessage::getInstance() const
 {
-    return new HelloConnectMessage(*this);
+	return new HelloConnectMessage(*this);
 }
 
-HelloConnectMessage::HelloConnectMessage(HelloConnectMessage* message)
+void HelloConnectMessage::initHelloConnectMessage(char* _salt, char* _key, unsigned short _length)
 {
-    salt = message->salt;
-    key = message->key;
-    keyLen = message->keyLen;
-}
-
-void HelloConnectMessage::initHelloConnectMessage(char* _salt, char* _key, int _keyLen)
-{
-    salt = _salt;
-    key = _key;
-    keyLen = _keyLen;
-
-	_isInitialized = true;
-}
-
-bool HelloConnectMessage::isInitialized()
-{
-	return _isInitialized;
+	salt = _salt;
+	key = _key;
+	length = _length;
 }
 
 int HelloConnectMessage::getMessageId()
@@ -39,29 +25,20 @@ char* HelloConnectMessage::getMessageName()
 void HelloConnectMessage::pack(MessageWriter *output)
 {
 	output->WriteUTF(salt);
-    output->WriteUShort(keyLen);
-    for(int i = 0; i < keyLen; i++)
+	output->WriteUShort(length);
+    for(int i = 0; i < length; i++)
         output->WriteByte(key[i]);
 }
 
 void HelloConnectMessage::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
+	MessageReader *input = new MessageReader(buffer);
 
 	salt = input->ReadUTF();
-	unsigned short keyLen = input->ReadUShort();
-	char byteKey = 0;
-
-	for(int i = 0; i < keyLen; i++)
+	length = input->ReadUShort();
+	key = new char[length];
+	for(int i = 0; i < length; i++)
         key[i] =  input->ReadByte();
 
 	delete input;
-}
-
-void HelloConnectMessage::reset()
-{
-	salt = NULL;
-	key = NULL;
-
-	_isInitialized = false;
 }

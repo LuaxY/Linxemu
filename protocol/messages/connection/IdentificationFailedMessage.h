@@ -6,26 +6,18 @@
 
 class IdentificationFailedMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        IdentificationFailedMessage(){};
-        IdentificationFailedMessage(IdentificationFailedMessage* message);
-        void initIdentificationFailedMessage(char _reason);
+	public:
+		INetworkMessage* getInstance() const;
+		void initIdentificationFailedMessage(char _reason);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 20;
+		static const int protocolId = 20;
 
-        /******* VARIABLES LIST *******/
-        char reason;
-
-    private:
-        bool _isInitialized;
+		char reason;
 };
 
-#endif // IDENTIFICATION_FAILED_MESSAGE_H
+#endif // IDENTIFICATIONFAILEDMESSAGE_H

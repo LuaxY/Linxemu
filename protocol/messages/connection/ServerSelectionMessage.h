@@ -6,26 +6,18 @@
 
 class ServerSelectionMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        ServerSelectionMessage(){};
-        ServerSelectionMessage(ServerSelectionMessage* message);
-        void initServerSelectionMessage(unsigned short _serverId);
+	public:
+		INetworkMessage* getInstance() const;
+		void initServerSelectionMessage(unsigned short _serverId);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 40;
+		static const int protocolId = 40;
 
-        /******* VARIABLES LIST *******/
-        unsigned short serverId;
-
-    private:
-        bool _isInitialized;
+		unsigned short serverId;
 };
 
 #endif // SERVER_SELECTION_MESSAGE_H

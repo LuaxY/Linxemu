@@ -1,5 +1,5 @@
-#ifndef SERVER_LIST_MESSAGE_H
-#define SERVER_LIST_MESSAGE_H
+#ifndef SERVERS_LIST_MESSAGE_H
+#define SERVERS_LIST_MESSAGE_H
 
 #include "../../../utils/utils.h"
 #include "../INetworkMessage.h"
@@ -8,26 +8,18 @@
 
 class ServersListMessage : public INetworkMessage
 {
-    public:
-        INetworkMessage* getInstance() const;
-        ServersListMessage(){};
-        ServersListMessage(ServersListMessage* message);
-        void initServersListMessage(vector<GameServerInformations*> _servers);
+	public:
+		INetworkMessage* getInstance() const;
+		void initServersListMessage(vector<GameServerInformations*> _servers);
 
-        int getMessageId();
-        char* getMessageName();
-        bool isInitialized();
-        void pack(MessageWriter *output);
-        void unpack(char *buffer);
-        void reset();
+		int getMessageId();
+		char* getMessageName();
+		void pack(MessageWriter *output);
+		void unpack(char *buffer);
 
-        static const int protocolId = 30;
+		static const int protocolId = 30;
 
-        /******* VARIABLES LIST *******/
-        vector<GameServerInformations*> servers;
-
-    private:
-        bool _isInitialized;
+		vector<GameServerInformations*> servers;
 };
 
-#endif // SERVER_LIST_MESSAGE_H
+#endif // SERVERS_LIST_MESSAGE_H
