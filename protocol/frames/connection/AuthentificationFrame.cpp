@@ -200,7 +200,7 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
             unsigned short serverPort = resSelectedServer[0]["port"];
 
             SelectedServerDataMessage ssdm;
-            ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, "abc");
+            ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, genToken(10));
             ssdm.pack(data);
 
             NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
