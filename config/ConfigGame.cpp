@@ -17,6 +17,8 @@ void Config::init(string config_file)
     /** game **/
     port = reader.GetInteger("game", "port", 5555);
     max_user = reader.GetInteger("game", "max_user", 200);
+    requiredVersion = reader.GetInteger("game", "requiredVersion", 0);
+    currentVersion = reader.GetInteger("game", "currentVersion", 0);
 
     /** database **/
     host = reader.Get("database", "host", "127.0.0.1");

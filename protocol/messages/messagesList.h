@@ -10,9 +10,14 @@
 #include "connection/ServerSelectionMessage.h" // 40
 #include "connection/SelectedServerRefusedMessage.h" // 41
 #include "connection/SelectedServerDataMessage.h" // 42
+#include "game/approach/HelloGameMessage.h" // 101
+#include "game/approach/AuthenticationTicketMessage.h" // 110
+#include "game/approach/AuthenticationTicketAcceptedMessage.h" // 111
+#include "game/approach/AuthenticationTicketRefusedMessage.h" // 112
 #include "common/basic/BasicPingMessage.h" // 182
 #include "common/basic/BasicPongMessage.h" // 183
 #include "connection/ClearIdentificationMessage.h" // 888
 #include "security/RawDataMessage.h" // 6253
+#include "game/approach/ServerSettingsMessage.h" // 6340
 
 #endif // MESSAGES_LIST_H

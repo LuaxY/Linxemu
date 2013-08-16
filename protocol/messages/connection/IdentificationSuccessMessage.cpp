@@ -30,12 +30,12 @@ char* IdentificationSuccessMessage::getMessageName()
 
 void IdentificationSuccessMessage::pack(MessageWriter *output)
 {
-    char box0 = 0;
-    box0 = BooleanByteWrapper::SetFlag(box0, 0, hasRights);
-    box0 = BooleanByteWrapper::SetFlag(box0, 1, wasAlreadyConnected);
+	char box0 = 0;
+	box0 = BooleanByteWrapper::SetFlag(box0, 0, hasRights);
+	box0 = BooleanByteWrapper::SetFlag(box0, 1, wasAlreadyConnected);
 
-    output->WriteByte(box0);
-    output->WriteUTF(login);
+	output->WriteByte(box0);
+ 	output->WriteUTF(login);
 	output->WriteUTF(nickname);
 	output->WriteUInt(accountId);
 	output->WriteByte(communityId);
@@ -44,4 +44,6 @@ void IdentificationSuccessMessage::pack(MessageWriter *output)
 	output->WriteDouble(accountCreation);
 }
 
-void IdentificationSuccessMessage::unpack(char *buffer){}
+void IdentificationSuccessMessage::unpack(char *buffer)
+{
+}

@@ -4,6 +4,7 @@ void Frames::Register()
 {
     addFrame(new AuthentificationFrame);
     addFrame(new LatencyFrame);
+    addFrame(new GameServerApproachFrame);
 }
 
 bool Frames::processMessage(INetworkMessage* message, Client* client)
