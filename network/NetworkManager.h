@@ -19,7 +19,11 @@
 
 #include "../utils/utils.h"
 #include "../protocol/messages/INetworkMessage.h"
-#include "../config/Config.h"
+#ifdef GAME
+#include "../config/ConfigGame.h"
+#else
+#include "../config/ConfigLogin.h"
+#endif
 #include "../common/Client.h"
 
 #define INVALID_SOCKET -1

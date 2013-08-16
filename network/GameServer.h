@@ -1,5 +1,5 @@
-#ifndef AUTH_SERVER_H
-#define AUTH_SERVER_H
+#ifndef GAME_SERVER_H
+#define GAME_SERVER_H
 
 #include <iostream>
 #include <cstring>
@@ -11,10 +11,10 @@
 
 using namespace std;
 
-class AuthServer : public NetworkManager
+class GameServer : public NetworkManager
 {
     public:
-        AuthServer();
+        GameServer();
 
     private:
         void onClientConnected(SOCKET ClientSocket);
@@ -23,9 +23,8 @@ class AuthServer : public NetworkManager
 
         unsigned int requiredVersion;
         unsigned int currentVersion;
-        char *salt;
         char *key;
         ifstream::pos_type keySize;
 };
 
-#endif // AUTH_SERVER_H
+#endif // GAME_SERVER_H

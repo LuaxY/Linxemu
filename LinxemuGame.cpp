@@ -1,26 +1,26 @@
 #include <iostream>
 
-#include "config/Config.h"
+#include "config/ConfigGame.h"
 #include "database/Database.h"
 #include "worker/Worker.h"
-#include "network/AuthServer.h"
+#include "network/GameServer.h"
 
 using namespace std;
 
 int main()
 {
-    cout << "Linxemu (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
+    cout << "Linxemu GAME (DEV) by Sorrow (" << __DATE__ << " " << __TIME__ << ")" << endl << endl;
 
     Config* config = Config::Instance();
-    config->init("config.ini");
+    config->init("game.ini");
 
     Database* database = Database::Instance();
     database->init();
 
-    AuthServer authServer;
+    GameServer gameServer;
     Worker worker;
 
-    authServer.start();
+    gameServer.start();
 
     return 42;
 }

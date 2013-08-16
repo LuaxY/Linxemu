@@ -2,7 +2,11 @@
 #define DATABASE_H
 
 #include "mysql++.h"
-#include "../config/Config.h"
+#ifdef GAME
+#include "../config/ConfigGame.h"
+#else
+#include "../config/ConfigLogin.h"
+#endif
 #include "../utils/utils.h"
 
 using namespace std;

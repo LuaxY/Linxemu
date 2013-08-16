@@ -21,6 +21,8 @@ class Client
         unsigned short lastMessageId;
         unsigned short lastMessageLengthType;
         unsigned short lastMessageLength;
+
+        char* salt;
 };
 
 #endif // CLIENT_H

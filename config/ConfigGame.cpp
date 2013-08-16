@@ -1,4 +1,4 @@
-#include "Config.h"
+#include "ConfigGame.h"
 
 Config* Config::m_pInstance = NULL;
 
@@ -14,15 +14,13 @@ void Config::init(string config_file)
 {
     INIReader reader(config_file);
 
-    /** auth **/
-    port = reader.GetInteger("auth", "port", 1337);
-    max_user = reader.GetInteger("auth", "max_user", 200);
-    requiredVersion = reader.GetInteger("auth", "requiredVersion", 0);
-    currentVersion = reader.GetInteger("auth", "currentVersion", 0);
+    /** game **/
+    port = reader.GetInteger("game", "port", 5555);
+    max_user = reader.GetInteger("game", "max_user", 200);
 
     /** database **/
     host = reader.Get("database", "host", "127.0.0.1");
     username = reader.Get("database", "username", "root");
     password = reader.Get("database", "password", "");
-    database = reader.Get("database", "database", "linxemu");
+    database = reader.Get("database", "database", "linxemu_jiva");
 }

@@ -1,15 +1,14 @@
-#include "AuthServer.h"
+#include "LoginServer.h"
 #include <fstream>
 
-AuthServer::AuthServer()
+LoginServer::LoginServer()
 {
-    Logger::Log(INFO, sLog(), "Start AuthServer ", true);
+    Logger::Log(INFO, sLog(), "Start LoginServer ", true);
 
     Config* config = Config::Instance();
 
     requiredVersion = config->requiredVersion;
     currentVersion = config->currentVersion;
-    salt = "hk2zaar9desn'@CD\"G84vF&zEK\")DT!U";
 
     ifstream keyFile("key.bin", ios::in | ios::binary | ios::ate);
     if(keyFile.is_open())
@@ -24,7 +23,7 @@ AuthServer::AuthServer()
         Logger::Log(ERROR, sLog(), "Unable to open key.bin");
 }
 
-void AuthServer::onClientConnected(SOCKET ClientSocket)
+void LoginServer::onClientConnected(SOCKET ClientSocket)
 {
     MessageWriter *data = new MessageWriter();
     MessageWriter *packet = new MessageWriter();
@@ -59,8 +58,10 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
         packet->reset();
 
         /** HelloConnectMessage **/
+        newClient->salt = genSalt(32);
+
         HelloConnectMessage hcm;
-        hcm.initHelloConnectMessage(salt, key, keySize);
+        hcm.initHelloConnectMessage(newClient->salt, key, keySize);
         hcm.pack(data);
 
         writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
@@ -72,15 +73,16 @@ void AuthServer::onClientConnected(SOCKET ClientSocket)
     }
 }
 
-void AuthServer::onClientDisconnected(Client* client, int i)
+void LoginServer::onClientDisconnected(Client* client, int i)
 {
     Logger::Log(INFO, sLog(), "Client disconnected (" + getClientIP(client->socket) + ":" + getClientPort(client->socket) + ")");
 
     closesocket(client->socket);
     clients.erase(clients.begin()+i);
+    delete client;
 }
 
-void AuthServer::onDataReceive(Client* client, Packet* packet)
+void LoginServer::onDataReceive(Client* client, Packet* packet)
 {
     if(!Worker::addMessage(client, packet->messageId, packet->messageLength, packet))
     {
