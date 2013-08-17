@@ -38,51 +38,52 @@
 #include <sstream>
 #include <typeinfo>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Base class for all MySQL++ custom exceptions
 
 class MYSQLPP_EXPORT Exception : public std::exception
 {
 public:
-	/// \brief Create exception object as copy of another
-	Exception(const Exception& e) throw() :
-	std::exception(e),
-	what_(e.what_)
-	{
-	}
+    /// \brief Create exception object as copy of another
+    Exception(const Exception& e) throw() :
+        std::exception(e),
+        what_(e.what_)
+    {
+    }
 
-	/// \brief Assign another exception object's contents to this one
-	Exception& operator=(const Exception& rhs) throw()
-	{
-		what_ = rhs.what_;
-		return *this;
-	}
+    /// \brief Assign another exception object's contents to this one
+    Exception& operator=(const Exception& rhs) throw()
+    {
+        what_ = rhs.what_;
+        return *this;
+    }
 
-	/// \brief Destroy exception object
-	~Exception() throw() { }
+    /// \brief Destroy exception object
+    ~Exception() throw() { }
 
-	/// \brief Returns explanation of why exception was thrown
-	virtual const char* what() const throw()
-	{
-		return what_.c_str();
-	}
+    /// \brief Returns explanation of why exception was thrown
+    virtual const char* what() const throw()
+    {
+        return what_.c_str();
+    }
 
 protected:
-	/// \brief Create exception object
-	Exception(const char* w = "") throw() :
-	what_(w)
-	{
-	}
+    /// \brief Create exception object
+    Exception(const char* w = "") throw() :
+        what_(w)
+    {
+    }
 
-	/// \brief Create exception object
-	Exception(const std::string& w) throw() :
-	what_(w)
-	{
-	}
+    /// \brief Create exception object
+    Exception(const std::string& w) throw() :
+        what_(w)
+    {
+    }
 
-	/// \brief explanation of why exception was thrown
-	std::string what_;
+    /// \brief explanation of why exception was thrown
+    std::string what_;
 };
 
 
@@ -91,65 +92,65 @@ protected:
 class MYSQLPP_EXPORT BadConversion : public Exception
 {
 public:
-	const char* type_name;	///< name of type we tried to convert to
-	std::string data;		///< string form of data we tried to convert
-	size_t retrieved;		///< documentation needed!
-	size_t actual_size;		///< documentation needed!
+    const char* type_name;	///< name of type we tried to convert to
+    std::string data;		///< string form of data we tried to convert
+    size_t retrieved;		///< documentation needed!
+    size_t actual_size;		///< documentation needed!
 
-	/// \brief Create exception object, building error string
-	/// dynamically
-	///
-	/// \param tn type name we tried to convert to
-	/// \param d string form of data we tried to convert
-	/// \param r ??
-	/// \param a ??
-	BadConversion(const char* tn, const char* d,
-			size_t r, size_t a) :
-	Exception("Bad type conversion: \""),
-	type_name(tn),
-	data(d),
-	retrieved(r),
-	actual_size(a)
-	{
-		what_ += d ? d : "<NULL>";
-		what_ += "\" incompatible with \"";
-		what_ += tn;
-		what_ += "\" type";
-	}
+    /// \brief Create exception object, building error string
+    /// dynamically
+    ///
+    /// \param tn type name we tried to convert to
+    /// \param d string form of data we tried to convert
+    /// \param r ??
+    /// \param a ??
+    BadConversion(const char* tn, const char* d,
+                  size_t r, size_t a) :
+        Exception("Bad type conversion: \""),
+        type_name(tn),
+        data(d),
+        retrieved(r),
+        actual_size(a)
+    {
+        what_ += d ? d : "<NULL>";
+        what_ += "\" incompatible with \"";
+        what_ += tn;
+        what_ += "\" type";
+    }
 
-	/// \brief Create exception object, given completed error string
-	///
-	/// \param w the "what" error string
-	/// \param tn type name we tried to convert to
-	/// \param d string form of data we tried to convert
-	/// \param r ??
-	/// \param a ??
-	BadConversion(const std::string& w, const char* tn,
-				  const char* d, size_t r, size_t a) :
-	Exception(w),
-	type_name(tn),
-	data(d),
-	retrieved(r),
-	actual_size(a)
-	{
-	}
+    /// \brief Create exception object, given completed error string
+    ///
+    /// \param w the "what" error string
+    /// \param tn type name we tried to convert to
+    /// \param d string form of data we tried to convert
+    /// \param r ??
+    /// \param a ??
+    BadConversion(const std::string& w, const char* tn,
+                  const char* d, size_t r, size_t a) :
+        Exception(w),
+        type_name(tn),
+        data(d),
+        retrieved(r),
+        actual_size(a)
+    {
+    }
 
-	/// \brief Create exception object, with error string only
-	///
-	/// \param w the "what" error string
-	///
-	/// All other data members are initialize to default values
-	explicit BadConversion(const char* w = "") :
-	Exception(w),
-	type_name("unknown"),
-	data(""),
-	retrieved(0),
-	actual_size(0)
-	{
-	}
+    /// \brief Create exception object, with error string only
+    ///
+    /// \param w the "what" error string
+    ///
+    /// All other data members are initialize to default values
+    explicit BadConversion(const char* w = "") :
+        Exception(w),
+        type_name("unknown"),
+        data(""),
+        retrieved(0),
+        actual_size(0)
+    {
+    }
 
-	/// \brief Destroy exception
-	~BadConversion() throw() { }
+    /// \brief Destroy exception
+    ~BadConversion() throw() { }
 };
 
 
@@ -161,16 +162,16 @@ public:
 class MYSQLPP_EXPORT BadFieldName : public Exception
 {
 public:
-	/// \brief Create exception object
-	///
-	/// \param bad_field name of field the database server didn't like
-	explicit BadFieldName(const char* bad_field) :
-	Exception(std::string("Unknown field name: ") + bad_field)
-	{
-	}
+    /// \brief Create exception object
+    ///
+    /// \param bad_field name of field the database server didn't like
+    explicit BadFieldName(const char* bad_field) :
+        Exception(std::string("Unknown field name: ") + bad_field)
+    {
+    }
 
-	/// \brief Destroy exception
-	~BadFieldName() throw() { }
+    /// \brief Destroy exception
+    ~BadFieldName() throw() { }
 };
 
 
@@ -180,22 +181,22 @@ public:
 class MYSQLPP_EXPORT BadIndex : public Exception
 {
 public:
-	/// \brief Create exception object
-	///
-	/// \param what type of object bad index tried on
-	/// \param bad_index index value the container didn't like
-	/// \param max_index largest legal index value for container
-	explicit BadIndex(const char* what, int bad_index, int max_index) :
-	Exception()
-	{
-		std::ostringstream outs;
-		outs << "Index " << bad_index << " on " << what <<
-				" out of range, max legal index is " << max_index;
-		what_ = outs.str();
-	}
+    /// \brief Create exception object
+    ///
+    /// \param what type of object bad index tried on
+    /// \param bad_index index value the container didn't like
+    /// \param max_index largest legal index value for container
+    explicit BadIndex(const char* what, int bad_index, int max_index) :
+        Exception()
+    {
+        std::ostringstream outs;
+        outs << "Index " << bad_index << " on " << what <<
+             " out of range, max legal index is " << max_index;
+        what_ = outs.str();
+    }
 
-	/// \brief Destroy exception
-	~BadIndex() throw() { }
+    /// \brief Destroy exception
+    ~BadIndex() throw() { }
 };
 
 
@@ -205,28 +206,31 @@ public:
 class MYSQLPP_EXPORT BadOption : public Exception
 {
 public:
-	/// \brief Create exception object, taking C string
-	explicit BadOption(const char* w, const std::type_info& ti) :
-	Exception(w),
-	ti_(ti)
-	{
-	}
+    /// \brief Create exception object, taking C string
+    explicit BadOption(const char* w, const std::type_info& ti) :
+        Exception(w),
+        ti_(ti)
+    {
+    }
 
-	/// \brief Create exception object, taking C++ string
-	explicit BadOption(const std::string& w, const std::type_info& ti) :
-	Exception(w),
-	ti_(ti)
-	{
-	}
+    /// \brief Create exception object, taking C++ string
+    explicit BadOption(const std::string& w, const std::type_info& ti) :
+        Exception(w),
+        ti_(ti)
+    {
+    }
 
-	/// \brief Return type information about the option that failed
-	///
-	/// Because each option has its own C++ type, this lets you
-	/// distinguish among BadOption exceptions programmatically.
-	const std::type_info& what_option() const { return ti_; }
+    /// \brief Return type information about the option that failed
+    ///
+    /// Because each option has its own C++ type, this lets you
+    /// distinguish among BadOption exceptions programmatically.
+    const std::type_info& what_option() const
+    {
+        return ti_;
+    }
 
 private:
-	const std::type_info& ti_;
+    const std::type_info& ti_;
 };
 
 
@@ -238,14 +242,14 @@ private:
 class MYSQLPP_EXPORT BadParamCount : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit BadParamCount(const char* w = "") :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit BadParamCount(const char* w = "") :
+        Exception(w)
+    {
+    }
 
-	/// \brief Destroy exception
-	~BadParamCount() throw() { }
+    /// \brief Destroy exception
+    ~BadParamCount() throw() { }
 };
 
 /// \brief Exception thrown when something goes wrong in processing a
@@ -254,11 +258,11 @@ public:
 class MYSQLPP_EXPORT UseQueryError : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit UseQueryError(const char* w = "") :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit UseQueryError(const char* w = "") :
+        Exception(w)
+    {
+    }
 };
 
 
@@ -267,7 +271,7 @@ public:
 ///
 /// Unlike most other MySQL++ exceptions, which carry just an error
 /// message, this type carries an error number to preserve
-/// Connection::errnum()'s return value at the point the exception is 
+/// Connection::errnum()'s return value at the point the exception is
 /// thrown.  We do this because when using the Transaction class, the
 /// rollback process that occurs during stack unwinding issues a query
 /// to the database server, overwriting the error value.  This rollback
@@ -285,36 +289,39 @@ public:
 class MYSQLPP_EXPORT BadQuery : public Exception
 {
 public:
-	/// \brief Create exception object
-	///
-	/// \param w explanation for why the exception was thrown
-	/// \param e the error number from the underlying database API
-	explicit BadQuery(const char* w = "", int e = 0) :
-	Exception(w),
-	errnum_(e)
-	{
-	}
+    /// \brief Create exception object
+    ///
+    /// \param w explanation for why the exception was thrown
+    /// \param e the error number from the underlying database API
+    explicit BadQuery(const char* w = "", int e = 0) :
+        Exception(w),
+        errnum_(e)
+    {
+    }
 
-	/// \brief Create exception object
-	///
-	/// \param w explanation for why the exception was thrown
-	/// \param e the error number from the underlying database API
-	explicit BadQuery(const std::string& w, int e = 0) :
-	Exception(w),
-	errnum_(e)
-	{
-	}
+    /// \brief Create exception object
+    ///
+    /// \param w explanation for why the exception was thrown
+    /// \param e the error number from the underlying database API
+    explicit BadQuery(const std::string& w, int e = 0) :
+        Exception(w),
+        errnum_(e)
+    {
+    }
 
-	/// \brief Return the error number corresponding to the error
-	/// message returned by what()
-	///
-	/// This may return the same value as Connection::errnum(), but not
-	/// always.  See the overview documentation for this class for the
-	/// reason for the difference.
-	int errnum() const { return errnum_; }
-	
-private:	
-	int	errnum_;	///< error number associated with execption
+    /// \brief Return the error number corresponding to the error
+    /// message returned by what()
+    ///
+    /// This may return the same value as Connection::errnum(), but not
+    /// always.  See the overview documentation for this class for the
+    /// reason for the difference.
+    int errnum() const
+    {
+        return errnum_;
+    }
+
+private:
+    int	errnum_;	///< error number associated with execption
 };
 
 
@@ -328,28 +335,31 @@ private:
 class MYSQLPP_EXPORT ConnectionFailed : public Exception
 {
 public:
-	/// \brief Create exception object
-	///
-	/// \param w explanation for why the exception was thrown
-	/// \param e the error number from the underlying database API
-	explicit ConnectionFailed(const char* w = "", int e = 0) :
-	Exception(w),
-	errnum_(e)
-	{
-	}
+    /// \brief Create exception object
+    ///
+    /// \param w explanation for why the exception was thrown
+    /// \param e the error number from the underlying database API
+    explicit ConnectionFailed(const char* w = "", int e = 0) :
+        Exception(w),
+        errnum_(e)
+    {
+    }
 
-	/// \brief Return the error number corresponding to the error
-	/// message returned by what(), if any.
-	///
-	/// If the error number is 0, it means that the error message
-	/// doesn't come from the underlying database API, but rather from
-	/// MySQL++ itself.  This happens when an error condition is
-	/// detected up at this higher level instead of letting the
-	/// underlying database API do it.
-	int errnum() const { return errnum_; }
-	
-private:	
-	int	errnum_;	///< error number associated with execption
+    /// \brief Return the error number corresponding to the error
+    /// message returned by what(), if any.
+    ///
+    /// If the error number is 0, it means that the error message
+    /// doesn't come from the underlying database API, but rather from
+    /// MySQL++ itself.  This happens when an error condition is
+    /// detected up at this higher level instead of letting the
+    /// underlying database API do it.
+    int errnum() const
+    {
+        return errnum_;
+    }
+
+private:
+    int	errnum_;	///< error number associated with execption
 };
 
 
@@ -359,28 +369,31 @@ private:
 class MYSQLPP_EXPORT DBSelectionFailed : public Exception
 {
 public:
-	/// \brief Create exception object
-	///
-	/// \param w explanation for why the exception was thrown
-	/// \param e the error number from the underlying database API
-	explicit DBSelectionFailed(const char* w = "", int e = 0) :
-	Exception(w),
-	errnum_(e)
-	{
-	}
+    /// \brief Create exception object
+    ///
+    /// \param w explanation for why the exception was thrown
+    /// \param e the error number from the underlying database API
+    explicit DBSelectionFailed(const char* w = "", int e = 0) :
+        Exception(w),
+        errnum_(e)
+    {
+    }
 
-	/// \brief Return the error number corresponding to the error
-	/// message returned by what(), if any.
-	///
-	/// If the error number is 0, it means that the error message
-	/// doesn't come from the underlying database API, but rather from
-	/// MySQL++ itself.  This happens when an error condition is
-	/// detected up at this higher level instead of letting the
-	/// underlying database API do it.
-	int errnum() const { return errnum_; }
-	
-private:	
-	int	errnum_;	///< error number associated with execption
+    /// \brief Return the error number corresponding to the error
+    /// message returned by what(), if any.
+    ///
+    /// If the error number is 0, it means that the error message
+    /// doesn't come from the underlying database API, but rather from
+    /// MySQL++ itself.  This happens when an error condition is
+    /// detected up at this higher level instead of letting the
+    /// underlying database API do it.
+    int errnum() const
+    {
+        return errnum_;
+    }
+
+private:
+    int	errnum_;	///< error number associated with execption
 };
 
 
@@ -389,11 +402,11 @@ private:
 class MYSQLPP_EXPORT MutexFailed : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit MutexFailed(const char* w = "lock failed") :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit MutexFailed(const char* w = "lock failed") :
+        Exception(w)
+    {
+    }
 };
 
 
@@ -403,11 +416,11 @@ public:
 class MYSQLPP_EXPORT ObjectNotInitialized : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit ObjectNotInitialized(const char* w = "") :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit ObjectNotInitialized(const char* w = "") :
+        Exception(w)
+    {
+    }
 };
 
 
@@ -416,11 +429,11 @@ public:
 class MYSQLPP_EXPORT SelfTestFailed : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit SelfTestFailed(const std::string& w) :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit SelfTestFailed(const std::string& w) :
+        Exception(w)
+    {
+    }
 };
 
 
@@ -438,11 +451,11 @@ public:
 class MYSQLPP_EXPORT TypeLookupFailed : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit TypeLookupFailed(const std::string& w) :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit TypeLookupFailed(const std::string& w) :
+        Exception(w)
+    {
+    }
 };
 
 
@@ -456,11 +469,11 @@ public:
 class MYSQLPP_EXPORT BadInsertPolicy : public Exception
 {
 public:
-	/// \brief Create exception object
-	explicit BadInsertPolicy(const std::string& w) :
-	Exception(w)
-	{
-	}
+    /// \brief Create exception object
+    explicit BadInsertPolicy(const std::string& w) :
+        Exception(w)
+    {
+    }
 };
 
 

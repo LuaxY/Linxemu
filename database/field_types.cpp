@@ -31,15 +31,17 @@
 
 #include "result.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 void FieldTypes::init(const ResultBase* res)
 {
-	size_t num = res->num_fields();
-	reserve(num);
-	for (size_t i = 0; i < num; i++) {
-		push_back(res->field(unsigned(i)).type());
-	}
+    size_t num = res->num_fields();
+    reserve(num);
+    for (size_t i = 0; i < num; i++)
+    {
+        push_back(res->field(unsigned(i)).type());
+    }
 }
 
 } // end namespace mysqlpp

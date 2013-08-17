@@ -12,19 +12,19 @@ void Logger::Log(LOG_NAME logName, string location, string message, bool newLine
 
     switch(logName)
     {
-        case DEBUG:
-            cout << "[\033[1;36mDEBUG\033[0m] ";
-            break;
-        case ERROR:
-            cout << "[\033[1;31mERROR\033[0m] ";
-            break;
-        case WORKER:
-            cout << "[\033[1;32mWORKER\033[0m] ";
-            break;
-        case INFO:
-        default:
-            cout << "[\033[1;33mINFO\033[0m] ";
-            break;
+    case DEBUG:
+        cout << "[\033[1;36mDEBUG\033[0m] ";
+        break;
+    case ERROR:
+        cout << "[\033[1;31mERROR\033[0m] ";
+        break;
+    case WORKER:
+        cout << "[\033[1;32mWORKER\033[0m] ";
+        break;
+    case INFO:
+    default:
+        cout << "[\033[1;33mINFO\033[0m] ";
+        break;
     }
 
     if(timeLog)

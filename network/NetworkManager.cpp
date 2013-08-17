@@ -95,7 +95,10 @@ void NetworkManager::start()
                         onClientDisconnected(client, i);
                     else
                     {
-                        for(j = 0; j <= bufferSize-1; j++){ client->bufferQueue.push(buffer[j]); }
+                        for(j = 0; j <= bufferSize-1; j++)
+                        {
+                            client->bufferQueue.push(buffer[j]);
+                        }
                         PacketParser(client);
                     }
 
@@ -167,27 +170,27 @@ void NetworkManager::PacketParser(Client* client)
 
             switch(client->lastMessageLengthType)
             {
-                case 1:
-                    length[0] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    break;
-                case 2:
-                    length[0] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    length[1] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    break;
-                case 3:
-                    length[0] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    length[1] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    length[2] = client->bufferQueue.front();
-                    client->bufferQueue.pop();
-                    break;
-                case 0:
-                default:
-                    break;
+            case 1:
+                length[0] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                break;
+            case 2:
+                length[0] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                length[1] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                break;
+            case 3:
+                length[0] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                length[1] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                length[2] = client->bufferQueue.front();
+                client->bufferQueue.pop();
+                break;
+            case 0:
+            default:
+                break;
             }
 
             MessageReader *lengthReader = new MessageReader(length);
@@ -238,35 +241,35 @@ void NetworkManager::PacketParser(Client* client)
 
 unsigned short NetworkManager::getMessageId(unsigned short firstByte)
 {
-	return firstByte >> 2;
+    return firstByte >> 2;
 }
 
 unsigned short NetworkManager::getMessageLengthType(unsigned short firstByte)
 {
-	return firstByte & 3;
+    return firstByte & 3;
 }
 
 unsigned short NetworkManager::readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet)
 {
-	unsigned short messageLength = 0;
+    unsigned short messageLength = 0;
 
-	switch(byteLenDynamicHeader)
-	{
-		case 1:
-			messageLength = packet->ReadByte();
-			break;
-		case 2:
-			messageLength = packet->ReadUShort();
-			break;
-		case 3:
-			messageLength = ((packet->ReadByte() & 255) << 16) + ((packet->ReadByte() & 255) << 8) + (packet->ReadByte() & 255);
-			break;
-        case 0:
-        default:
-			break;
-	}
+    switch(byteLenDynamicHeader)
+    {
+    case 1:
+        messageLength = packet->ReadByte();
+        break;
+    case 2:
+        messageLength = packet->ReadUShort();
+        break;
+    case 3:
+        messageLength = ((packet->ReadByte() & 255) << 16) + ((packet->ReadByte() & 255) << 8) + (packet->ReadByte() & 255);
+        break;
+    case 0:
+    default:
+        break;
+    }
 
-	return messageLength;
+    return messageLength;
 }
 
 void NetworkManager::writePacket(MessageWriter *output, int msgId, char* data, unsigned int len)
@@ -276,18 +279,18 @@ void NetworkManager::writePacket(MessageWriter *output, int msgId, char* data, u
 
     switch(typeLen)
     {
-        case 0:
-            return;
-            break;
-        case 1:
-            output->WriteByte(len);
-            break;
-        case 2:
-            output->WriteShort(len);
-            break;
-        case 3:
-            // Motherfucker
-            break;
+    case 0:
+        return;
+        break;
+    case 1:
+        output->WriteByte(len);
+        break;
+    case 2:
+        output->WriteShort(len);
+        break;
+    case 3:
+        // Motherfucker
+        break;
     }
 
     output->WriteBytes(data, len);

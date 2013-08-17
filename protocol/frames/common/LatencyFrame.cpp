@@ -7,7 +7,7 @@ IFrame* LatencyFrame::getInstance() const
 
 char* LatencyFrame::getFrameName()
 {
-	return "LatencyFrame";
+    return "LatencyFrame";
 }
 
 bool LatencyFrame::process(INetworkMessage* message, Client* client)
@@ -19,10 +19,10 @@ bool LatencyFrame::process(INetworkMessage* message, Client* client)
 
     switch(message->getMessageId())
     {
-        case 182:
-            processMessage((BasicPingMessage*)message, client); // LatencyFrame
-            state = true;
-            break;
+    case 182:
+        processMessage((BasicPingMessage*)message, client); // LatencyFrame
+        state = true;
+        break;
     }
 
     delete data;

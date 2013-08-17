@@ -31,73 +31,81 @@
 #include <stdexcept>
 #include <string>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 
 char
 String::at(size_type pos) const
 {
-	if (pos >= size()) {
-		throw BadIndex("String", int(pos), int(size()));
-	}
-	else {
-		return buffer_->data()[pos];
-	}
+    if (pos >= size())
+    {
+        throw BadIndex("String", int(pos), int(size()));
+    }
+    else
+    {
+        return buffer_->data()[pos];
+    }
 }
 
 
 int
 String::compare(const String& other) const
 {
-	if (other.buffer_) {
-		return compare(0, std::max(length(), other.length()),
-				other.buffer_->data());
-	}
-	else {
-		// Other object has no buffer, so we are greater unless empty or
-		// we also have no buffer.
-		return length() > 0 ? 1 : 0;	
-	}
+    if (other.buffer_)
+    {
+        return compare(0, std::max(length(), other.length()),
+                       other.buffer_->data());
+    }
+    else
+    {
+        // Other object has no buffer, so we are greater unless empty or
+        // we also have no buffer.
+        return length() > 0 ? 1 : 0;
+    }
 }
 
 
 int
 String::compare(const std::string& other) const
 {
-	return compare(0, std::max(length(), other.length()), other.data());
+    return compare(0, std::max(length(), other.length()), other.data());
 }
 
 
 int
 String::compare(size_type pos, size_type num, std::string& other) const
 {
-	return compare(pos, num, other.data());
+    return compare(pos, num, other.data());
 }
 
 
 int
 String::compare(const char* other) const
 {
-	return compare(0, std::max(length(), strlen(other)), other);
+    return compare(0, std::max(length(), strlen(other)), other);
 }
 
 
 int
 String::compare(size_type pos, size_type num,
-		const char* other) const
+                const char* other) const
 {
-	if (buffer_ && other) {
-		return strncmp(data() + pos, other, num);
-	}
-	else if (!other) {
-		// Initted and non-empty is "greater than" uninitted
-		return length() > 0 ? 1 : 0;
-	}
-	else {
-		// This object has no buffer, so we are less than other object
-		// unless it is empty.
-		return other[0] == '\0' ? 0 : -1;
-	}
+    if (buffer_ && other)
+    {
+        return strncmp(data() + pos, other, num);
+    }
+    else if (!other)
+    {
+        // Initted and non-empty is "greater than" uninitted
+        return length() > 0 ? 1 : 0;
+    }
+    else
+    {
+        // This object has no buffer, so we are less than other object
+        // unless it is empty.
+        return other[0] == '\0' ? 0 : -1;
+    }
 }
 
 
@@ -107,14 +115,17 @@ String::compare(size_type pos, size_type num,
 
 template <>
 String
-String::conv(String) const { return *this; }
+String::conv(String) const
+{
+    return *this;
+}
 
 
 template <>
 bool
 String::conv(bool) const
 {
-	return *this;	// delegate to operator bool
+    return *this;	// delegate to operator bool
 }
 
 
@@ -122,7 +133,7 @@ template <>
 std::string
 String::conv(std::string) const
 {
-	return buffer_ ? std::string(data(), length()) : std::string();
+    return buffer_ ? std::string(data(), length()) : std::string();
 }
 
 
@@ -130,7 +141,7 @@ template <>
 Date
 String::conv(Date) const
 {
-	return buffer_ ? Date(c_str()) : Date();
+    return buffer_ ? Date(c_str()) : Date();
 }
 
 
@@ -138,7 +149,7 @@ template <>
 DateTime
 String::conv(DateTime) const
 {
-	return buffer_ ? DateTime(c_str()) : DateTime();
+    return buffer_ ? DateTime(c_str()) : DateTime();
 }
 
 
@@ -146,7 +157,7 @@ template <>
 Time
 String::conv(Time) const
 {
-	return buffer_ ? Time(c_str()) : Time();
+    return buffer_ ? Time(c_str()) : Time();
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -155,68 +166,72 @@ String::conv(Time) const
 const char*
 String::data() const
 {
-	return buffer_ ? buffer_->data() : 0;
+    return buffer_ ? buffer_->data() : 0;
 }
 
 
 String::const_iterator
 String::end() const
 {
-	return buffer_ ? buffer_->data() + buffer_->length() : 0;
+    return buffer_ ? buffer_->data() + buffer_->length() : 0;
 }
 
 
 bool
 String::escape_q() const
 {
-	return buffer_ ? buffer_->type().escape_q() : false;
+    return buffer_ ? buffer_->type().escape_q() : false;
 }
 
 
 bool
 String::is_null() const
 {
-	return buffer_ ? buffer_->is_null() : false;
+    return buffer_ ? buffer_->is_null() : false;
 }
 
 
 void
 String::it_is_null()
 {
-	if (buffer_) {
-		buffer_->set_null();
-	}
-	else {
-		buffer_ = new SQLBuffer(0, 0, mysql_type_info::string_type, true);
-	}
+    if (buffer_)
+    {
+        buffer_->set_null();
+    }
+    else
+    {
+        buffer_ = new SQLBuffer(0, 0, mysql_type_info::string_type, true);
+    }
 }
 
 
 String::size_type
 String::length() const
 {
-	return buffer_ ? buffer_->length() : 0;
+    return buffer_ ? buffer_->length() : 0;
 }
 
 
 bool
 String::quote_q() const
 {
-	// If no buffer, it means we're an empty string, so we need to be 
-	// quoted to be expressed properly in SQL.
-	return buffer_ ? buffer_->type().quote_q() : true;
+    // If no buffer, it means we're an empty string, so we need to be
+    // quoted to be expressed properly in SQL.
+    return buffer_ ? buffer_->type().quote_q() : true;
 }
 
 
 void
 String::to_string(std::string& s) const
 {
-	if (buffer_) {
-		s.assign(buffer_->data(), buffer_->length());
-	}
-	else {
-		s.clear();
-	}
+    if (buffer_)
+    {
+        s.assign(buffer_->data(), buffer_->length());
+    }
+    else
+    {
+        s.clear();
+    }
 }
 
 
@@ -228,28 +243,30 @@ String::to_string(std::string& s) const
 /// in result sets; it should only go back out as queries when using
 /// result data in a new query.  Since SQLTypeAdapter has a conversion
 /// ctor for String, this shouldn't be a problem.  It's just trading
-/// simplicity for a tiny bit of inefficiency in a rare case.  And 
+/// simplicity for a tiny bit of inefficiency in a rare case.  And
 /// since String and SQLTypeAdapter can share a buffer, it's not all
 /// that inefficient anyway.
 
 std::ostream&
 operator <<(std::ostream& o, const String& in)
 {
-	if (dynamic_cast<Query*>(&o)) {
-		// We can just insert the raw data into the stream
-		o.write(in.data(), in.length());
-	}
-	else {
-		// Can't guess what sort of stream it is, so convert the String
-		// to a std::string so we can use the formatted output method.
-		// To see why this is necessary, change it to use write() only
-		// (unformatted output) and then run simple2: notice that the
-		// columnar output formatting is wrecked.
-		std::string temp;
-		in.to_string(temp);
-		o << temp;
-	}
-	return o;
+    if (dynamic_cast<Query*>(&o))
+    {
+        // We can just insert the raw data into the stream
+        o.write(in.data(), in.length());
+    }
+    else
+    {
+        // Can't guess what sort of stream it is, so convert the String
+        // to a std::string so we can use the formatted output method.
+        // To see why this is necessary, change it to use write() only
+        // (unformatted output) and then run simple2: notice that the
+        // columnar output formatting is wrecked.
+        std::string temp;
+        in.to_string(temp);
+        o << temp;
+    }
+    return o;
 }
 
 

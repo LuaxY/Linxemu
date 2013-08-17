@@ -33,7 +33,8 @@
 #include <string>
 #include <vector>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 
 /// \brief Holds two lists of items, typically used to construct a
@@ -59,44 +60,44 @@ namespace mysqlpp {
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_ba
 {
-	/// \brief the list of objects on the left-hand side of the
-	/// equals sign
-	const Seq1* list1;
+    /// \brief the list of objects on the left-hand side of the
+    /// equals sign
+    const Seq1* list1;
 
-	/// \brief the list of objects on the right-hand side of the
-	/// equals sign
-	const Seq2* list2;
+    /// \brief the list of objects on the right-hand side of the
+    /// equals sign
+    const Seq2* list2;
 
-	/// \brief delimiter to use between each pair of elements
-	const char* delim;
+    /// \brief delimiter to use between each pair of elements
+    const char* delim;
 
-	/// \brief "equal" sign to use between each item in each equal
-	/// pair; doesn't have to actually be " = "
-	const char* equl;
+    /// \brief "equal" sign to use between each item in each equal
+    /// pair; doesn't have to actually be " = "
+    const char* equl;
 
-	/// \brief manipulator to use when inserting the equal_list into
-	/// a C++ stream
-	Manip manip;
+    /// \brief manipulator to use when inserting the equal_list into
+    /// a C++ stream
+    Manip manip;
 
-	/// \brief Create object
-	///
-	/// \param s1 list of objects on left-hand side of equal sign
-	/// \param s2 list of objects on right-hand side of equal sign
-	/// \param d what delimiter to use between each group in the list
-	///		when inserting the list into a C++ stream
-	/// \param e the "equals" sign between each pair of items in the
-	/// 	equal list; doesn't actually have to be " = "!
-	/// \param m manipulator to use when inserting the list into a
-	/// 	C++ stream
-	equal_list_ba(const Seq1& s1, const Seq2& s2, const char* d,
-			const char* e, Manip m) :
-	list1(&s1),
-	list2(&s2),
-	delim(d),
-	equl(e),
-	manip(m)
-	{
-	}
+    /// \brief Create object
+    ///
+    /// \param s1 list of objects on left-hand side of equal sign
+    /// \param s2 list of objects on right-hand side of equal sign
+    /// \param d what delimiter to use between each group in the list
+    ///		when inserting the list into a C++ stream
+    /// \param e the "equals" sign between each pair of items in the
+    /// 	equal list; doesn't actually have to be " = "!
+    /// \param m manipulator to use when inserting the list into a
+    /// 	C++ stream
+    equal_list_ba(const Seq1& s1, const Seq2& s2, const char* d,
+                  const char* e, Manip m) :
+        list1(&s1),
+        list2(&s2),
+        delim(d),
+        equl(e),
+        manip(m)
+    {
+    }
 };
 
 
@@ -114,52 +115,52 @@ struct equal_list_ba
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_b
 {
-	/// \brief the list of objects on the left-hand side of the
-	/// equals sign
-	const Seq1* list1;
+    /// \brief the list of objects on the left-hand side of the
+    /// equals sign
+    const Seq1* list1;
 
-	/// \brief the list of objects on the right-hand side of the
-	/// equals sign
-	const Seq2* list2;
+    /// \brief the list of objects on the right-hand side of the
+    /// equals sign
+    const Seq2* list2;
 
-	/// \brief for each true item in the list, the pair in that position
-	/// will be inserted into a C++ stream
-	const std::vector<bool> fields;
+    /// \brief for each true item in the list, the pair in that position
+    /// will be inserted into a C++ stream
+    const std::vector<bool> fields;
 
-	/// \brief delimiter to use between each pair of elements
-	const char* delim;
+    /// \brief delimiter to use between each pair of elements
+    const char* delim;
 
-	/// \brief "equal" sign to use between each item in each equal
-	/// pair; doesn't have to actually be " = "
-	const char* equl;
+    /// \brief "equal" sign to use between each item in each equal
+    /// pair; doesn't have to actually be " = "
+    const char* equl;
 
-	/// \brief manipulator to use when inserting the equal_list into
-	/// a C++ stream
-	Manip manip;
+    /// \brief manipulator to use when inserting the equal_list into
+    /// a C++ stream
+    Manip manip;
 
-	/// \brief Create object
-	///
-	/// \param s1 list of objects on left-hand side of equal sign
-	/// \param s2 list of objects on right-hand side of equal sign
-	/// \param f for each true item in the list, the pair of items
-	///		in that position will be inserted into a C++ stream
-	/// \param d what delimiter to use between each group in the list
-	///		when inserting the list into a C++ stream
-	/// \param e the "equals" sign between each pair of items in the
-	/// 	equal list; doesn't actually have to be " = "!
-	/// \param m manipulator to use when inserting the list into a
-	/// 	C++ stream
-	equal_list_b(const Seq1& s1, const Seq2& s2,
-			const std::vector<bool>& f, const char* d,
-			const char* e, Manip m) :
-	list1(&s1),
-	list2(&s2),
-	fields(f),
-	delim(d),
-	equl(e),
-	manip(m)
-	{
-	}
+    /// \brief Create object
+    ///
+    /// \param s1 list of objects on left-hand side of equal sign
+    /// \param s2 list of objects on right-hand side of equal sign
+    /// \param f for each true item in the list, the pair of items
+    ///		in that position will be inserted into a C++ stream
+    /// \param d what delimiter to use between each group in the list
+    ///		when inserting the list into a C++ stream
+    /// \param e the "equals" sign between each pair of items in the
+    /// 	equal list; doesn't actually have to be " = "!
+    /// \param m manipulator to use when inserting the list into a
+    /// 	C++ stream
+    equal_list_b(const Seq1& s1, const Seq2& s2,
+                 const std::vector<bool>& f, const char* d,
+                 const char* e, Manip m) :
+        list1(&s1),
+        list2(&s2),
+        fields(f),
+        delim(d),
+        equl(e),
+        manip(m)
+    {
+    }
 };
 
 
@@ -185,30 +186,30 @@ struct equal_list_b
 template <class Seq, class Manip>
 struct value_list_ba
 {
-	/// \brief set of objects in the value list
-	const Seq* list;
+    /// \brief set of objects in the value list
+    const Seq* list;
 
-	/// \brief delimiter to use between each value in the list when
-	/// inserting it into a C++ stream
-	const char* delim;
+    /// \brief delimiter to use between each value in the list when
+    /// inserting it into a C++ stream
+    const char* delim;
 
-	/// \brief manipulator to use when inserting the list into a
-	/// C++ stream
-	Manip manip;
+    /// \brief manipulator to use when inserting the list into a
+    /// C++ stream
+    Manip manip;
 
-	/// \brief Create object
-	///
-	/// \param s set of objects in the value list
-	/// \param d what delimiter to use between each value in the list
-	///		when inserting the list into a C++ stream
-	/// \param m manipulator to use when inserting the list into a
-	/// 	C++ stream
-	value_list_ba(const Seq& s, const char* d, Manip m) :
-	list(&s),
-	delim(d),
-	manip(m)
-	{
-	}
+    /// \brief Create object
+    ///
+    /// \param s set of objects in the value list
+    /// \param d what delimiter to use between each value in the list
+    ///		when inserting the list into a C++ stream
+    /// \param m manipulator to use when inserting the list into a
+    /// 	C++ stream
+    value_list_ba(const Seq& s, const char* d, Manip m) :
+        list(&s),
+        delim(d),
+        manip(m)
+    {
+    }
 };
 
 
@@ -225,38 +226,38 @@ struct value_list_ba
 template <class Seq, class Manip>
 struct value_list_b
 {
-	/// \brief set of objects in the value list
-	const Seq* list;
+    /// \brief set of objects in the value list
+    const Seq* list;
 
-	/// \brief delimiter to use between each value in the list when
-	/// inserting it into a C++ stream
-	const std::vector<bool> fields;
+    /// \brief delimiter to use between each value in the list when
+    /// inserting it into a C++ stream
+    const std::vector<bool> fields;
 
-	/// \brief delimiter to use between each value in the list when
-	/// inserting it into a C++ stream
-	const char* delim;
+    /// \brief delimiter to use between each value in the list when
+    /// inserting it into a C++ stream
+    const char* delim;
 
-	/// \brief manipulator to use when inserting the list into a C++
-	/// stream
-	Manip manip;
+    /// \brief manipulator to use when inserting the list into a C++
+    /// stream
+    Manip manip;
 
-	/// \brief Create object
-	///
-	/// \param s set of objects in the value list
-	/// \param f for each true item in the list, the list item
-	///		in that position will be inserted into a C++ stream
-	/// \param d what delimiter to use between each value in the list
-	///		when inserting the list into a C++ stream
-	/// \param m manipulator to use when inserting the list into a
-	///		C++ stream
-	value_list_b(const Seq& s, const std::vector<bool>& f,
-			const char* d, Manip m) :
-	list(&s),
-	fields(f),
-	delim(d),
-	manip(m)
-	{
-	}
+    /// \brief Create object
+    ///
+    /// \param s set of objects in the value list
+    /// \param f for each true item in the list, the list item
+    ///		in that position will be inserted into a C++ stream
+    /// \param d what delimiter to use between each value in the list
+    ///		when inserting the list into a C++ stream
+    /// \param m manipulator to use when inserting the list into a
+    ///		C++ stream
+    value_list_b(const Seq& s, const std::vector<bool>& f,
+                 const char* d, Manip m) :
+        list(&s),
+        fields(f),
+        delim(d),
+        manip(m)
+    {
+    }
 };
 
 
@@ -271,20 +272,22 @@ struct value_list_b
 
 template <class Seq1, class Seq2, class Manip>
 std::ostream& operator <<(std::ostream& o,
-		const equal_list_ba<Seq1, Seq2, Manip>& el)
+                          const equal_list_ba<Seq1, Seq2, Manip>& el)
 {
-	typename Seq1::const_iterator i = el.list1->begin();
-	typename Seq2::const_iterator j = el.list2->begin();
+    typename Seq1::const_iterator i = el.list1->begin();
+    typename Seq2::const_iterator j = el.list2->begin();
 
-	while (1) {
-		o << *i << el.equl << el.manip << *j;
-		if ((++i == el.list1->end()) || (++j == el.list2->end())) {
-			break;
-		}
-		o << el.delim;
-	}
+    while (1)
+    {
+        o << *i << el.equl << el.manip << *j;
+        if ((++i == el.list1->end()) || (++j == el.list2->end()))
+        {
+            break;
+        }
+        o << el.delim;
+    }
 
-	return o;
+    return o;
 }
 
 
@@ -295,25 +298,29 @@ std::ostream& operator <<(std::ostream& o,
 
 template <class Seq1, class Seq2, class Manip>
 std::ostream& operator <<(std::ostream& o,
-		const equal_list_b <Seq1, Seq2, Manip>& el)
+                          const equal_list_b <Seq1, Seq2, Manip>& el)
 {
-	typename Seq1::const_iterator i = el.list1->begin();
-	typename Seq2::const_iterator j = el.list2->begin();
+    typename Seq1::const_iterator i = el.list1->begin();
+    typename Seq2::const_iterator j = el.list2->begin();
 
-	int k = 0;
-	while (1) {
-		if (el.fields[k++]) {
-			o << *i << el.equl << el.manip << *j;
-		}
-		if ((++i == el.list1->end()) || (++j == el.list2->end())) {
-			break;
-		}
-		if (el.fields[k]) {
-			o << el.delim;
-		}
-	}
+    int k = 0;
+    while (1)
+    {
+        if (el.fields[k++])
+        {
+            o << *i << el.equl << el.manip << *j;
+        }
+        if ((++i == el.list1->end()) || (++j == el.list2->end()))
+        {
+            break;
+        }
+        if (el.fields[k])
+        {
+            o << el.delim;
+        }
+    }
 
-	return o;
+    return o;
 }
 
 
@@ -328,19 +335,21 @@ std::ostream& operator <<(std::ostream& o,
 
 template <class Seq, class Manip>
 std::ostream& operator <<(std::ostream& o,
-		const value_list_ba<Seq, Manip>& cl)
+                          const value_list_ba<Seq, Manip>& cl)
 {
-	typename Seq::const_iterator i = cl.list->begin();
+    typename Seq::const_iterator i = cl.list->begin();
 
-	while (1) {
-		o << cl.manip << *i;
-		if (++i == cl.list->end()) {
-			break;
-		}
-		o << cl.delim;
-	}
+    while (1)
+    {
+        o << cl.manip << *i;
+        if (++i == cl.list->end())
+        {
+            break;
+        }
+        o << cl.delim;
+    }
 
-	return o;
+    return o;
 }
 
 
@@ -351,24 +360,28 @@ std::ostream& operator <<(std::ostream& o,
 
 template <class Seq, class Manip>
 std::ostream& operator <<(std::ostream& o,
-		const value_list_b<Seq, Manip>& cl)
+                          const value_list_b<Seq, Manip>& cl)
 {
-	typename Seq::const_iterator i = cl.list->begin();
+    typename Seq::const_iterator i = cl.list->begin();
 
-	int k = 0;
-	while (1) {
-		if (cl.fields[k++]) {
-			o << cl.manip << *i;
-		}
-		if (++i == cl.list->end()) {
-			break;
-		}
-		if (cl.fields[k]) {
-			o << cl.delim;
-		}
-	}
+    int k = 0;
+    while (1)
+    {
+        if (cl.fields[k++])
+        {
+            o << cl.manip << *i;
+        }
+        if (++i == cl.list->end())
+        {
+            break;
+        }
+        if (cl.fields[k])
+        {
+            o << cl.delim;
+        }
+    }
 
-	return o;
+    return o;
 }
 
 
@@ -383,10 +396,10 @@ std::ostream& operator <<(std::ostream& o,
 /// of the user manual to see that feature at work.
 
 void create_vector(size_t size, std::vector<bool>& v, bool t0,
-		bool t1 = false, bool t2 = false, bool t3 = false,
-		bool t4 = false, bool t5 = false, bool t6 = false,
-		bool t7 = false, bool t8 = false, bool t9 = false,
-		bool ta = false, bool tb = false, bool tc = false);
+                   bool t1 = false, bool t2 = false, bool t3 = false,
+                   bool t4 = false, bool t5 = false, bool t6 = false,
+                   bool t7 = false, bool t8 = false, bool t9 = false,
+                   bool ta = false, bool tb = false, bool tc = false);
 
 
 /// \brief Create a vector of bool using a list of named fields.
@@ -403,11 +416,11 @@ void create_vector(size_t size, std::vector<bool>& v, bool t0,
 
 template <class Container>
 void create_vector(const Container& c, std::vector<bool>& v,
-		std::string s0, std::string s1, std::string s2,
-		std::string s3, std::string s4, std::string s5,
-		std::string s6, std::string s7, std::string s8,
-		std::string s9, std::string sa, std::string sb,
-		std::string sc);
+                   std::string s0, std::string s1, std::string s2,
+                   std::string s3, std::string s4, std::string s5,
+                   std::string s6, std::string s7, std::string s8,
+                   std::string s9, std::string sa, std::string sb,
+                   std::string sc);
 
 
 
@@ -425,7 +438,7 @@ template <class Seq>
 value_list_ba<Seq, do_nothing_type0>
 value_list(const Seq& s, const char* d = ",")
 {
-	return value_list_ba<Seq, do_nothing_type0>(s, d, do_nothing);
+    return value_list_ba<Seq, do_nothing_type0>(s, d, do_nothing);
 }
 
 
@@ -439,7 +452,7 @@ template <class Seq, class Manip>
 value_list_ba<Seq, Manip>
 value_list(const Seq& s, const char* d, Manip m)
 {
-	return value_list_ba<Seq, Manip>(s, d, m);
+    return value_list_ba<Seq, Manip>(s, d, m);
 }
 
 
@@ -455,9 +468,9 @@ value_list(const Seq& s, const char* d, Manip m)
 template <class Seq, class Manip>
 inline value_list_b<Seq, Manip>
 value_list(const Seq& s, const char* d, Manip m,
-		const std::vector<bool>& vb)
+           const std::vector<bool>& vb)
 {
-	return value_list_b<Seq, Manip>(s, vb, d, m);
+    return value_list_b<Seq, Manip>(s, vb, d, m);
 }
 
 
@@ -470,15 +483,15 @@ value_list(const Seq& s, const char* d, Manip m,
 template <class Seq, class Manip>
 value_list_b<Seq, Manip>
 value_list(const Seq& s, const char* d, Manip m, bool t0,
-		bool t1 = false, bool t2 = false, bool t3 = false,
-		bool t4 = false, bool t5 = false, bool t6 = false,
-		bool t7 = false, bool t8 = false, bool t9 = false,
-		bool ta = false, bool tb = false, bool tc = false)
+           bool t1 = false, bool t2 = false, bool t3 = false,
+           bool t4 = false, bool t5 = false, bool t6 = false,
+           bool t7 = false, bool t8 = false, bool t9 = false,
+           bool ta = false, bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-				  ta, tb, tc);
-	return value_list_b<Seq, Manip>(s, vb, d, m);
+    std::vector<bool> vb;
+    create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
+                  ta, tb, tc);
+    return value_list_b<Seq, Manip>(s, vb, d, m);
 }
 
 /// \brief Constructs a sparse value list
@@ -491,15 +504,15 @@ value_list(const Seq& s, const char* d, Manip m, bool t0,
 template <class Seq>
 value_list_b<Seq, do_nothing_type0>
 value_list(const Seq& s, const char* d, bool t0,
-		bool t1 = false, bool t2 = false, bool t3 = false,
-		bool t4 = false, bool t5 = false, bool t6 = false,
-		bool t7 = false, bool t8 = false, bool t9 = false,
-		bool ta = false, bool tb = false, bool tc = false)
+           bool t1 = false, bool t2 = false, bool t3 = false,
+           bool t4 = false, bool t5 = false, bool t6 = false,
+           bool t7 = false, bool t8 = false, bool t9 = false,
+           bool ta = false, bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-				  ta, tb, tc);
-	return value_list_b<Seq, do_nothing_type0>(s, vb, d, do_nothing);
+    std::vector<bool> vb;
+    create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
+                  ta, tb, tc);
+    return value_list_b<Seq, do_nothing_type0>(s, vb, d, do_nothing);
 }
 
 
@@ -515,15 +528,15 @@ value_list(const Seq& s, const char* d, bool t0,
 template <class Seq>
 value_list_b<Seq, do_nothing_type0>
 value_list(const Seq& s, bool t0,
-		bool t1 = false, bool t2 = false, bool t3 = false,
-		bool t4 = false, bool t5 = false, bool t6 = false,
-		bool t7 = false, bool t8 = false, bool t9 = false,
-		bool ta = false, bool tb = false, bool tc = false)
+           bool t1 = false, bool t2 = false, bool t3 = false,
+           bool t4 = false, bool t5 = false, bool t6 = false,
+           bool t7 = false, bool t8 = false, bool t9 = false,
+           bool ta = false, bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-				  ta, tb, tc);
-	return value_list_b<Seq, do_nothing_type0>(s, vb, ",", do_nothing);
+    std::vector<bool> vb;
+    create_vector(s.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
+                  ta, tb, tc);
+    return value_list_b<Seq, do_nothing_type0>(s, vb, ",", do_nothing);
 }
 
 
@@ -551,10 +564,10 @@ value_list(const Seq& s, bool t0,
 template <class Seq1, class Seq2>
 equal_list_ba<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, const char *d = ",",
-		const char *e = " = ")
+           const char *e = " = ")
 {
-	return equal_list_ba<Seq1, Seq2, do_nothing_type0>(s1, s2, d,
-			e, do_nothing);
+    return equal_list_ba<Seq1, Seq2, do_nothing_type0>(s1, s2, d,
+            e, do_nothing);
 }
 
 
@@ -567,9 +580,9 @@ equal_list(const Seq1& s1, const Seq2& s2, const char *d = ",",
 template <class Seq1, class Seq2, class Manip>
 equal_list_ba<Seq1, Seq2, Manip>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
-		const char* e, Manip m)
+           const char* e, Manip m)
 {
-	return equal_list_ba<Seq1, Seq2, Manip>(s1, s2, d, e, m);
+    return equal_list_ba<Seq1, Seq2, Manip>(s1, s2, d, e, m);
 }
 
 
@@ -584,9 +597,9 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 template <class Seq1, class Seq2, class Manip>
 equal_list_b<Seq1, Seq2, Manip>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
-		const char *e, Manip m, const std::vector<bool>& vb)
+           const char *e, Manip m, const std::vector<bool>& vb)
 {
-	return equal_list_b<Seq1, Seq2, Manip>(s1, s2, vb, d, e, m);
+    return equal_list_b<Seq1, Seq2, Manip>(s1, s2, vb, d, e, m);
 }
 
 
@@ -599,16 +612,16 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 template <class Seq1, class Seq2, class Manip>
 equal_list_b<Seq1, Seq2, Manip>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
-		const char* e, Manip m, bool t0, bool t1 = false,
-		bool t2 = false, bool t3 = false, bool t4 = false,
-		bool t5 = false, bool t6 = false, bool t7 = false,
-		bool t8 = false, bool t9 = false, bool ta = false,
-		bool tb = false, bool tc = false)
+           const char* e, Manip m, bool t0, bool t1 = false,
+           bool t2 = false, bool t3 = false, bool t4 = false,
+           bool t5 = false, bool t6 = false, bool t7 = false,
+           bool t8 = false, bool t9 = false, bool ta = false,
+           bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
-				  t9, ta, tb, tc);
-	return equal_list_b<Seq1, Seq2, Manip>(s1, s2, vb, d, e, m);
+    std::vector<bool> vb;
+    create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
+                  t9, ta, tb, tc);
+    return equal_list_b<Seq1, Seq2, Manip>(s1, s2, vb, d, e, m);
 }
 
 
@@ -622,17 +635,17 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
-		const char* e, bool t0, bool t1 = false, bool t2 = false,
-		bool t3 = false, bool t4 = false, bool t5 = false,
-		bool t6 = false, bool t7 = false, bool t8 = false,
-		bool t9 = false, bool ta = false, bool tb = false,
-		bool tc = false)
+           const char* e, bool t0, bool t1 = false, bool t2 = false,
+           bool t3 = false, bool t4 = false, bool t5 = false,
+           bool t6 = false, bool t7 = false, bool t8 = false,
+           bool t9 = false, bool ta = false, bool tb = false,
+           bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
-				  t9, ta, tb, tc);
-	return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
-			d, e, do_nothing);
+    std::vector<bool> vb;
+    create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
+                  t9, ta, tb, tc);
+    return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
+            d, e, do_nothing);
 }
 
 
@@ -645,16 +658,16 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d, bool t0,
-		bool t1 = false, bool t2 = false, bool t3 = false,
-		bool t4 = false, bool t5 = false, bool t6 = false,
-		bool t7 = false, bool t8 = false, bool t9 = false,
-		bool ta = false, bool tb = false, bool tc = false)
+           bool t1 = false, bool t2 = false, bool t3 = false,
+           bool t4 = false, bool t5 = false, bool t6 = false,
+           bool t7 = false, bool t8 = false, bool t9 = false,
+           bool ta = false, bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
-				  t9, ta, tb, tc);
-	return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
-			d, " = ", do_nothing);
+    std::vector<bool> vb;
+    create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
+                  t9, ta, tb, tc);
+    return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
+            d, " = ", do_nothing);
 }
 
 
@@ -669,16 +682,16 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d, bool t0,
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, bool t0, bool t1 = false,
-		bool t2 = false, bool t3 = false, bool t4 = false,
-		bool t5 = false, bool t6 = false, bool t7 = false,
-		bool t8 = false, bool t9 = false, bool ta = false,
-		bool tb = false, bool tc = false)
+           bool t2 = false, bool t3 = false, bool t4 = false,
+           bool t5 = false, bool t6 = false, bool t7 = false,
+           bool t8 = false, bool t9 = false, bool ta = false,
+           bool tb = false, bool tc = false)
 {
-	std::vector<bool> vb;
-	create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
-				  t9, ta, tb, tc);
-	return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
-			",", " = ", do_nothing);
+    std::vector<bool> vb;
+    create_vector(s1.size(), vb, t0, t1, t2, t3, t4, t5, t6, t7, t8,
+                  t9, ta, tb, tc);
+    return equal_list_b<Seq1, Seq2, do_nothing_type0>(s1, s2, vb,
+            ",", " = ", do_nothing);
 }
 
 } // end namespace mysqlpp

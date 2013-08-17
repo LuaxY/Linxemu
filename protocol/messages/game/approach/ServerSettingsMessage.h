@@ -6,20 +6,20 @@
 
 class ServerSettingsMessage : public INetworkMessage
 {
-	public:
-		INetworkMessage* getInstance() const;
-		void initServerSettingsMessage(char* _lang, char _community, char _gameType);
+public:
+    INetworkMessage* getInstance() const;
+    void initServerSettingsMessage(char* _lang, char _community, char _gameType);
 
-		int getMessageId();
-		char* getMessageName();
-		void pack(MessageWriter *output);
-		void unpack(char *buffer);
+    int getMessageId();
+    char* getMessageName();
+    void pack(MessageWriter *output);
+    void unpack(char *buffer);
 
-		static const int protocolId = 6340;
+    static const int protocolId = 6340;
 
-		char* lang;
-		char community;
-		char gameType;
+    char* lang;
+    char community;
+    char gameType;
 };
 
 #endif // SERVER_SETTINGS_MESSAGE_H

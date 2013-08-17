@@ -2,7 +2,7 @@
 
 INetworkMessage* AuthenticationTicketRefusedMessage::getInstance() const
 {
-	return new AuthenticationTicketRefusedMessage(*this);
+    return new AuthenticationTicketRefusedMessage(*this);
 }
 
 void AuthenticationTicketRefusedMessage::initAuthenticationTicketRefusedMessage()
@@ -11,12 +11,12 @@ void AuthenticationTicketRefusedMessage::initAuthenticationTicketRefusedMessage(
 
 int AuthenticationTicketRefusedMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* AuthenticationTicketRefusedMessage::getMessageName()
 {
-	return "AuthenticationTicketRefusedMessage";
+    return "AuthenticationTicketRefusedMessage";
 }
 
 void AuthenticationTicketRefusedMessage::pack(MessageWriter *output)

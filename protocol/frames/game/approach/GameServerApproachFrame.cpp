@@ -7,7 +7,7 @@ IFrame* GameServerApproachFrame::getInstance() const
 
 char* GameServerApproachFrame::getFrameName()
 {
-	return "GameServerApproachFrame";
+    return "GameServerApproachFrame";
 }
 
 bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
@@ -19,10 +19,10 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
 
     switch(message->getMessageId())
     {
-        case 110:
-            processMessage((AuthenticationTicketMessage*)message, client);
-            state = true;
-            break;
+    case 110:
+        processMessage((AuthenticationTicketMessage*)message, client);
+        state = true;
+        break;
     }
 
     delete data;
@@ -33,43 +33,43 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
 
 void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* message, Client* client)
 {
-	Database* database = Database::Instance();
-	Config* config = Config::Instance();
+    Database* database = Database::Instance();
+    Config* config = Config::Instance();
 
-	try
-	{
-		// need to select login DB
-		database->db->select_db(config->login_db);
+    try
+    {
+        // need to select login DB
+        database->db->select_db(config->login_db);
 
-		mysqlpp::Query queryUser = database->db->query("SELECT id FROM accounts WHERE token = %0q");
-		queryUser.parse();
-		mysqlpp::StoreQueryResult resUser = queryUser.store(message->ticket);
+        mysqlpp::Query queryUser = database->db->query("SELECT id FROM accounts WHERE token = %0q");
+        queryUser.parse();
+        mysqlpp::StoreQueryResult resUser = queryUser.store(message->ticket);
 
-		database->selectDefault();
+        database->selectDefault();
 
-		if(!resUser.empty())
-		{
-			client->accountId = resUser[0]["id"];
+        if(!resUser.empty())
+        {
+            client->accountId = resUser[0]["id"];
 
-			AuthenticationTicketAcceptedMessage atam;
-			atam.initAuthenticationTicketAcceptedMessage();
-			atam.pack(data);
+            AuthenticationTicketAcceptedMessage atam;
+            atam.initAuthenticationTicketAcceptedMessage();
+            atam.pack(data);
 
-			NetworkManager::writePacket(packet, atam.getMessageId(), data->getBuffer(), data->getPosition());
-			NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atam.getInstance());
-		}
-		else
-		{
-			AuthenticationTicketRefusedMessage atrm;
-			atrm.initAuthenticationTicketRefusedMessage();
-			atrm.pack(data);
+            NetworkManager::writePacket(packet, atam.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atam.getInstance());
+        }
+        else
+        {
+            AuthenticationTicketRefusedMessage atrm;
+            atrm.initAuthenticationTicketRefusedMessage();
+            atrm.pack(data);
 
-			NetworkManager::writePacket(packet, atrm.getMessageId(), data->getBuffer(), data->getPosition());
-			NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atrm.getInstance());
-		}
-	}
-	catch(const mysqlpp::Exception& e)
-	{
-		Logger::Log(ERROR, sLog(), e.what());
-	}
+            NetworkManager::writePacket(packet, atrm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atrm.getInstance());
+        }
+    }
+    catch(const mysqlpp::Exception& e)
+    {
+        Logger::Log(ERROR, sLog(), e.what());
+    }
 }

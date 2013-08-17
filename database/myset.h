@@ -37,7 +37,8 @@
 #include <iostream>
 #include <set>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
@@ -46,17 +47,20 @@ template <class T, class key_type = typename T::key_type>
 class MYSQLPP_EXPORT SetInsert
 {
 public:
-	SetInsert(T* o) : object_(o) { }
-	void operator ()(const key_type& data) { object_->insert(data); }
+    SetInsert(T* o) : object_(o) { }
+    void operator ()(const key_type& data)
+    {
+        object_->insert(data);
+    }
 
 private:
-	T* object_;
+    T* object_;
 };
 
 template <class T>
 inline SetInsert< std::set<T> > set_insert(std::set<T>* o)
 {
-	return SetInsert< std::set<T> >(o);
+    return SetInsert< std::set<T> >(o);
 }
 
 template <class Insert>
@@ -71,55 +75,64 @@ template <class Container = std::set<std::string> >
 class MYSQLPP_EXPORT Set : public Container
 {
 public:
-	/// \brief Default constructor
-	Set() {};
+    /// \brief Default constructor
+    Set() {};
 
-	/// \brief Create object from a comma-separated list of values
-	Set(const char* str)
-	{
-		set2container(str, set_insert(this));
-	}
-	
-	/// \brief Create object from a comma-separated list of values
-	Set(const std::string& str)
-	{
-		set2container(str.c_str(), set_insert(this));
-	}
-	
-	/// \brief Create object from a comma-separated list of values
-	Set(const String& str)
-	{
-		set2container(str.c_str(), set_insert(this));
-	}
+    /// \brief Create object from a comma-separated list of values
+    Set(const char* str)
+    {
+        set2container(str, set_insert(this));
+    }
 
-	/// \brief Convert this set's data to a string containing
-	/// comma-separated items.
-	operator std::string() const { return stream2string(*this); }
+    /// \brief Create object from a comma-separated list of values
+    Set(const std::string& str)
+    {
+        set2container(str.c_str(), set_insert(this));
+    }
 
-	/// \brief Return our value in std::string form
-	std::string str() const { return *this; }
+    /// \brief Create object from a comma-separated list of values
+    Set(const String& str)
+    {
+        set2container(str.c_str(), set_insert(this));
+    }
+
+    /// \brief Convert this set's data to a string containing
+    /// comma-separated items.
+    operator std::string() const
+    {
+        return stream2string(*this);
+    }
+
+    /// \brief Return our value in std::string form
+    std::string str() const
+    {
+        return *this;
+    }
 };
 
 
 /// \brief Inserts a Set object into a C++ stream
 template <class Container>
 inline std::ostream& operator <<(std::ostream& s,
-		const Set<Container>& d)
+                                 const Set<Container>& d)
 {
-	typename Container::const_iterator i = d.begin();
-	typename Container::const_iterator e = d.end();
+    typename Container::const_iterator i = d.begin();
+    typename Container::const_iterator e = d.end();
 
-	if (i != e) {
-		while (true) {
-			s << *i;
-			if (++i == e) {
-				break;
-			}
-			s << ",";
-		}
-	}
-	
-	return s;
+    if (i != e)
+    {
+        while (true)
+        {
+            s << *i;
+            if (++i == e)
+            {
+                break;
+            }
+            s << ",";
+        }
+    }
+
+    return s;
 }
 
 
@@ -129,28 +142,33 @@ inline std::ostream& operator <<(std::ostream& s,
 template <class Insert>
 void set2container(const char* str, Insert insert)
 {
-	std::string temp;
+    std::string temp;
 
-	// Break str up using comma separators
-	while (str && *str) {
-		if (*str == ',') {
-			insert(temp);
-			temp.clear();
+    // Break str up using comma separators
+    while (str && *str)
+    {
+        if (*str == ',')
+        {
+            insert(temp);
+            temp.clear();
 
-			// Handle comma at end of string case
-			if (*++str) {
-				++str;
-			}
-		}
-		else {
-			temp += *str++;
-		}
-	}
+            // Handle comma at end of string case
+            if (*++str)
+            {
+                ++str;
+            }
+        }
+        else
+        {
+            temp += *str++;
+        }
+    }
 
-	// Save final element of set, if any
-	if (temp.size()) {
-		insert(temp);
-	}
+    // Save final element of set, if any
+    if (temp.size())
+    {
+        insert(temp);
+    }
 }
 
 #endif // !defined(DOXYGEN_IGNORE)

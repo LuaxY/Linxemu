@@ -2,27 +2,27 @@
 
 INetworkMessage* ServersListMessage::getInstance() const
 {
-	return new ServersListMessage(*this);
+    return new ServersListMessage(*this);
 }
 
 void ServersListMessage::initServersListMessage(vector<GameServerInformations*> _servers)
 {
-	servers = _servers;
+    servers = _servers;
 }
 
 int ServersListMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* ServersListMessage::getMessageName()
 {
-	return "ServersListMessage";
+    return "ServersListMessage";
 }
 
 void ServersListMessage::pack(MessageWriter *output)
 {
-	output->WriteUShort(servers.size());
+    output->WriteUShort(servers.size());
     for(GameServerInformations entry : servers)
     {
         entry.pack(output);
@@ -31,7 +31,7 @@ void ServersListMessage::pack(MessageWriter *output)
 
 void ServersListMessage::unpack(char *buffer)
 {
-	MessageReader *input = new MessageReader(buffer);
+    MessageReader *input = new MessageReader(buffer);
 
-	delete input;
+    delete input;
 }

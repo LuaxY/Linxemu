@@ -2,34 +2,34 @@
 
 INetworkMessage* IdentificationFailedMessage::getInstance() const
 {
-	return new IdentificationFailedMessage(*this);
+    return new IdentificationFailedMessage(*this);
 }
 
 void IdentificationFailedMessage::initIdentificationFailedMessage(char _reason)
 {
-	reason = _reason;
+    reason = _reason;
 }
 
 int IdentificationFailedMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* IdentificationFailedMessage::getMessageName()
 {
-	return "IdentificationFailedMessage";
+    return "IdentificationFailedMessage";
 }
 
 void IdentificationFailedMessage::pack(MessageWriter *output)
 {
-	output->WriteByte(reason);
+    output->WriteByte(reason);
 }
 
 void IdentificationFailedMessage::unpack(char *buffer)
 {
-	MessageReader *input = new MessageReader(buffer);
+    MessageReader *input = new MessageReader(buffer);
 
-	reason = input->ReadByte();
+    reason = input->ReadByte();
 
-	delete input;
+    delete input;
 }

@@ -37,16 +37,18 @@
 #include <cstring>
 #include <string>
 
-namespace mysqlpp {
-	/// \brief Namespace for holding things used only within MySQL++
-	namespace internal {
-		/// \brief Lowercase a C++ string in place
-		void MYSQLPP_EXPORT str_to_lwr(std::string& s);
+namespace mysqlpp
+{
+/// \brief Namespace for holding things used only within MySQL++
+namespace internal
+{
+/// \brief Lowercase a C++ string in place
+void MYSQLPP_EXPORT str_to_lwr(std::string& s);
 
-		/// \brief Copy a C string into a C++ string, lowercasing
-		/// it along the way
-		void MYSQLPP_EXPORT str_to_lwr(std::string& ls, const char* mcs);
-	} // end namespace mysqlpp::internal
+/// \brief Copy a C string into a C++ string, lowercasing
+/// it along the way
+void MYSQLPP_EXPORT str_to_lwr(std::string& ls, const char* mcs);
+} // end namespace mysqlpp::internal
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_UTILITY_H)

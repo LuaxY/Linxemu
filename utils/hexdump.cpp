@@ -15,11 +15,11 @@ void hexdump(void *mem, unsigned int len)
         /* print hex data */
         if(i < len)
         {
-                printf("%02X ", 0xFF & ((char*)mem)[i]);
+            printf("%02X ", 0xFF & ((char*)mem)[i]);
         }
         else /* end of block, just aligning for ASCII dump */
         {
-                printf("   ");
+            printf("   ");
         }
 
         /* print ASCII dump */

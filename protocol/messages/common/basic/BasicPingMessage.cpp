@@ -2,34 +2,34 @@
 
 INetworkMessage* BasicPingMessage::getInstance() const
 {
-	return new BasicPingMessage(*this);
+    return new BasicPingMessage(*this);
 }
 
 void BasicPingMessage::initBasicPingMessage(bool _quiet)
 {
-	quiet = _quiet;
+    quiet = _quiet;
 }
 
 int BasicPingMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* BasicPingMessage::getMessageName()
 {
-	return "BasicPingMessage";
+    return "BasicPingMessage";
 }
 
 void BasicPingMessage::pack(MessageWriter *output)
 {
-	output->WriteBool(quiet);
+    output->WriteBool(quiet);
 }
 
 void BasicPingMessage::unpack(char *buffer)
 {
-	MessageReader *input = new MessageReader(buffer);
+    MessageReader *input = new MessageReader(buffer);
 
-	quiet = input->ReadBool();
+    quiet = input->ReadBool();
 
-	delete input;
+    delete input;
 }

@@ -48,7 +48,8 @@
 
 #include <iostream>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 class SQLQueryParms;
 
@@ -69,7 +70,7 @@ class SQLQueryParms;
 
 enum quote_type0
 {
-	quote ///< insert into a Query stream to single-quote and escape next item
+    quote ///< insert into a Query stream to single-quote and escape next item
 };
 
 
@@ -78,35 +79,35 @@ enum quote_type0
 
 struct quote_type1
 {
-	std::ostream * ostr;
-	quote_type1(std::ostream * o) :
-	ostr(o)
-	{
-	}
+    std::ostream * ostr;
+    quote_type1(std::ostream * o) :
+        ostr(o)
+    {
+    }
 };
 
 
 inline quote_type1
 operator <<(std::ostream& o, quote_type0 /* esc */)
 {
-	return quote_type1(&o);
+    return quote_type1(&o);
 }
 
 
 struct quote_type2
 {
-	SQLQueryParms *qparms;
-	quote_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms *qparms;
+    quote_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline quote_type2
 operator <<(SQLQueryParms& p, quote_type0 /* esc */)
 {
-	return quote_type2(&p);
+    return quote_type2(&p);
 }
 
 
@@ -114,14 +115,14 @@ operator <<(SQLQueryParms& p, quote_type0 /* esc */)
 /// as appropriate to the data type the object was initialized from.
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_type2 p,
-		SQLTypeAdapter& in);
+        SQLTypeAdapter& in);
 
 
 /// \brief Inserts a anything that can be converted to SQLTypeAdapter
 /// into a stream, quoted and escaped as needed if it's a Query stream
 
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const SQLTypeAdapter& in);
+        const SQLTypeAdapter& in);
 
 
 /// \brief Inserts a SQLTypeAdapter into a non-Query stream.
@@ -132,14 +133,14 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 /// it easier to build syntactically-correct SQL queries.
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
-		const SQLTypeAdapter& in);
+        const SQLTypeAdapter& in);
 
 
 template <class ST>
 inline std::ostream&
 operator <<(quote_type1 o, const Set<ST>& in)
 {
-	return *o.ostr << '\'' << in << '\'';
+    return *o.ostr << '\'' << in << '\'';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -155,7 +156,7 @@ operator <<(quote_type1 o, const Set<ST>& in)
 
 enum quote_only_type0
 {
-	quote_only				///< insert into a std::ostream to single-quote next item
+    quote_only				///< insert into a std::ostream to single-quote next item
 };
 
 
@@ -164,35 +165,35 @@ enum quote_only_type0
 
 struct quote_only_type1
 {
-	std::ostream* ostr;
-	quote_only_type1(std::ostream* o) :
-	ostr(o)
-	{
-	}
+    std::ostream* ostr;
+    quote_only_type1(std::ostream* o) :
+        ostr(o)
+    {
+    }
 };
 
 
 inline quote_only_type1
 operator <<(std::ostream& o, quote_only_type0 /* esc */)
 {
-	return quote_only_type1(&o);
+    return quote_only_type1(&o);
 }
 
 
 struct quote_only_type2
 {
-	SQLQueryParms* qparms;
-	quote_only_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms* qparms;
+    quote_only_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline quote_only_type2
 operator <<(SQLQueryParms& p, quote_only_type0 /* esc */)
 {
-	return quote_only_type2(&p);
+    return quote_only_type2(&p);
 }
 
 
@@ -215,7 +216,7 @@ template <class ST>
 inline std::ostream&
 operator <<(quote_only_type1 o, const Set<ST>& in)
 {
-	return *o.ostr << '\'' << in << '\'';
+    return *o.ostr << '\'' << in << '\'';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -236,7 +237,7 @@ operator <<(quote_only_type1 o, const Set<ST>& in)
 
 enum quote_double_only_type0
 {
-	quote_double_only ///< insert into a std::ostream to double-quote next item
+    quote_double_only ///< insert into a std::ostream to double-quote next item
 };
 
 
@@ -245,35 +246,35 @@ enum quote_double_only_type0
 
 struct quote_double_only_type1
 {
-	std::ostream* ostr;
-	quote_double_only_type1(std::ostream* o) :
-	ostr(o)
-	{
-	}
+    std::ostream* ostr;
+    quote_double_only_type1(std::ostream* o) :
+        ostr(o)
+    {
+    }
 };
 
 
 inline quote_double_only_type1
 operator <<(std::ostream& o, quote_double_only_type0 /* esc */)
 {
-	return quote_double_only_type1(&o);
+    return quote_double_only_type1(&o);
 }
 
 
 struct quote_double_only_type2
 {
-	SQLQueryParms *qparms;
-	quote_double_only_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms *qparms;
+    quote_double_only_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline quote_double_only_type2
 operator <<(SQLQueryParms& p, quote_double_only_type0 /* esc */)
 {
-	return quote_double_only_type2(&p);
+    return quote_double_only_type2(&p);
 }
 
 
@@ -296,7 +297,7 @@ template <class ST>
 inline std::ostream&
 operator <<(quote_double_only_type1 o, const Set<ST>& in)
 {
-	return *o.ostr << '"' << in << '"';
+    return *o.ostr << '"' << in << '"';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -321,35 +322,35 @@ enum escape_type0 { escape };
 
 struct escape_type1
 {
-	std::ostream* ostr;
-	escape_type1(std::ostream* o) :
-	ostr(o)
-	{
-	}
+    std::ostream* ostr;
+    escape_type1(std::ostream* o) :
+        ostr(o)
+    {
+    }
 };
 
 
 inline escape_type1
 operator <<(std::ostream& o, escape_type0 /* esc */)
 {
-	return escape_type1(&o);
+    return escape_type1(&o);
 }
 
 
 struct escape_type2
 {
-	SQLQueryParms *qparms;
-	escape_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms *qparms;
+    escape_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline escape_type2
 operator <<(SQLQueryParms& p, escape_type0 /* esc */)
 {
-	return escape_type2(&p);
+    return escape_type2(&p);
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -386,7 +387,7 @@ operator <<(escape_type1 o, const SQLTypeAdapter& in);
 
 enum do_nothing_type0
 {
-	do_nothing				///< insert into a std::ostream to override manipulation of next item
+    do_nothing				///< insert into a std::ostream to override manipulation of next item
 };
 
 
@@ -395,18 +396,18 @@ enum do_nothing_type0
 
 struct do_nothing_type1
 {
-	std::ostream* ostr;
-	do_nothing_type1(std::ostream* o) :
-	ostr(o)
-	{
-	}
+    std::ostream* ostr;
+    do_nothing_type1(std::ostream* o) :
+        ostr(o)
+    {
+    }
 };
 
 
 inline do_nothing_type1
 operator <<(std::ostream& o, do_nothing_type0 /* esc */)
 {
-	return do_nothing_type1(&o);
+    return do_nothing_type1(&o);
 }
 
 
@@ -416,18 +417,18 @@ operator <<(do_nothing_type1 o, const SQLTypeAdapter& in);
 
 struct do_nothing_type2
 {
-	SQLQueryParms *qparms;
-	do_nothing_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms *qparms;
+    do_nothing_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline do_nothing_type2
 operator <<(SQLQueryParms& p, do_nothing_type0 /* esc */)
 {
-	return do_nothing_type2(&p);
+    return do_nothing_type2(&p);
 }
 
 
@@ -452,7 +453,7 @@ operator <<(do_nothing_type2 p, SQLTypeAdapter& in);
 
 enum ignore_type0
 {
-	ignore					///< insert into a std::ostream as a dummy manipulator
+    ignore					///< insert into a std::ostream as a dummy manipulator
 };
 
 
@@ -461,18 +462,18 @@ enum ignore_type0
 
 struct ignore_type2
 {
-	SQLQueryParms* qparms;
-	ignore_type2(SQLQueryParms* p) :
-	qparms(p)
-	{
-	}
+    SQLQueryParms* qparms;
+    ignore_type2(SQLQueryParms* p) :
+        qparms(p)
+    {
+    }
 };
 
 
 inline ignore_type2
 operator <<(SQLQueryParms& p, ignore_type0 /* esc */)
 {
-	return ignore_type2(&p);
+    return ignore_type2(&p);
 }
 
 

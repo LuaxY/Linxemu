@@ -1,8 +1,8 @@
 /***********************************************************************
  sqlstream.cpp - Implements the SQLStream class.
 
- Copyright (c) 2008 by AboveNet, Inc.  Others may also hold copyrights 
- on code in this file.  See the CREDITS file in the top directory of 
+ Copyright (c) 2008 by AboveNet, Inc.  Others may also hold copyrights
+ on code in this file.  See the CREDITS file in the top directory of
  the distribution for details.
 
  This file is part of MySQL++.
@@ -30,64 +30,70 @@
 
 #include <string>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 SQLStream::SQLStream(Connection* c, const char* pstr) :
-std::ostringstream(),
-conn_(c)
+    std::ostringstream(),
+    conn_(c)
 {
-	if (pstr != 0) {
-		str(pstr);
-	}
+    if (pstr != 0)
+    {
+        str(pstr);
+    }
 }
 
 
 SQLStream::SQLStream(const SQLStream& s) :
-std::ostringstream(s.str()),
-conn_(s.conn_)
+    std::ostringstream(s.str()),
+    conn_(s.conn_)
 {
 }
 
 
 size_t
 SQLStream::escape_string(std::string* ps, const char* original,
-		size_t length) const
+                         size_t length) const
 {
-	if (conn_ && *conn_) {
-		// Normal case
-		return conn_->driver()->escape_string(ps, original, length);
-	}
-	else {
-		// Should only happen in test/test_manip.cpp, since it doesn't
-		// want to open a DB connection just to test the manipulators.
-		return DBDriver::escape_string_no_conn(ps, original, length);
-	}
+    if (conn_ && *conn_)
+    {
+        // Normal case
+        return conn_->driver()->escape_string(ps, original, length);
+    }
+    else
+    {
+        // Should only happen in test/test_manip.cpp, since it doesn't
+        // want to open a DB connection just to test the manipulators.
+        return DBDriver::escape_string_no_conn(ps, original, length);
+    }
 }
 
 
 size_t
 SQLStream::escape_string(char* escaped, const char* original,
-		size_t length) const
+                         size_t length) const
 {
-	if (conn_ && *conn_) {
-		// Normal case
-		return conn_->driver()->escape_string(escaped, original, length);
-	}
-	else {
-		// Should only happen in test/test_manip.cpp, since it doesn't
-		// want to open a DB connection just to test the manipulators.
-		return DBDriver::escape_string_no_conn(escaped, original, length);
-	}
+    if (conn_ && *conn_)
+    {
+        // Normal case
+        return conn_->driver()->escape_string(escaped, original, length);
+    }
+    else
+    {
+        // Should only happen in test/test_manip.cpp, since it doesn't
+        // want to open a DB connection just to test the manipulators.
+        return DBDriver::escape_string_no_conn(escaped, original, length);
+    }
 }
 
 
 SQLStream&
 SQLStream::operator=(const SQLStream& rhs)
 {
-	conn_ = rhs.conn_;
-	str(rhs.str());
+    conn_ = rhs.conn_;
+    str(rhs.str());
 
-	return *this;
+    return *this;
 }
 
 

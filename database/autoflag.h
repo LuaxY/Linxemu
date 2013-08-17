@@ -36,21 +36,21 @@ template <class T = bool>
 class AutoFlag
 {
 public:
-	/// \brief Constructor: sets ref to true.
-	AutoFlag(T& ref) :
-	referent_(ref)
-	{
-		referent_ = true;
-	}
+    /// \brief Constructor: sets ref to true.
+    AutoFlag(T& ref) :
+        referent_(ref)
+    {
+        referent_ = true;
+    }
 
-	/// \brief Destructor: sets referent passed to ctor to false.
-	~AutoFlag()
-	{
-		referent_ = false;
-	}
+    /// \brief Destructor: sets referent passed to ctor to false.
+    ~AutoFlag()
+    {
+        referent_ = false;
+    }
 
 private:
-	T& referent_;
+    T& referent_;
 };
 
 #endif // !defined(MYSQLPP_AUTOFLAG_H)

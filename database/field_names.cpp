@@ -32,36 +32,43 @@
 
 #include <algorithm>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
-namespace internal { extern void str_to_lwr(std::string& s); }
+namespace internal
+{
+extern void str_to_lwr(std::string& s);
+}
 
 void
 FieldNames::init(const ResultBase* res)
 {
-	size_t num = res->num_fields();
-	reserve(num);
+    size_t num = res->num_fields();
+    reserve(num);
 
-	for (size_t i = 0; i < num; i++) {
-		push_back(res->fields().at(i).name());
-	}
+    for (size_t i = 0; i < num; i++)
+    {
+        push_back(res->fields().at(i).name());
+    }
 }
 
 
 unsigned int
 FieldNames::operator [](const std::string& s) const
 {
-	std::string temp1(s);
-	internal::str_to_lwr(temp1);
-	for (const_iterator it = begin(); it != end(); ++it) {
-	std::string temp2(*it);
-		internal::str_to_lwr(temp2);
-		if (temp2.compare(temp1) == 0) {
-			return it - begin();
-		}
-	}
+    std::string temp1(s);
+    internal::str_to_lwr(temp1);
+    for (const_iterator it = begin(); it != end(); ++it)
+    {
+        std::string temp2(*it);
+        internal::str_to_lwr(temp2);
+        if (temp2.compare(temp1) == 0)
+        {
+            return it - begin();
+        }
+    }
 
-	return end() - begin();
+    return end() - begin();
 }
 
 } // end namespace mysqlpp

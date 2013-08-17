@@ -12,17 +12,17 @@
 using namespace std;
 
 template <class T> class PrototypeFrame
- {
-    public:
-        virtual ~PrototypeFrame(){}
-        virtual T* getInstance() const = 0;
- };
+{
+public:
+    virtual ~PrototypeFrame() {}
+    virtual T* getInstance() const = 0;
+};
 
 class IFrame : public PrototypeFrame<IFrame>
 {
-    public:
-        virtual char* getFrameName() = 0;
-        virtual bool process(INetworkMessage* message, Client* client) = 0;
+public:
+    virtual char* getFrameName() = 0;
+    virtual bool process(INetworkMessage* message, Client* client) = 0;
 };
 
 #endif // IFRAME_H

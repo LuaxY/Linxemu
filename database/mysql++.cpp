@@ -26,12 +26,13 @@
 
 #include "mysql++.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 unsigned int
 get_library_version()
 {
-	return MYSQLPP_HEADER_VERSION;
+    return MYSQLPP_HEADER_VERSION;
 }
 
 } // end namespace mysqlpp

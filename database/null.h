@@ -37,7 +37,8 @@
 #include <iostream>
 #include <string>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 extern const std::string null_str;	///< "NULL" string constant
 
@@ -51,11 +52,11 @@ class MYSQLPP_EXPORT null_type
 protected:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	template <typename CannotConvertNullToAnyOtherDataType>
-	operator CannotConvertNullToAnyOtherDataType() const
-	{
-		return CannotConvertNullToAnyOtherDataType();
-	}
+    template <typename CannotConvertNullToAnyOtherDataType>
+    operator CannotConvertNullToAnyOtherDataType() const
+    {
+        return CannotConvertNullToAnyOtherDataType();
+    }
 #endif // !defined(DOXYGEN_IGNORE)
 };
 
@@ -73,7 +74,7 @@ protected:
 /// int foo = return_some_value_for_foo();
 /// mysqlpp::Null<int> bar = foo ? foo : mysqlpp::null;
 /// \endcode
-/// 
+///
 /// The compiler will try to convert mysqlpp::null to \c int to make
 /// all values in the conditional operation consistent, but this is
 /// not legal.  Anyway, it's questionable code because it means you're
@@ -95,13 +96,16 @@ struct NullIsNull
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	static null_type null_is() { return null; }
+    static null_type null_is()
+    {
+        return null;
+    }
 
-	static std::ostream& null_ostr(std::ostream& o)
-	{
-		o << "(NULL)";
-		return o;
-	}
+    static std::ostream& null_ostr(std::ostream& o)
+    {
+        o << "(NULL)";
+        return o;
+    }
 #endif // !defined(DOXYGEN_IGNORE)
 };
 
@@ -116,13 +120,16 @@ struct NullIsZero
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	static int null_is() { return 0; }
-	
-	static std::ostream& null_ostr(std::ostream& o)
-	{
-		o << 0;
-		return o;
-	}
+    static int null_is()
+    {
+        return 0;
+    }
+
+    static std::ostream& null_ostr(std::ostream& o)
+    {
+        o << 0;
+        return o;
+    }
 #endif // !defined(DOXYGEN_IGNORE)
 };
 
@@ -136,13 +143,16 @@ struct NullIsBlank
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	static const char *null_is() { return ""; }
-	
-	static std::ostream& null_ostr(std::ostream& o)
-	{
-		o << "";
-		return o;
-	}
+    static const char *null_is()
+    {
+        return "";
+    }
+
+    static std::ostream& null_ostr(std::ostream& o)
+    {
+        o << "";
+        return o;
+    }
 #endif // !defined(DOXYGEN_IGNORE)
 };
 
@@ -152,7 +162,7 @@ struct NullIsBlank
 ///
 /// This template is necessary because there is nothing in the C++ type
 /// system with the same semantics as SQL's null.  In SQL, a column can
-/// have the optional 'NULL' attribute, so there is a difference in 
+/// have the optional 'NULL' attribute, so there is a difference in
 /// type between, say an \c int column that can be null and one that
 /// cannot be.  C++'s NULL constant does not have these features.
 ///
@@ -170,146 +180,164 @@ template <class Type, class Behavior = NullIsNull>
 class Null
 {
 public:
-	/// \brief The object's value, when it is not SQL null
-	Type data;
-	
-	/// \brief If set, this object is considered equal to SQL null.
-	///
-	/// This flag affects how the Type() and << operators work.
-	bool is_null;
+    /// \brief The object's value, when it is not SQL null
+    Type data;
 
-	/// \brief Type of the data stored in this object, when it is not
-	/// equal to SQL null.
-	typedef Type value_type;
+    /// \brief If set, this object is considered equal to SQL null.
+    ///
+    /// This flag affects how the Type() and << operators work.
+    bool is_null;
 
-	/// \brief Default constructor
-	///
-	/// "data" member is left uninitialized by this ctor, because we
-	/// don't know what to initialize it to.
-	Null() :
-	data(),
-	is_null(false)
-	{
-	}
+    /// \brief Type of the data stored in this object, when it is not
+    /// equal to SQL null.
+    typedef Type value_type;
 
-	/// \brief Initialize the object with a particular value.
-	///
-	/// The object is marked as "not null" if you use this ctor.  This
-	/// behavior exists because the class doesn't encode nulls, but
-	/// rather data which \e can \e be null.  The distinction is
-	/// necessary because 'NULL' is an optional attribute of SQL
-	/// columns.
-	Null(const Type& x) :
-	data(x),
-	is_null(false)
-	{
-	}
+    /// \brief Default constructor
+    ///
+    /// "data" member is left uninitialized by this ctor, because we
+    /// don't know what to initialize it to.
+    Null() :
+        data(),
+        is_null(false)
+    {
+    }
 
-	/// \brief Construct a Null equal to SQL null
-	///
-	/// This is typically used with the global \c null object. (Not to
-	/// be confused with C's NULL type.)  You can say something like...
-	/// \code
-	/// Null<int> foo = null;
-	/// \endcode
-	/// ...to get a null \c int.
-	Null(const null_type&) :
-	data(),
-	is_null(true)
-	{
-	}
+    /// \brief Initialize the object with a particular value.
+    ///
+    /// The object is marked as "not null" if you use this ctor.  This
+    /// behavior exists because the class doesn't encode nulls, but
+    /// rather data which \e can \e be null.  The distinction is
+    /// necessary because 'NULL' is an optional attribute of SQL
+    /// columns.
+    Null(const Type& x) :
+        data(x),
+        is_null(false)
+    {
+    }
 
-	/// \brief Converts this object to Type
-	///
-	/// If is_null is set, returns whatever we consider that null "is",
-	/// according to the Behavior parameter you used when instantiating
-	/// this template.  See NullIsNull, NullIsZero and NullIsBlank.
-	///
-	/// Otherwise, just returns the 'data' member.
-	operator Type() const
-	{
-		if (is_null) {
-			return Behavior::null_is();
-		}
-		else {
-			return data;
-		}
-	}
+    /// \brief Construct a Null equal to SQL null
+    ///
+    /// This is typically used with the global \c null object. (Not to
+    /// be confused with C's NULL type.)  You can say something like...
+    /// \code
+    /// Null<int> foo = null;
+    /// \endcode
+    /// ...to get a null \c int.
+    Null(const null_type&) :
+        data(),
+        is_null(true)
+    {
+    }
 
-	/// \brief Assign a value to the object.
-	///
-	/// This marks the object as "not null" as a side effect.
-	Null& operator =(const Type& x)
-	{
-		data = x;
-		is_null = false;
-		return *this;
-	}
+    /// \brief Converts this object to Type
+    ///
+    /// If is_null is set, returns whatever we consider that null "is",
+    /// according to the Behavior parameter you used when instantiating
+    /// this template.  See NullIsNull, NullIsZero and NullIsBlank.
+    ///
+    /// Otherwise, just returns the 'data' member.
+    operator Type() const
+    {
+        if (is_null)
+        {
+            return Behavior::null_is();
+        }
+        else
+        {
+            return data;
+        }
+    }
 
-	/// \brief Assign SQL null to this object.
-	///
-	/// This just sets the is_null flag; the data member is not
-	/// affected until you call the Type() operator on it.
-	Null& operator =(const null_type&)
-	{
-		is_null = true;
-		return *this;
-	}
+    /// \brief Assign a value to the object.
+    ///
+    /// This marks the object as "not null" as a side effect.
+    Null& operator =(const Type& x)
+    {
+        data = x;
+        is_null = false;
+        return *this;
+    }
 
-	/// \brief Do equality comparison of two nullable values
-	///
-	/// Two null objects are equal, and null is not equal to not-null.
-	/// If neither is null, we delegate to operator == for the base
-	/// data type.
-	bool operator ==(const Null<Type>& rhs) const
-	{
-		if (is_null && rhs.is_null) {
-			return true;
-		}
-		else if (is_null != rhs.is_null) {
-			return false;	// one null, the other not
-		}
-		else {
-			return data == rhs.data;
-		}
-	}
+    /// \brief Assign SQL null to this object.
+    ///
+    /// This just sets the is_null flag; the data member is not
+    /// affected until you call the Type() operator on it.
+    Null& operator =(const null_type&)
+    {
+        is_null = true;
+        return *this;
+    }
 
-	/// \brief Do equality comparison against hard-coded SQL null
-	///
-	/// This tells you the same thing as testing is_null member.
-	bool operator ==(const null_type&) const { return is_null; }
+    /// \brief Do equality comparison of two nullable values
+    ///
+    /// Two null objects are equal, and null is not equal to not-null.
+    /// If neither is null, we delegate to operator == for the base
+    /// data type.
+    bool operator ==(const Null<Type>& rhs) const
+    {
+        if (is_null && rhs.is_null)
+        {
+            return true;
+        }
+        else if (is_null != rhs.is_null)
+        {
+            return false;	// one null, the other not
+        }
+        else
+        {
+            return data == rhs.data;
+        }
+    }
 
-	/// \brief Do inequality comparison of two nullable values
-	bool operator !=(const Null<Type>& rhs) const
-			{ return !(*this == rhs); }
+    /// \brief Do equality comparison against hard-coded SQL null
+    ///
+    /// This tells you the same thing as testing is_null member.
+    bool operator ==(const null_type&) const
+    {
+        return is_null;
+    }
 
-	/// \brief Do inequality comparison against hard-coded SQL null
-	bool operator !=(const null_type& rhs) const
-			{ return !(*this == rhs); }
+    /// \brief Do inequality comparison of two nullable values
+    bool operator !=(const Null<Type>& rhs) const
+    {
+        return !(*this == rhs);
+    }
 
-	/// \brief Do less-than comparison of two nullable values
-	///
-	/// Two null objects are equal to each other, and null is less
-	/// than not-null.  If neither is null, we delegate to operator <
-	/// for the base data type.
-	bool operator <(const Null<Type>& rhs) const
-	{
-		if (is_null) {
-			return !rhs.is_null;	// less than only if RHS not null
-		}
-		else if (rhs.is_null) {
-			return false;			// non-null always greater than null
-		}
-		else {
-			return data < rhs.data;	// neither is null, so compare data
-		}
-	}
+    /// \brief Do inequality comparison against hard-coded SQL null
+    bool operator !=(const null_type& rhs) const
+    {
+        return !(*this == rhs);
+    }
 
-	/// \brief Do less-than comparison against hard-coded SQL null
-	///
-	/// Always returns false because we can only be greater than or
-	/// equal to a SQL null.
-	bool operator <(const null_type&) const { return false; }
+    /// \brief Do less-than comparison of two nullable values
+    ///
+    /// Two null objects are equal to each other, and null is less
+    /// than not-null.  If neither is null, we delegate to operator <
+    /// for the base data type.
+    bool operator <(const Null<Type>& rhs) const
+    {
+        if (is_null)
+        {
+            return !rhs.is_null;	// less than only if RHS not null
+        }
+        else if (rhs.is_null)
+        {
+            return false;			// non-null always greater than null
+        }
+        else
+        {
+            return data < rhs.data;	// neither is null, so compare data
+        }
+    }
+
+    /// \brief Do less-than comparison against hard-coded SQL null
+    ///
+    /// Always returns false because we can only be greater than or
+    /// equal to a SQL null.
+    bool operator <(const null_type&) const
+    {
+        return false;
+    }
 };
 
 
@@ -320,24 +348,24 @@ public:
 template <> class Null<void>
 {
 public:
-	bool is_null;
-	typedef void value_type;
+    bool is_null;
+    typedef void value_type;
 
-	Null() :
-	is_null(false)
-	{
-	}
-	
-	Null(const null_type&) :
-	is_null(true)
-	{
-	}
+    Null() :
+        is_null(false)
+    {
+    }
 
-	Null& operator =(const null_type&)
-	{
-		is_null = true;
-		return *this;
-	}
+    Null(const null_type&) :
+        is_null(true)
+    {
+    }
+
+    Null& operator =(const null_type&)
+    {
+        is_null = true;
+        return *this;
+    }
 };
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -348,12 +376,12 @@ public:
 /// data.
 template <class Type, class Behavior>
 inline std::ostream& operator <<(std::ostream& o,
-		const Null<Type, Behavior>& n)
+                                 const Null<Type, Behavior>& n)
 {
-	if (n.is_null)
-		return Behavior::null_ostr(o);
-	else
-		return o << n.data;
+    if (n.is_null)
+        return Behavior::null_ostr(o);
+    else
+        return o << n.data;
 }
 
 } // end namespace mysqlpp

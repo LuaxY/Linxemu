@@ -34,7 +34,8 @@
 
 #include "common.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -46,81 +47,83 @@ class MYSQLPP_EXPORT Connection;
 class MYSQLPP_EXPORT Transaction
 {
 public:
-	/// \brief Transaction isolation levels defined in SQL
-	///
-	/// These values can be passed to one of the Transaction
-	/// constructors to change the way the database engine protects
-	/// transactions from other DB updates.  These values are in order
-	/// of increasing isolation, but decreasing performance.
-	enum IsolationLevel {
-		read_uncommitted,	///< allow "dirty reads" from other transactions
-		read_committed,		///< only read rows committed by other transactions
-		repeatable_read,	///< other transactions do not affect repeated reads in this transaction
-		serializable		///< this transaction prevents writes to any rows it accesses while it runs
-	};
+    /// \brief Transaction isolation levels defined in SQL
+    ///
+    /// These values can be passed to one of the Transaction
+    /// constructors to change the way the database engine protects
+    /// transactions from other DB updates.  These values are in order
+    /// of increasing isolation, but decreasing performance.
+    enum IsolationLevel
+    {
+        read_uncommitted,	///< allow "dirty reads" from other transactions
+        read_committed,		///< only read rows committed by other transactions
+        repeatable_read,	///< other transactions do not affect repeated reads in this transaction
+        serializable		///< this transaction prevents writes to any rows it accesses while it runs
+    };
 
-	/// \brief Isolation level scopes defined in SQL
-	///
-	/// These values are only used with one of the Transaction
-	/// constructors, to select which transaction(s) our change to
-	// the isolation scope will affect.
-	enum IsolationScope {
-		this_transaction,	///< change level for this transaction only
-		session,			///< change level for all transactions in this session
-		global				///< change level for all transactions on the DB server
-	};
+    /// \brief Isolation level scopes defined in SQL
+    ///
+    /// These values are only used with one of the Transaction
+    /// constructors, to select which transaction(s) our change to
+    // the isolation scope will affect.
+    enum IsolationScope
+    {
+        this_transaction,	///< change level for this transaction only
+        session,			///< change level for all transactions in this session
+        global				///< change level for all transactions on the DB server
+    };
 
-	/// \brief Simple constructor
-	///
-	/// \param conn The connection we use to manage the transaction set
-	/// \param consistent Whether to use "consistent snapshots" during
-	/// the transaction. See the documentation for "START TRANSACTION"
-	/// in the MySQL manual for more on this.
-	Transaction(Connection& conn, bool consistent = false);
+    /// \brief Simple constructor
+    ///
+    /// \param conn The connection we use to manage the transaction set
+    /// \param consistent Whether to use "consistent snapshots" during
+    /// the transaction. See the documentation for "START TRANSACTION"
+    /// in the MySQL manual for more on this.
+    Transaction(Connection& conn, bool consistent = false);
 
-	/// \brief Constructor allowing custom transaction isolation level
-	/// and scope
-	///
-	/// \param conn The connection we use to manage the transaction set
-	/// \param level Isolation level to use for this transaction
-	/// \param scope Selects the scope of the isolation level change
-	/// \param consistent Whether to use "consistent snapshots" during
-	/// the transaction. See the documentation for "START TRANSACTION"
-	/// in the MySQL manual for more on this.
-	Transaction(Connection& conn, IsolationLevel level,
-			IsolationScope scope = this_transaction,
-			bool consistent = false);
+    /// \brief Constructor allowing custom transaction isolation level
+    /// and scope
+    ///
+    /// \param conn The connection we use to manage the transaction set
+    /// \param level Isolation level to use for this transaction
+    /// \param scope Selects the scope of the isolation level change
+    /// \param consistent Whether to use "consistent snapshots" during
+    /// the transaction. See the documentation for "START TRANSACTION"
+    /// in the MySQL manual for more on this.
+    Transaction(Connection& conn, IsolationLevel level,
+                IsolationScope scope = this_transaction,
+                bool consistent = false);
 
-	/// \brief Destructor
-	///
-	/// If the transaction has not been committed or rolled back by the
-	/// time the destructor is called, it is rolled back.  This is the
-	/// right thing because one way this can happen is if the object is
-	/// being destroyed as the stack is unwound to handle an exception.
-	/// In that instance, you certainly want to roll back the
-	/// transaction.
-	~Transaction();
+    /// \brief Destructor
+    ///
+    /// If the transaction has not been committed or rolled back by the
+    /// time the destructor is called, it is rolled back.  This is the
+    /// right thing because one way this can happen is if the object is
+    /// being destroyed as the stack is unwound to handle an exception.
+    /// In that instance, you certainly want to roll back the
+    /// transaction.
+    ~Transaction();
 
-	/// \brief Commits the transaction
-	///
-	/// This commits all updates to the database using the connection
-	/// we were created with since this object was created.  This is a
-	/// no-op if the table isn't stored using a transaction-aware
-	/// storage engine.  See CREATE TABLE in the MySQL manual for
-	/// details.
-	void commit();
+    /// \brief Commits the transaction
+    ///
+    /// This commits all updates to the database using the connection
+    /// we were created with since this object was created.  This is a
+    /// no-op if the table isn't stored using a transaction-aware
+    /// storage engine.  See CREATE TABLE in the MySQL manual for
+    /// details.
+    void commit();
 
-	/// \brief Rolls back the transaction
-	///
-	/// This abandons all SQL statements made on the connection since
-	/// this object was created.  This only works on tables stored using
-	/// a transaction-aware storage engine.  See CREATE TABLE in the
-	/// MySQL manual for details.
-	void rollback();
+    /// \brief Rolls back the transaction
+    ///
+    /// This abandons all SQL statements made on the connection since
+    /// this object was created.  This only works on tables stored using
+    /// a transaction-aware storage engine.  See CREATE TABLE in the
+    /// MySQL manual for details.
+    void rollback();
 
 private:
-	Connection& conn_;	///! Connection to send queries through
-	bool finished_;		///! True when we commit or roll back xaction
+    Connection& conn_;	///! Connection to send queries through
+    bool finished_;		///! True when we commit or roll back xaction
 };
 
 
@@ -137,19 +140,19 @@ private:
 class MYSQLPP_EXPORT NoTransaction
 {
 public:
-	/// \brief Constructor
-	NoTransaction(Connection&, bool = false)
-	{
-	}
+    /// \brief Constructor
+    NoTransaction(Connection&, bool = false)
+    {
+    }
 
-	/// \brief Destructor
-	~NoTransaction() { }
+    /// \brief Destructor
+    ~NoTransaction() { }
 
-	/// \brief stub to replace Transaction::commit()
-	void commit() { }
+    /// \brief stub to replace Transaction::commit()
+    void commit() { }
 
-	/// \brief stub to replace Transaction::rollback()
-	void rollback() { }
+    /// \brief stub to replace Transaction::rollback()
+    void rollback() { }
 };
 
 } // end namespace mysqlpp

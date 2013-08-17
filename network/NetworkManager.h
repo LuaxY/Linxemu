@@ -58,32 +58,32 @@ typedef struct Packet
 
 class NetworkManager
 {
-    public:
-        NetworkManager(){};
-        ~NetworkManager(){};
-        void start();
+public:
+    NetworkManager() {};
+    ~NetworkManager() {};
+    void start();
 
-        static string getClientIP(SOCKET ClientSocket);
-        static string getClientPort(SOCKET ClientSocket);
-        static void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
-        static unsigned int computeTypeLen(unsigned int len);
-        static unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
-        static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
+    static string getClientIP(SOCKET ClientSocket);
+    static string getClientPort(SOCKET ClientSocket);
+    static void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
+    static unsigned int computeTypeLen(unsigned int len);
+    static unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
+    static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
 
-    private:
-        void PacketParser(Client* client);
-        unsigned short getMessageId(unsigned short firstByte);
-        unsigned short getMessageLengthType(unsigned short firstByte);
-        unsigned short readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet);
+private:
+    void PacketParser(Client* client);
+    unsigned short getMessageId(unsigned short firstByte);
+    unsigned short getMessageLengthType(unsigned short firstByte);
+    unsigned short readMessageLength(unsigned short byteLenDynamicHeader, MessageReader *packet);
 
-    protected:
-        virtual void onClientConnected(SOCKET ClientSocket) = 0;
-        virtual void onClientDisconnected(Client* client, int i) = 0;
-        virtual void onDataReceive(Client* client, Packet* packet) = 0;
+protected:
+    virtual void onClientConnected(SOCKET ClientSocket) = 0;
+    virtual void onClientDisconnected(Client* client, int i) = 0;
+    virtual void onDataReceive(Client* client, Packet* packet) = 0;
 
-        //Client *clients; // OLD
-        vector<Client*> clients;
-        unsigned short max_user;
+    //Client *clients; // OLD
+    vector<Client*> clients;
+    unsigned short max_user;
 };
 
 #endif // NETWORK_MANAGER_H

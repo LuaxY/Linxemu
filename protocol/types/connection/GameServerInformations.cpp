@@ -22,7 +22,7 @@ void GameServerInformations::initGameServerInformations(unsigned short _id, char
 
 int GameServerInformations::getTypeId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 void GameServerInformations::pack(MessageWriter *output)
@@ -39,7 +39,7 @@ void GameServerInformations::unpack(char *buffer)
 {
     MessageReader *input = new MessageReader(buffer);
 
-	delete input;
+    delete input;
 }
 
 void GameServerInformations::reset()

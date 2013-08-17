@@ -36,7 +36,8 @@
 
 #include <vector>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -44,178 +45,187 @@ class MYSQLPP_EXPORT Query;
 #endif
 
 /// \brief This class holds the parameter values for filling
-/// template queries. 
+/// template queries.
 class MYSQLPP_EXPORT SQLQueryParms : public std::vector<SQLTypeAdapter>
 {
 public:
-	/// \brief Abbreviation so some of the declarations below don't
-	/// span many lines.
-	typedef const SQLTypeAdapter& sta;
+    /// \brief Abbreviation so some of the declarations below don't
+    /// span many lines.
+    typedef const SQLTypeAdapter& sta;
 
-	/// \brief Default constructor
-	SQLQueryParms() :
-	parent_(0),
-	processing_(false)
-	{
-	}
-	
-	/// \brief Create object
-	///
-	/// \param p pointer to the query object these parameters are tied
-	/// to
-	SQLQueryParms(Query* p) :
-	parent_(p),
-	processing_(false)
-	{
-	}
-	
-	/// \brief Returns true if we are bound to a query object.
-	///
-	/// Basically, this tells you which of the two ctors were called.
-	bool bound() { return parent_ != 0; }
+    /// \brief Default constructor
+    SQLQueryParms() :
+        parent_(0),
+        processing_(false)
+    {
+    }
 
-	/// \brief Clears the list
-	void clear() { erase(begin(), end()); }
+    /// \brief Create object
+    ///
+    /// \param p pointer to the query object these parameters are tied
+    /// to
+    SQLQueryParms(Query* p) :
+        parent_(p),
+        processing_(false)
+    {
+    }
 
-	/// \brief Indirect access to Query::escape_string()
-	///
-	/// \internal Needed by \c operator<<(Manip&, \c const \c T&) where
-	/// \c Manip is used on a SQLQueryParms object.  We'd have to make
-	/// all these operators friends to give access to our internal Query
-	/// object otherwise.
-	///
-	/// \see Query::escape_string(std::string*, const char*, size_t)
-	size_t escape_string(std::string* ps, const char* original = 0,
-			size_t length = 0) const;
+    /// \brief Returns true if we are bound to a query object.
+    ///
+    /// Basically, this tells you which of the two ctors were called.
+    bool bound()
+    {
+        return parent_ != 0;
+    }
 
-	/// \brief Indirect access to Query::escape_string()
-	///
-	/// \see escape_string(std::string*, const char*, size_t)
-	/// \see Query::escape_string(const char*, const char*, size_t)
-	size_t escape_string(char* escaped, const char* original,
-			size_t length) const;
+    /// \brief Clears the list
+    void clear()
+    {
+        erase(begin(), end());
+    }
 
-	/// \brief Access element number n
-	SQLTypeAdapter& operator [](size_type n)
-	{
-		if (n >= size()) {
-			insert(end(), (n + 1) - size(), "");
-		}
-		return std::vector<SQLTypeAdapter>::operator [](n);
-	}
+    /// \brief Indirect access to Query::escape_string()
+    ///
+    /// \internal Needed by \c operator<<(Manip&, \c const \c T&) where
+    /// \c Manip is used on a SQLQueryParms object.  We'd have to make
+    /// all these operators friends to give access to our internal Query
+    /// object otherwise.
+    ///
+    /// \see Query::escape_string(std::string*, const char*, size_t)
+    size_t escape_string(std::string* ps, const char* original = 0,
+                         size_t length = 0) const;
 
-	/// \brief Access element number n
-	const SQLTypeAdapter& operator [](size_type n) const
-			{ return std::vector<SQLTypeAdapter>::operator [](n); }
-	
-	/// \brief Access the value of the element with a key of str.
-	SQLTypeAdapter& operator [](const char *str);
+    /// \brief Indirect access to Query::escape_string()
+    ///
+    /// \see escape_string(std::string*, const char*, size_t)
+    /// \see Query::escape_string(const char*, const char*, size_t)
+    size_t escape_string(char* escaped, const char* original,
+                         size_t length) const;
 
-	/// \brief Access the value of the element with a key of str.
-	const SQLTypeAdapter& operator [](const char *str) const;
+    /// \brief Access element number n
+    SQLTypeAdapter& operator [](size_type n)
+    {
+        if (n >= size())
+        {
+            insert(end(), (n + 1) - size(), "");
+        }
+        return std::vector<SQLTypeAdapter>::operator [](n);
+    }
 
-	/// \brief Adds an element to the list
-	SQLQueryParms& operator <<(const SQLTypeAdapter& str)
-	{
-		push_back(str);
-		return *this;
-	}
+    /// \brief Access element number n
+    const SQLTypeAdapter& operator [](size_type n) const
+    {
+        return std::vector<SQLTypeAdapter>::operator [](n);
+    }
 
-	/// \brief Adds an element to the list
-	SQLQueryParms& operator +=(const SQLTypeAdapter& str)
-	{
-		push_back(str);
-		return *this;
-	}
+    /// \brief Access the value of the element with a key of str.
+    SQLTypeAdapter& operator [](const char *str);
 
-	/// \brief Build a composite of two parameter lists
-	///
-	/// If this list is (a, b) and \c other is (c, d, e, f, g), then
-	/// the returned list will be (a, b, e, f, g).  That is, all of this
-	/// list's parameters are in the returned list, plus any from the
-	/// other list that are in positions beyond what exist in this list.
-	///
-	/// If the two lists are the same length or this list is longer than
-	/// the \c other list, a copy of this list is returned.
-	SQLQueryParms operator +(
-			const SQLQueryParms& other) const;
+    /// \brief Access the value of the element with a key of str.
+    const SQLTypeAdapter& operator [](const char *str) const;
+
+    /// \brief Adds an element to the list
+    SQLQueryParms& operator <<(const SQLTypeAdapter& str)
+    {
+        push_back(str);
+        return *this;
+    }
+
+    /// \brief Adds an element to the list
+    SQLQueryParms& operator +=(const SQLTypeAdapter& str)
+    {
+        push_back(str);
+        return *this;
+    }
+
+    /// \brief Build a composite of two parameter lists
+    ///
+    /// If this list is (a, b) and \c other is (c, d, e, f, g), then
+    /// the returned list will be (a, b, e, f, g).  That is, all of this
+    /// list's parameters are in the returned list, plus any from the
+    /// other list that are in positions beyond what exist in this list.
+    ///
+    /// If the two lists are the same length or this list is longer than
+    /// the \c other list, a copy of this list is returned.
+    SQLQueryParms operator +(
+        const SQLQueryParms& other) const;
 
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	void set(sta a)
-	{
-		clear();
-		*this << a;
-	}
-	void set(sta a, sta b)
-	{
-		clear();
-		*this << a << b;
-	}
-	void set(sta a, sta b, sta c)
-	{
-		clear();
-		*this << a << b << c;
-	}
-	void set(sta a, sta b, sta c, sta d)
-	{
-		clear();
-		*this << a << b << c << d;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e)
-	{
-		clear();
-		*this << a << b << c << d << e;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f)
-	{
-		clear();
-		*this << a << b << c << d << e << f;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g << h;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g << h << i;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i, sta j)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g << h << i << j;
-	}
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i, sta j, sta k)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g << h << i << j << k;
-	}
+    void set(sta a)
+    {
+        clear();
+        *this << a;
+    }
+    void set(sta a, sta b)
+    {
+        clear();
+        *this << a << b;
+    }
+    void set(sta a, sta b, sta c)
+    {
+        clear();
+        *this << a << b << c;
+    }
+    void set(sta a, sta b, sta c, sta d)
+    {
+        clear();
+        *this << a << b << c << d;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e)
+    {
+        clear();
+        *this << a << b << c << d << e;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f)
+    {
+        clear();
+        *this << a << b << c << d << e << f;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g << h;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g << h << i;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i, sta j)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g << h << i << j;
+    }
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g, sta h, sta i, sta j, sta k)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g << h << i << j << k;
+    }
 #endif // !defined(DOXYGEN_IGNORE)
 
-	/// \brief Set the template query parameters.
-	///
-	/// Sets parameter 0 to a, parameter 1 to b, etc. There are
-	/// overloaded versions of this function that take anywhere from
-	/// one to a dozen parameters.
-	void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g,
-			sta h, sta i, sta j, sta k, sta l)
-	{
-		clear();
-		*this << a << b << c << d << e << f << g << h << i << j << k << l;
-	}
+    /// \brief Set the template query parameters.
+    ///
+    /// Sets parameter 0 to a, parameter 1 to b, etc. There are
+    /// overloaded versions of this function that take anywhere from
+    /// one to a dozen parameters.
+    void set(sta a, sta b, sta c, sta d, sta e, sta f, sta g,
+             sta h, sta i, sta j, sta k, sta l)
+    {
+        clear();
+        *this << a << b << c << d << e << f << g << h << i << j << k << l;
+    }
 
 private:
-	friend class Query;
+    friend class Query;
 
-	Query* parent_;
-	bool processing_;	///< true if we're building a query string
+    Query* parent_;
+    bool processing_;	///< true if we're building a query string
 };
 
 
@@ -243,21 +253,21 @@ private:
 
 struct SQLParseElement
 {
-	/// \brief Create object
-	///
-	/// \param b the 'before' value
-	/// \param o the 'option' value
-	/// \param n the 'num' value
-	SQLParseElement(std::string b, char o, signed char n) :
-	before(b),
-	option(o),
-	num(n)
-	{
-	}
-	
-	std::string before;		///< string inserted before the parameter
-	char option;			///< the parameter option, or blank if none
-	signed char num;		///< the parameter position to use
+    /// \brief Create object
+    ///
+    /// \param b the 'before' value
+    /// \param o the 'option' value
+    /// \param n the 'num' value
+    SQLParseElement(std::string b, char o, signed char n) :
+        before(b),
+        option(o),
+        num(n)
+    {
+    }
+
+    std::string before;		///< string inserted before the parameter
+    char option;			///< the parameter option, or blank if none
+    signed char num;		///< the parameter position to use
 };
 
 } // end namespace mysqlpp

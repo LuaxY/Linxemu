@@ -6,19 +6,19 @@
 
 class AuthenticationTicketMessage : public INetworkMessage
 {
-	public:
-		INetworkMessage* getInstance() const;
-		void initAuthenticationTicketMessage(char* _lang, char* _ticket);
+public:
+    INetworkMessage* getInstance() const;
+    void initAuthenticationTicketMessage(char* _lang, char* _ticket);
 
-		int getMessageId();
-		char* getMessageName();
-		void pack(MessageWriter *output);
-		void unpack(char *buffer);
+    int getMessageId();
+    char* getMessageName();
+    void pack(MessageWriter *output);
+    void unpack(char *buffer);
 
-		static const int protocolId = 110;
+    static const int protocolId = 110;
 
-		char* lang;
-		char* ticket;
+    char* lang;
+    char* ticket;
 };
 
 #endif // AUTHENTICATION_TICKET_MESSAGE_H

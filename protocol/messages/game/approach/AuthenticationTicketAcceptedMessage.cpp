@@ -2,7 +2,7 @@
 
 INetworkMessage* AuthenticationTicketAcceptedMessage::getInstance() const
 {
-	return new AuthenticationTicketAcceptedMessage(*this);
+    return new AuthenticationTicketAcceptedMessage(*this);
 }
 
 void AuthenticationTicketAcceptedMessage::initAuthenticationTicketAcceptedMessage()
@@ -11,12 +11,12 @@ void AuthenticationTicketAcceptedMessage::initAuthenticationTicketAcceptedMessag
 
 int AuthenticationTicketAcceptedMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* AuthenticationTicketAcceptedMessage::getMessageName()
 {
-	return "AuthenticationTicketAcceptedMessage";
+    return "AuthenticationTicketAcceptedMessage";
 }
 
 void AuthenticationTicketAcceptedMessage::pack(MessageWriter *output)

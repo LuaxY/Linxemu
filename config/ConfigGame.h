@@ -7,28 +7,28 @@ using namespace std;
 
 class Config
 {
-	public:
-		static Config* Instance();
-		void init(string);
+public:
+    static Config* Instance();
+    void init(string);
 
-		/** game **/
-		unsigned short port;
-		unsigned short max_user;
-		unsigned int requiredVersion;
-		unsigned int currentVersion;
+    /** game **/
+    unsigned short port;
+    unsigned short max_user;
+    unsigned int requiredVersion;
+    unsigned int currentVersion;
 
-		/** database **/
-		string host;
-		string username;
-		string password;
-		string database;
-		string login_db;
+    /** database **/
+    string host;
+    string username;
+    string password;
+    string database;
+    string login_db;
 
-	private:
-		Config(){};
-		Config(Config const&){};
-		Config& operator=(Config const&){};
-		static Config* m_pInstance;
+private:
+    Config() {};
+    Config(Config const&) {};
+    Config& operator=(Config const&) {};
+    static Config* m_pInstance;
 };
 
 #endif // CONFIG_H

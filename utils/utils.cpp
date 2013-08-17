@@ -1,15 +1,15 @@
 #include "utils.h"
 
 static const char salt_rand[] =
-        "0123456789"
-        "!@#$%^&*"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
+    "0123456789"
+    "!@#$%^&*"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
 
 static const char token_rand[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
+    "0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
 
 char* genSalt(int len)
 {

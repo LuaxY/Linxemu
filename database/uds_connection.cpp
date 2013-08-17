@@ -36,30 +36,34 @@
 
 using namespace std;
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 static const char* common_complaint =
-		"UnixDomainSocketConnection only works on POSIX systems";
+    "UnixDomainSocketConnection only works on POSIX systems";
 
 bool
 UnixDomainSocketConnection::connect(const char* path,
-		const char* db, const char* user, const char* pass)
+                                    const char* db, const char* user, const char* pass)
 {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
-	if (is_socket(path, &error_message_)) {
-		return Connection::connect(db, path, user, pass);
-	}
-	(void)common_complaint;
+    if (is_socket(path, &error_message_))
+    {
+        return Connection::connect(db, path, user, pass);
+    }
+    (void)common_complaint;
 #else
-	error_message_ = common_complaint;
+    error_message_ = common_complaint;
 #endif
 
-	if (throw_exceptions()) {
-		throw ConnectionFailed(error_message_.c_str());
-	}
-	else {
-		return false;
-	}
+    if (throw_exceptions())
+    {
+        throw ConnectionFailed(error_message_.c_str());
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -67,52 +71,64 @@ bool
 UnixDomainSocketConnection::is_socket(const char* path, std::string* error)
 {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
-	if (path) {
-		struct stat fi;
+    if (path)
+    {
+        struct stat fi;
 
-		if (access(path, F_OK) != 0) {
-			if (error) {
-				*error = path;
-				*error += " does not exist";
-			}
-		}
-		else if (access(path, R_OK | W_OK) != 0) {
-			if (error) {
-				*error = "Don't have read-write permission for ";
-				*error += path;
-			}
-		}
-		else if (stat(path, &fi) != 0) {
-			if (error) {
-				*error = "Failed to get information for ";
-				*error += path;
-			}
-		}
-		else if (!S_ISSOCK(fi.st_mode)) {
-			if (error) {
-				*error = path;
-				*error += " is not a Unix domain socket";
-			}
-		}
-		else {
-			// It's a socket, and we have permission to use it
-			if (error) {
-				error->clear();
-			}
-			return true;
-		}
-	}
-	else
+        if (access(path, F_OK) != 0)
+        {
+            if (error)
+            {
+                *error = path;
+                *error += " does not exist";
+            }
+        }
+        else if (access(path, R_OK | W_OK) != 0)
+        {
+            if (error)
+            {
+                *error = "Don't have read-write permission for ";
+                *error += path;
+            }
+        }
+        else if (stat(path, &fi) != 0)
+        {
+            if (error)
+            {
+                *error = "Failed to get information for ";
+                *error += path;
+            }
+        }
+        else if (!S_ISSOCK(fi.st_mode))
+        {
+            if (error)
+            {
+                *error = path;
+                *error += " is not a Unix domain socket";
+            }
+        }
+        else
+        {
+            // It's a socket, and we have permission to use it
+            if (error)
+            {
+                error->clear();
+            }
+            return true;
+        }
+    }
+    else
 #endif
-	if (error) {
+        if (error)
+        {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
-		*error = "NULL is not a valid Unix domain socket";
+            *error = "NULL is not a valid Unix domain socket";
 #else
-		*error = common_complaint;
+            *error = common_complaint;
 #endif
-	}
+        }
 
-	return false;
+    return false;
 }
 
 

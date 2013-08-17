@@ -6,16 +6,16 @@
 
 class HelloGameMessage : public INetworkMessage
 {
-	public:
-		INetworkMessage* getInstance() const;
-		void initHelloGameMessage();
+public:
+    INetworkMessage* getInstance() const;
+    void initHelloGameMessage();
 
-		int getMessageId();
-		char* getMessageName();
-		void pack(MessageWriter *output);
-		void unpack(char *buffer);
+    int getMessageId();
+    char* getMessageName();
+    void pack(MessageWriter *output);
+    void unpack(char *buffer);
 
-		static const int protocolId = 101;
+    static const int protocolId = 101;
 };
 
 #endif // HELLO_GAME_MESSAGE_H

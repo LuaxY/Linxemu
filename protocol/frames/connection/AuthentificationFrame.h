@@ -12,18 +12,18 @@
 
 class AuthentificationFrame : public IFrame
 {
-    public:
-        IFrame* getInstance() const;
-        char* getFrameName();
-        bool process(INetworkMessage* message, Client* client);
+public:
+    IFrame* getInstance() const;
+    char* getFrameName();
+    bool process(INetworkMessage* message, Client* client);
 
-    private:
-        MessageWriter *data;
-        MessageWriter *packet;
+private:
+    MessageWriter *data;
+    MessageWriter *packet;
 
-        void processMessage(IdentificationMessage* message, Client* client);
-        void processMessage(ClearIdentificationMessage* message, Client* client);
-        void processMessage(ServerSelectionMessage* message, Client* client);
+    void processMessage(IdentificationMessage* message, Client* client);
+    void processMessage(ClearIdentificationMessage* message, Client* client);
+    void processMessage(ServerSelectionMessage* message, Client* client);
 };
 
 #endif // AUTHENTIFICATION_FRAME_H

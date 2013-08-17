@@ -7,16 +7,16 @@
 
 class GameServerApproachFrame : public IFrame
 {
-    public:
-        IFrame* getInstance() const;
-        char* getFrameName();
-        bool process(INetworkMessage* message, Client* client);
+public:
+    IFrame* getInstance() const;
+    char* getFrameName();
+    bool process(INetworkMessage* message, Client* client);
 
-    private:
-        MessageWriter *data;
-        MessageWriter *packet;
+private:
+    MessageWriter *data;
+    MessageWriter *packet;
 
-        void processMessage(AuthenticationTicketMessage* message, Client* client);
+    void processMessage(AuthenticationTicketMessage* message, Client* client);
 };
 
 #endif // GAME_SERVER_APPROACH_FRAME_H

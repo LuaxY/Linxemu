@@ -31,7 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -42,75 +43,75 @@ class MYSQLPP_EXPORT ResultBase;
 class FieldNames : public std::vector<std::string>
 {
 public:
-	/// \brief Default constructor
-	FieldNames() { }
+    /// \brief Default constructor
+    FieldNames() { }
 
-	/// \brief Copy constructor
-	FieldNames(const FieldNames& other) :
-	std::vector<std::string>()
-	{
-		assign(other.begin(), other.end());
-	}
-	
-	/// \brief Create field name list from a result set
-	FieldNames(const ResultBase* res) :
-	std::vector<std::string>()
-	{
-		init(res);
-	}
+    /// \brief Copy constructor
+    FieldNames(const FieldNames& other) :
+        std::vector<std::string>()
+    {
+        assign(other.begin(), other.end());
+    }
 
-	/// \brief Create empty field name list, reserving space for
-	/// a fixed number of field names.
-	FieldNames(int i) :
-	std::vector<std::string>(i)
-	{
-	}
+    /// \brief Create field name list from a result set
+    FieldNames(const ResultBase* res) :
+        std::vector<std::string>()
+    {
+        init(res);
+    }
 
-	/// \brief Initializes the field list from a result set
-	FieldNames& operator =(const ResultBase* res)
-	{
-		init(res);
-		return *this;
-	}
+    /// \brief Create empty field name list, reserving space for
+    /// a fixed number of field names.
+    FieldNames(int i) :
+        std::vector<std::string>(i)
+    {
+    }
 
-	/// \brief Insert \c i empty field names at beginning of list
-	FieldNames& operator =(int i)
-	{
-		insert(begin(), i, "");
-		return *this;
-	}
+    /// \brief Initializes the field list from a result set
+    FieldNames& operator =(const ResultBase* res)
+    {
+        init(res);
+        return *this;
+    }
 
-	/// \brief Get the name of a field given its index.
-	std::string& operator [](int i)
-	{
-		return at(i);
-	}
+    /// \brief Insert \c i empty field names at beginning of list
+    FieldNames& operator =(int i)
+    {
+        insert(begin(), i, "");
+        return *this;
+    }
 
-	/// \brief Get the name of a field given its index, in const
-	/// context.
-	const std::string& operator [](int i) const
-	{
-		return at(i);
-	}
+    /// \brief Get the name of a field given its index.
+    std::string& operator [](int i)
+    {
+        return at(i);
+    }
 
-	/// \brief Get the name of a field given its index.
-	std::string& operator [](size_type i)
-	{
-		return at(i);
-	}
+    /// \brief Get the name of a field given its index, in const
+    /// context.
+    const std::string& operator [](int i) const
+    {
+        return at(i);
+    }
 
-	/// \brief Get the name of a field given its index, in const
-	/// context.
-	const std::string& operator [](size_type i) const
-	{
-		return at(i);
-	}
+    /// \brief Get the name of a field given its index.
+    std::string& operator [](size_type i)
+    {
+        return at(i);
+    }
 
-	/// \brief Get the index number of a field given its name
-	unsigned int operator [](const std::string& s) const;
+    /// \brief Get the name of a field given its index, in const
+    /// context.
+    const std::string& operator [](size_type i) const
+    {
+        return at(i);
+    }
+
+    /// \brief Get the index number of a field given its name
+    unsigned int operator [](const std::string& s) const;
 
 private:
-	void init(const ResultBase* res);
+    void init(const ResultBase* res);
 };
 
 } // end namespace mysqlpp

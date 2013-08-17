@@ -60,7 +60,8 @@
 #include "sql_types.h"
 #include "transaction.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Get the current MySQL++ library version number
 ///

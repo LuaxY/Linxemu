@@ -32,7 +32,8 @@
 #include <sstream>
 #include <string>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Converts anything you can insert into a C++ stream to a
 /// \c std::string via \c std::ostringstream.
@@ -40,9 +41,9 @@ namespace mysqlpp {
 template <class T>
 std::string stream2string(const T& object)
 {
-	std::ostringstream str;
-	str << object;
-	return str.str();
+    std::ostringstream str;
+    str << object;
+    return str.str();
 }
 
 } // end namespace mysqlpp

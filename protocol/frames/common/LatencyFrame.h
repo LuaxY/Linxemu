@@ -7,16 +7,16 @@
 
 class LatencyFrame : public IFrame
 {
-    public:
-        IFrame* getInstance() const;
-        char* getFrameName();
-        bool process(INetworkMessage* message, Client* client);
+public:
+    IFrame* getInstance() const;
+    char* getFrameName();
+    bool process(INetworkMessage* message, Client* client);
 
-    private:
-        MessageWriter *data;
-        MessageWriter *packet;
+private:
+    MessageWriter *data;
+    MessageWriter *packet;
 
-        void processMessage(BasicPingMessage* message, Client* client);
+    void processMessage(BasicPingMessage* message, Client* client);
 };
 
 #endif // LATENCY_FRAME_H

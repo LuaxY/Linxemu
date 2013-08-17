@@ -49,80 +49,80 @@
 // Work out major platform-specific stuff here.
 #if defined(__WIN32__) || defined(_WIN32)
 #	define MYSQLPP_PLATFORM_WINDOWS
-	// Windows compiler support.  Tested with Microsoft Visual C++,
-	// Borland C++ Builder, and MinGW GCC.
+// Windows compiler support.  Tested with Microsoft Visual C++,
+// Borland C++ Builder, and MinGW GCC.
 #	include <winsock.h>
 
-	// Stuff for Visual C++ only
+// Stuff for Visual C++ only
 #	if defined(_MSC_VER)
 #		define MYSQLPP_PLATFORM_VISUAL_CPP
-		// MS *still* doesn't ship stdint.h, through VC++ 2008 at least.
-		// This means we have to take a wild guess at appropriate
-		// integer types in lib/sql_types.h.  See test/inttypes.cpp for
-		// tests that check whether we've guessed well.
+// MS *still* doesn't ship stdint.h, through VC++ 2008 at least.
+// This means we have to take a wild guess at appropriate
+// integer types in lib/sql_types.h.  See test/inttypes.cpp for
+// tests that check whether we've guessed well.
 #		define MYSQLPP_NO_STDINT_H
 #		if _MSC_VER < 1400
-			// Workarounds for limitations of VC++ 2003 that are fixed
-			// in 2005 and later.
+// Workarounds for limitations of VC++ 2003 that are fixed
+// in 2005 and later.
 #			undef MYSQLPP_QUERY_THISPTR
 #			define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
 #			undef MYSQLPP_SSQLS_COMPATIBLE
 #		elif !defined(_STLP_VERSION) && !defined(_STLP_VERSION_STR)
-			// VC++ 2005 or newer and not using STLport, so #define
-			// portability flags indicating features we can use from
-			// the compiler's native RTL.
+// VC++ 2005 or newer and not using STLport, so #define
+// portability flags indicating features we can use from
+// the compiler's native RTL.
 #			define MYSQLPP_HAVE_LOCALTIME_S
 #			define MYSQLPP_HAVE_STD__NOINIT
 #		endif
 
-		// Disable complaints about STL data members: VC++ believes
-		// these need to be __declspec(dllexport) for some reason.
+// Disable complaints about STL data members: VC++ believes
+// these need to be __declspec(dllexport) for some reason.
 #		pragma warning(disable: 4251)
-		// Disable complaint that VC++ doesn't grok throw specs
+// Disable complaint that VC++ doesn't grok throw specs
 #		pragma warning(disable: 4290)
-		// Disable whining about using 'this' as a member initializer on VC++.
+// Disable whining about using 'this' as a member initializer on VC++.
 #		pragma warning(disable: 4355)
-		// Disable whining about implicit conversions to bool
+// Disable whining about implicit conversions to bool
 #		pragma warning(disable: 4800)
-		// Disable nagging about new "secure" functions like strncpy_s()
+// Disable nagging about new "secure" functions like strncpy_s()
 #		pragma warning(disable: 4996)
-		// Call _snprintf() for VC++ version of snprintf() function
+// Call _snprintf() for VC++ version of snprintf() function
 #		define snprintf _snprintf
 #	endif
 
-	// Define DLL import/export tags for Windows compilers, where we build
-	// the library into a DLL, for LGPL license compatibility reasons.
-	// (This is based on a similar mechanism in wxWindows.)
+// Define DLL import/export tags for Windows compilers, where we build
+// the library into a DLL, for LGPL license compatibility reasons.
+// (This is based on a similar mechanism in wxWindows.)
 
-	#ifdef MYSQLPP_MAKING_DLL
-		// When making the DLL, export tagged symbols, so they appear
-		// in the import library.
-		#define MYSQLPP_EXPORT __declspec(dllexport)
-	#elif !defined(MYSQLPP_NO_DLL)
-		// We must be _using_ the DLL, so import symbols instead.
-		#define MYSQLPP_EXPORT __declspec(dllimport)
-	#else
-		// Not making a DLL at all, so no-op these declspecs
-		#define MYSQLPP_EXPORT
-	#endif
-
-	// We need to use the DOS/Windows path separator here
-	#define MYSQLPP_PATH_SEPARATOR '\\'
+#ifdef MYSQLPP_MAKING_DLL
+// When making the DLL, export tagged symbols, so they appear
+// in the import library.
+#define MYSQLPP_EXPORT __declspec(dllexport)
+#elif !defined(MYSQLPP_NO_DLL)
+// We must be _using_ the DLL, so import symbols instead.
+#define MYSQLPP_EXPORT __declspec(dllimport)
 #else
-	// If not VC++, MinGW, or Xcode, we assume we're on a system using
-	// autoconf, so bring in the config.h file it wrote containing the
-	// config test results.  Only do this during the library build, and
-	// even then, not if included from a MySQL++ header file, since
-	// config.h cannot be safely installed with the other headers.
+// Not making a DLL at all, so no-op these declspecs
+#define MYSQLPP_EXPORT
+#endif
+
+// We need to use the DOS/Windows path separator here
+#define MYSQLPP_PATH_SEPARATOR '\\'
+#else
+// If not VC++, MinGW, or Xcode, we assume we're on a system using
+// autoconf, so bring in the config.h file it wrote containing the
+// config test results.  Only do this during the library build, and
+// even then, not if included from a MySQL++ header file, since
+// config.h cannot be safely installed with the other headers.
 #	if defined(MYSQLPP_NOT_HEADER) && !defined(MYSQLPP_XCODE)
 #		include "config.h"
 #	endif
 
-	// Make DLL stuff a no-op on this platform.
-	#define MYSQLPP_EXPORT
+// Make DLL stuff a no-op on this platform.
+#define MYSQLPP_EXPORT
 
-	// Assume POSIX path separator
-	#define MYSQLPP_PATH_SEPARATOR '/'
+// Assume POSIX path separator
+#define MYSQLPP_PATH_SEPARATOR '/'
 #endif
 
 #if defined(MYSQLPP_MYSQL_HEADERS_BURIED)
@@ -131,7 +131,8 @@
 #	include <mysql/mysql_version.h>
 #endif
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Alias for 'true', to make code requesting exceptions more
 /// readable.

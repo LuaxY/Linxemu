@@ -34,7 +34,8 @@
 
 #include "common.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -48,40 +49,49 @@ class MYSQLPP_EXPORT ConnectionPool;
 class MYSQLPP_EXPORT ScopedConnection
 {
 public:
-	/// \brief Standard constructor
-	///
-	/// Grabs a Connection from the specified pool.
-	///
-	/// \internal Note that there is no default ctor on purpose.  RAII.
-	///
-	/// \param pool The ConnectionPool to use.
-	/// \param safe By default, we get the connection from the pool with
-	/// ConnectionPool::grab(), but we can call safe_grab() instead.
-	explicit ScopedConnection(ConnectionPool& pool, bool safe = false);
+    /// \brief Standard constructor
+    ///
+    /// Grabs a Connection from the specified pool.
+    ///
+    /// \internal Note that there is no default ctor on purpose.  RAII.
+    ///
+    /// \param pool The ConnectionPool to use.
+    /// \param safe By default, we get the connection from the pool with
+    /// ConnectionPool::grab(), but we can call safe_grab() instead.
+    explicit ScopedConnection(ConnectionPool& pool, bool safe = false);
 
-	/// \brief Destructor
-	///
-	/// Releases the Connection back to the ConnectionPool.
-	~ScopedConnection();
+    /// \brief Destructor
+    ///
+    /// Releases the Connection back to the ConnectionPool.
+    ~ScopedConnection();
 
-	/// \brief Access the Connection pointer
-	Connection* operator->() const { return connection_; }
+    /// \brief Access the Connection pointer
+    Connection* operator->() const
+    {
+        return connection_;
+    }
 
-	/// \brief Dereference
-	Connection& operator*() const { return *connection_; }
+    /// \brief Dereference
+    Connection& operator*() const
+    {
+        return *connection_;
+    }
 
-	/// \brief Truthiness operator
-	operator void*() const { return connection_; }
+    /// \brief Truthiness operator
+    operator void*() const
+    {
+        return connection_;
+    }
 
 private:
-	// ScopedConnection objects cannot be copied.  We want them to be
-	// tightly scoped to their use point, not put in containers or
-	// passed around promiscuously.
-	ScopedConnection(const ScopedConnection& no_copies);   
-	const ScopedConnection& operator=(const ScopedConnection& no_copies);
+    // ScopedConnection objects cannot be copied.  We want them to be
+    // tightly scoped to their use point, not put in containers or
+    // passed around promiscuously.
+    ScopedConnection(const ScopedConnection& no_copies);
+    const ScopedConnection& operator=(const ScopedConnection& no_copies);
 
-	ConnectionPool& pool_;
-	Connection* const connection_;
+    ConnectionPool& pool_;
+    Connection* const connection_;
 };
 
 } // end namespace mysqlpp

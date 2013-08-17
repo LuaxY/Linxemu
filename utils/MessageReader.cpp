@@ -26,8 +26,8 @@ int MessageReader::bytesAvailable()
 signed short MessageReader::ReadShort()
 {
     signed short s =
-    buffer[position] * 256 +
-    buffer[position + 1];
+        buffer[position] * 256 +
+        buffer[position + 1];
 
     position += 2;
 

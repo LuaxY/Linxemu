@@ -50,42 +50,43 @@ using namespace std;
 	} \
 	else throw ObjectNotInitialized(typeid(*this).name());
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 bool
 SsqlsBase::create(Connection* conn) const
 {
-	(void)conn;
-	//TODO define Query::insert(SsqlsBase&)
-	//QUERY_ACTIVE_RECORD_WRAPPER(insert, conn, fs_not_autoinc);
-	return false;
+    (void)conn;
+    //TODO define Query::insert(SsqlsBase&)
+    //QUERY_ACTIVE_RECORD_WRAPPER(insert, conn, fs_not_autoinc);
+    return false;
 }
 
 bool
 SsqlsBase::load(Connection* conn) const
 {
-	(void)conn;
-	//TODO define Query::select(SsqlsBase&)
-	//QUERY_ACTIVE_RECORD_WRAPPER(select, conn, fs_key);
-	return false;
+    (void)conn;
+    //TODO define Query::select(SsqlsBase&)
+    //QUERY_ACTIVE_RECORD_WRAPPER(select, conn, fs_key);
+    return false;
 }
 
 bool
 SsqlsBase::remove(Connection* conn) const
 {
-	(void)conn;
-	//TODO define Query::remove(SsqlsBase&)
-	//QUERY_ACTIVE_RECORD_WRAPPER(remove, conn, fs_key);
-	return false;
+    (void)conn;
+    //TODO define Query::remove(SsqlsBase&)
+    //QUERY_ACTIVE_RECORD_WRAPPER(remove, conn, fs_key);
+    return false;
 }
 
 bool
 SsqlsBase::save(Connection* conn) const
 {
-	(void)conn;
-	//TODO define Query::update(SsqlsBase&)
-	//QUERY_ACTIVE_RECORD_WRAPPER(update, conn, fs_all);
-	return false;
+    (void)conn;
+    //TODO define Query::update(SsqlsBase&)
+    //QUERY_ACTIVE_RECORD_WRAPPER(update, conn, fs_all);
+    return false;
 }
 
 } // end namespace mysqlpp

@@ -40,7 +40,8 @@
 #include <string>
 
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 class DBDriver;
@@ -57,17 +58,18 @@ class DBDriver;
 class MYSQLPP_EXPORT Option
 {
 public:
-	/// \brief Types of option setting errors we can diagnose
-	enum Error {
-		err_NONE,		///< option was set successfully
-		err_api_limit,	///< option not supported by underlying C API
-		err_api_reject,	///< underlying C API returned error when setting option
-		err_connected,	///< can't set the given option while connected
-		err_disconnected///< can only set the given option while connected
-	};
-	
-	virtual ~Option() { }					///< Destroy object
-	virtual Error set(DBDriver* dbd) = 0;	///< Apply option
+    /// \brief Types of option setting errors we can diagnose
+    enum Error
+    {
+        err_NONE,		///< option was set successfully
+        err_api_limit,	///< option not supported by underlying C API
+        err_api_reject,	///< underlying C API returned error when setting option
+        err_connected,	///< can't set the given option while connected
+        err_disconnected///< can only set the given option while connected
+    };
+
+    virtual ~Option() { }					///< Destroy object
+    virtual Error set(DBDriver* dbd) = 0;	///< Apply option
 };
 
 
@@ -77,11 +79,11 @@ template <typename T>
 class MYSQLPP_EXPORT DataOption : public Option
 {
 public:
-	typedef T ArgType;						///< Alias for template param
+    typedef T ArgType;						///< Alias for template param
 
 protected:
-	DataOption(const T& arg) : arg_(arg) { }///< Construct object
-	T arg_;									///< The argument value
+    DataOption(const T& arg) : arg_(arg) { }///< Construct object
+    T arg_;									///< The argument value
 };
 
 typedef DataOption<unsigned> IntegerOption;		///< Option w/ int argument
@@ -94,10 +96,10 @@ class MYSQLPP_EXPORT CompressOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	CompressOption() : Option() { }
+    CompressOption() : Option() { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -107,10 +109,10 @@ class MYSQLPP_EXPORT ConnectTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ConnectTimeoutOption(ArgType arg) : IntegerOption(arg) { }
+    ConnectTimeoutOption(ArgType arg) : IntegerOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -122,10 +124,10 @@ class MYSQLPP_EXPORT FoundRowsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	FoundRowsOption(ArgType arg) : BooleanOption(arg) { }
+    FoundRowsOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -138,10 +140,10 @@ class MYSQLPP_EXPORT GuessConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	GuessConnectionOption() : Option() { }
+    GuessConnectionOption() : Option() { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -151,10 +153,10 @@ class MYSQLPP_EXPORT IgnoreSpaceOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	IgnoreSpaceOption(ArgType arg) : BooleanOption(arg) { }
+    IgnoreSpaceOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -164,10 +166,10 @@ class MYSQLPP_EXPORT InitCommandOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	InitCommandOption(ArgType arg) : StringOption(arg) { }
+    InitCommandOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -179,10 +181,10 @@ class MYSQLPP_EXPORT InteractiveOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	InteractiveOption(ArgType arg) : BooleanOption(arg) { }
+    InteractiveOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -192,10 +194,10 @@ class MYSQLPP_EXPORT LocalFilesOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	LocalFilesOption(ArgType arg) : BooleanOption(arg) { }
+    LocalFilesOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -205,10 +207,10 @@ class MYSQLPP_EXPORT LocalInfileOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	LocalInfileOption(ArgType arg) : IntegerOption(arg) { }
+    LocalInfileOption(ArgType arg) : IntegerOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -218,10 +220,10 @@ class MYSQLPP_EXPORT MultiResultsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	MultiResultsOption(ArgType arg) : BooleanOption(arg) { }
+    MultiResultsOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -231,10 +233,10 @@ class MYSQLPP_EXPORT MultiStatementsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	MultiStatementsOption(ArgType arg) : BooleanOption(arg) { }
+    MultiStatementsOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -244,10 +246,10 @@ class MYSQLPP_EXPORT NamedPipeOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	NamedPipeOption() : Option() { }
+    NamedPipeOption() : Option() { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -257,10 +259,10 @@ class MYSQLPP_EXPORT NoSchemaOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	NoSchemaOption(ArgType arg) : BooleanOption(arg) { }
+    NoSchemaOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -271,10 +273,10 @@ class MYSQLPP_EXPORT ProtocolOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ProtocolOption(ArgType arg) : IntegerOption(arg) { }
+    ProtocolOption(ArgType arg) : IntegerOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 #endif
@@ -285,10 +287,10 @@ class MYSQLPP_EXPORT ReadDefaultFileOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ReadDefaultFileOption(ArgType arg) : StringOption(arg) { }
+    ReadDefaultFileOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -298,10 +300,10 @@ class MYSQLPP_EXPORT ReadDefaultGroupOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ReadDefaultGroupOption(ArgType arg) : StringOption(arg) { }
+    ReadDefaultGroupOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -311,10 +313,10 @@ class MYSQLPP_EXPORT ReadTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ReadTimeoutOption(ArgType arg) : IntegerOption(arg) { }
+    ReadTimeoutOption(ArgType arg) : IntegerOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -324,10 +326,10 @@ class MYSQLPP_EXPORT ReconnectOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ReconnectOption(ArgType arg) : BooleanOption(arg) { }
+    ReconnectOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -337,10 +339,10 @@ class MYSQLPP_EXPORT ReportDataTruncationOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	ReportDataTruncationOption(ArgType arg) : BooleanOption(arg) { }
+    ReportDataTruncationOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -351,10 +353,10 @@ class MYSQLPP_EXPORT SecureAuthOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	SecureAuthOption(ArgType arg) : BooleanOption(arg) { }
+    SecureAuthOption(ArgType arg) : BooleanOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -364,10 +366,10 @@ class MYSQLPP_EXPORT SetCharsetDirOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	SetCharsetDirOption(ArgType arg) : StringOption(arg) { }
+    SetCharsetDirOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -377,10 +379,10 @@ class MYSQLPP_EXPORT SetCharsetNameOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	SetCharsetNameOption(ArgType arg) : StringOption(arg) { }
+    SetCharsetNameOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -390,10 +392,10 @@ class MYSQLPP_EXPORT SetClientIpOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	SetClientIpOption(ArgType arg) : StringOption(arg) { }
+    SetClientIpOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -403,10 +405,10 @@ class MYSQLPP_EXPORT SharedMemoryBaseNameOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	SharedMemoryBaseNameOption(ArgType arg) : StringOption(arg) { }
+    SharedMemoryBaseNameOption(ArgType arg) : StringOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -415,32 +417,32 @@ private:
 class MYSQLPP_EXPORT SslOption : public Option
 {
 public:
-	/// \brief Create a set of SSL connection option parameters
-	///
-	/// \param key the pathname to the key file
-	/// \param cert the pathname to the certificate file
-	/// \param ca the pathname to the certificate authority file
-	/// \param capath directory that contains trusted SSL CA
-	///        certificates in pem format.
-	/// \param cipher list of allowable ciphers to use
-	///
-	/// This option replaces \c Connection::enable_ssl() from MySQL++
-	/// version 2.  Now you can set this connection option just like any
-	/// other.
-	SslOption(const char* key = 0, const char* cert = 0,
-			const char* ca = 0, const char* capath = 0,
-			const char* cipher = 0)
-	{
-		if (key)	key_.assign(key);
-		if (cert)	cert_.assign(cert);
-		if (ca)		ca_.assign(ca);
-		if (capath)	capath_.assign(capath);
-		if (cipher)	cipher_.assign(cipher);
-	}
+    /// \brief Create a set of SSL connection option parameters
+    ///
+    /// \param key the pathname to the key file
+    /// \param cert the pathname to the certificate file
+    /// \param ca the pathname to the certificate authority file
+    /// \param capath directory that contains trusted SSL CA
+    ///        certificates in pem format.
+    /// \param cipher list of allowable ciphers to use
+    ///
+    /// This option replaces \c Connection::enable_ssl() from MySQL++
+    /// version 2.  Now you can set this connection option just like any
+    /// other.
+    SslOption(const char* key = 0, const char* cert = 0,
+              const char* ca = 0, const char* capath = 0,
+              const char* cipher = 0)
+    {
+        if (key)	key_.assign(key);
+        if (cert)	cert_.assign(cert);
+        if (ca)		ca_.assign(ca);
+        if (capath)	capath_.assign(capath);
+        if (cipher)	cipher_.assign(cipher);
+    }
 
 private:
-	std::string key_, cert_, ca_, capath_, cipher_;
-	Error set(DBDriver* dbd);
+    std::string key_, cert_, ca_, capath_, cipher_;
+    Error set(DBDriver* dbd);
 };
 
 
@@ -449,10 +451,10 @@ class MYSQLPP_EXPORT UseEmbeddedConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	UseEmbeddedConnectionOption() : Option() { }
+    UseEmbeddedConnectionOption() : Option() { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -462,10 +464,10 @@ class MYSQLPP_EXPORT UseRemoteConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	UseRemoteConnectionOption() : Option() { }
+    UseRemoteConnectionOption() : Option() { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 
@@ -475,10 +477,10 @@ class MYSQLPP_EXPORT WriteTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
-	WriteTimeoutOption(ArgType arg) : IntegerOption(arg) { }
+    WriteTimeoutOption(ArgType arg) : IntegerOption(arg) { }
 
 private:
-	Error set(DBDriver* dbd);
+    Error set(DBDriver* dbd);
 #endif
 };
 

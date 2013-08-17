@@ -7,7 +7,7 @@ IFrame* AuthentificationFrame::getInstance() const
 
 char* AuthentificationFrame::getFrameName()
 {
-	return "AuthentificationFrame";
+    return "AuthentificationFrame";
 }
 
 bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
@@ -19,20 +19,20 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
 
     switch(message->getMessageId())
     {
-        case 4:
-            processMessage((IdentificationMessage*)message, client);
-            state = true;
-            break;
+    case 4:
+        processMessage((IdentificationMessage*)message, client);
+        state = true;
+        break;
 
-        case 40:
-            processMessage((ServerSelectionMessage*)message, client);
-            state = true;
-            break;
+    case 40:
+        processMessage((ServerSelectionMessage*)message, client);
+        state = true;
+        break;
 
-        case 888:
-            processMessage((ClearIdentificationMessage*)message, client);
-            state = true;
-            break;
+    case 888:
+        processMessage((ClearIdentificationMessage*)message, client);
+        state = true;
+        break;
     }
 
     delete data;
@@ -160,18 +160,18 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                     NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), slm.getInstance());
 
                     try
-					{
-						client->accountId = accountId;
-						client->token = genToken(10);
+                    {
+                        client->accountId = accountId;
+                        client->token = genToken(10);
 
-						mysqlpp::Query queryStockToken = database->db->query("UPDATE accounts SET token = %1q WHERE id = %0");
-						queryStockToken.parse();
-						mysqlpp::SimpleResult resStockToken = queryStockToken.execute(client->accountId, client->token);
-					}
-					catch(const mysqlpp::Exception& e)
-					{
-						Logger::Log(ERROR, sLog(), e.what());
-					}
+                        mysqlpp::Query queryStockToken = database->db->query("UPDATE accounts SET token = %1q WHERE id = %0");
+                        queryStockToken.parse();
+                        mysqlpp::SimpleResult resStockToken = queryStockToken.execute(client->accountId, client->token);
+                    }
+                    catch(const mysqlpp::Exception& e)
+                    {
+                        Logger::Log(ERROR, sLog(), e.what());
+                    }
                 }
                 catch(const mysqlpp::Exception& e)
                 {
@@ -220,7 +220,7 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
             NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
             NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssdm.getInstance());
 
-			shutdown(client->socket, 2);
+            shutdown(client->socket, 2);
         }
         else
         {

@@ -14,14 +14,14 @@ using namespace std;
 
 class Frames
 {
-    public:
-        void Register();
-        bool processMessage(INetworkMessage* message, Client* client);
+public:
+    void Register();
+    bool processMessage(INetworkMessage* message, Client* client);
 
-    private:
-        vector<IFrame*> framesList;
-        void addFrame(IFrame* frame);
-        //void removeFrame();
+private:
+    vector<IFrame*> framesList;
+    void addFrame(IFrame* frame);
+    //void removeFrame();
 
 };
 

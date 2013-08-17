@@ -40,7 +40,8 @@
 
 #include "common.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -71,39 +72,51 @@ class MYSQLPP_EXPORT NoExceptions;
 class MYSQLPP_EXPORT OptionalExceptions
 {
 public:
-	/// \brief Default constructor
-	///
-	/// \param e if true, exceptions are enabled (this is the default)
-	OptionalExceptions(bool e = true) :
-	exceptions_(e)
-	{
-	}
+    /// \brief Default constructor
+    ///
+    /// \param e if true, exceptions are enabled (this is the default)
+    OptionalExceptions(bool e = true) :
+        exceptions_(e)
+    {
+    }
 
-	/// \brief Destroy object
-	virtual ~OptionalExceptions() { }
+    /// \brief Destroy object
+    virtual ~OptionalExceptions() { }
 
-	/// \brief Enable exceptions from the object
-	void enable_exceptions() const { exceptions_ = true; }
+    /// \brief Enable exceptions from the object
+    void enable_exceptions() const
+    {
+        exceptions_ = true;
+    }
 
-	/// \brief Disable exceptions from the object
-	void disable_exceptions() const { exceptions_ = false; }
+    /// \brief Disable exceptions from the object
+    void disable_exceptions() const
+    {
+        exceptions_ = false;
+    }
 
-	/// \brief Returns true if exceptions are enabled
-	bool throw_exceptions() const { return exceptions_; }
+    /// \brief Returns true if exceptions are enabled
+    bool throw_exceptions() const
+    {
+        return exceptions_;
+    }
 
 protected:
-	/// \brief Sets the exception state to a particular value
-	///
-	/// This method is protected because it is only intended for use by
-	/// subclasses' copy constructors and the like.
-	void set_exceptions(bool e) const { exceptions_ = e; }
+    /// \brief Sets the exception state to a particular value
+    ///
+    /// This method is protected because it is only intended for use by
+    /// subclasses' copy constructors and the like.
+    void set_exceptions(bool e) const
+    {
+        exceptions_ = e;
+    }
 
-	/// \brief Declare NoExceptions to be our friend so it can access
-	/// our protected functions.
-	friend class NoExceptions;
+    /// \brief Declare NoExceptions to be our friend so it can access
+    /// our protected functions.
+    friend class NoExceptions;
 
 private:
-	mutable bool exceptions_;
+    mutable bool exceptions_;
 };
 
 
@@ -119,34 +132,34 @@ private:
 class MYSQLPP_EXPORT NoExceptions
 {
 public:
-	/// \brief Constructor
-	///
-	/// Takes a reference to an OptionalExceptions derivative,
-	/// saves that object's current exception state, and disables
-	/// exceptions.
-	NoExceptions(const OptionalExceptions& a) :
-	assoc_(a),
-	exceptions_were_enabled_(a.throw_exceptions())
-	{
-		assoc_.disable_exceptions();
-	}
+    /// \brief Constructor
+    ///
+    /// Takes a reference to an OptionalExceptions derivative,
+    /// saves that object's current exception state, and disables
+    /// exceptions.
+    NoExceptions(const OptionalExceptions& a) :
+        assoc_(a),
+        exceptions_were_enabled_(a.throw_exceptions())
+    {
+        assoc_.disable_exceptions();
+    }
 
-	/// \brief Destructor
-	///
-	/// Restores our associate object's previous exception state.
-	~NoExceptions()
-	{
-		assoc_.set_exceptions(exceptions_were_enabled_);
-	}
-	
+    /// \brief Destructor
+    ///
+    /// Restores our associate object's previous exception state.
+    ~NoExceptions()
+    {
+        assoc_.set_exceptions(exceptions_were_enabled_);
+    }
+
 private:
-	const OptionalExceptions& assoc_;
-	bool exceptions_were_enabled_;
+    const OptionalExceptions& assoc_;
+    bool exceptions_were_enabled_;
 
-	// Hidden assignment operator and copy ctor, because we should not
-	// be copied.
-	NoExceptions(const NoExceptions&);
-	NoExceptions& operator=(const NoExceptions&);
+    // Hidden assignment operator and copy ctor, because we should not
+    // be copied.
+    NoExceptions(const NoExceptions&);
+    NoExceptions& operator=(const NoExceptions&);
 };
 
 } // end namespace mysqlpp

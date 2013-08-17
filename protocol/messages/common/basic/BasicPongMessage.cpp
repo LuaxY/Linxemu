@@ -2,34 +2,34 @@
 
 INetworkMessage* BasicPongMessage::getInstance() const
 {
-	return new BasicPongMessage(*this);
+    return new BasicPongMessage(*this);
 }
 
 void BasicPongMessage::initBasicPongMessage(bool _quiet)
 {
-	quiet = _quiet;
+    quiet = _quiet;
 }
 
 int BasicPongMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* BasicPongMessage::getMessageName()
 {
-	return "BasicPongMessage";
+    return "BasicPongMessage";
 }
 
 void BasicPongMessage::pack(MessageWriter *output)
 {
-	output->WriteBool(quiet);
+    output->WriteBool(quiet);
 }
 
 void BasicPongMessage::unpack(char *buffer)
 {
-	MessageReader *input = new MessageReader(buffer);
+    MessageReader *input = new MessageReader(buffer);
 
-	quiet = input->ReadBool();
+    quiet = input->ReadBool();
 
-	delete input;
+    delete input;
 }

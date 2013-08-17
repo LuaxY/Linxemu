@@ -4,24 +4,24 @@ map<int, INetworkMessage*> FactoryMessage::messagesList = map<int, INetworkMessa
 
 void MessageReceiver::Register()
 {
-	FactoryMessage::registerClass(1, new ProtocolRequired);
-	FactoryMessage::registerClass(3, new HelloConnectMessage);
-	FactoryMessage::registerClass(4, new IdentificationMessage);
-	FactoryMessage::registerClass(20, new IdentificationFailedMessage);
-	FactoryMessage::registerClass(22, new IdentificationSuccessMessage);
-	FactoryMessage::registerClass(30, new ServersListMessage);
-	FactoryMessage::registerClass(40, new ServerSelectionMessage);
-	FactoryMessage::registerClass(41, new SelectedServerRefusedMessage);
-	FactoryMessage::registerClass(42, new SelectedServerDataMessage);
-	FactoryMessage::registerClass(101, new HelloGameMessage);
-	FactoryMessage::registerClass(110, new AuthenticationTicketMessage);
-	FactoryMessage::registerClass(111, new AuthenticationTicketAcceptedMessage);
-	FactoryMessage::registerClass(112, new AuthenticationTicketRefusedMessage);
-	FactoryMessage::registerClass(182, new BasicPingMessage);
-	FactoryMessage::registerClass(183, new BasicPongMessage);
-	FactoryMessage::registerClass(888, new ClearIdentificationMessage);
-	FactoryMessage::registerClass(6253, new RawDataMessage);
-	FactoryMessage::registerClass(6340, new ServerSettingsMessage);
+    FactoryMessage::registerClass(1, new ProtocolRequired);
+    FactoryMessage::registerClass(3, new HelloConnectMessage);
+    FactoryMessage::registerClass(4, new IdentificationMessage);
+    FactoryMessage::registerClass(20, new IdentificationFailedMessage);
+    FactoryMessage::registerClass(22, new IdentificationSuccessMessage);
+    FactoryMessage::registerClass(30, new ServersListMessage);
+    FactoryMessage::registerClass(40, new ServerSelectionMessage);
+    FactoryMessage::registerClass(41, new SelectedServerRefusedMessage);
+    FactoryMessage::registerClass(42, new SelectedServerDataMessage);
+    FactoryMessage::registerClass(101, new HelloGameMessage);
+    FactoryMessage::registerClass(110, new AuthenticationTicketMessage);
+    FactoryMessage::registerClass(111, new AuthenticationTicketAcceptedMessage);
+    FactoryMessage::registerClass(112, new AuthenticationTicketRefusedMessage);
+    FactoryMessage::registerClass(182, new BasicPingMessage);
+    FactoryMessage::registerClass(183, new BasicPongMessage);
+    FactoryMessage::registerClass(888, new ClearIdentificationMessage);
+    FactoryMessage::registerClass(6253, new RawDataMessage);
+    FactoryMessage::registerClass(6340, new ServerSettingsMessage);
 }
 
 INetworkMessage* MessageReceiver::parse(Packet* packet)

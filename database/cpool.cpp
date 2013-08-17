@@ -31,7 +31,8 @@
 #include <algorithm>
 #include <functional>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 
 /// \brief Functor to test whether a given ConnectionInfo object is
@@ -46,19 +47,19 @@ class TooOld : std::unary_function<ConnInfoT, bool>
 {
 public:
 #if !defined(DOXYGEN_IGNORE)
-	TooOld(unsigned int tmax) :
-	min_age_(time(0) - tmax)
-	{
-	}
+    TooOld(unsigned int tmax) :
+        min_age_(time(0) - tmax)
+    {
+    }
 
-	bool operator()(const ConnInfoT& conn_info) const
-	{
-		return !conn_info.in_use && conn_info.last_used <= min_age_;
-	}
+    bool operator()(const ConnInfoT& conn_info) const
+    {
+        return !conn_info.in_use && conn_info.last_used <= min_age_;
+    }
 
 #endif
 private:
-	time_t min_age_;
+    time_t min_age_;
 };
 
 
@@ -71,17 +72,20 @@ private:
 void
 ConnectionPool::clear(bool all)
 {
-	ScopedLock lock(mutex_);	// ensure we're not interfered with
+    ScopedLock lock(mutex_);	// ensure we're not interfered with
 
-	PoolIt it = pool_.begin();
-	while (it != pool_.end()) {
-		if (all || !it->in_use) {
-			remove(it++);
-		}
-		else {
-			++it;
-		}
-	}
+    PoolIt it = pool_.begin();
+    while (it != pool_.end())
+    {
+        if (all || !it->in_use)
+        {
+            remove(it++);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
 
 
@@ -92,12 +96,12 @@ ConnectionPool::clear(bool all)
 Connection*
 ConnectionPool::exchange(const Connection* pc)
 {
-	// Don't grab the mutex first.  remove() and grab() both do.
-	// Inefficient, but we'd have to hoist their contents up into this
-	// method or extract a mutex-free version of each mechanism for
-	// each, both of which are also inefficient.
-	remove(pc);
-	return grab();
+    // Don't grab the mutex first.  remove() and grab() both do.
+    // Inefficient, but we'd have to hoist their contents up into this
+    // method or extract a mutex-free version of each mechanism for
+    // each, both of which are also inefficient.
+    remove(pc);
+    return grab();
 }
 
 
@@ -109,14 +113,16 @@ ConnectionPool::exchange(const Connection* pc)
 Connection*
 ConnectionPool::find_mru()
 {
-	PoolIt mru = std::max_element(pool_.begin(), pool_.end());
-	if (mru != pool_.end() && !mru->in_use) {
-		mru->in_use = true;
-		return mru->conn;
-	}
-	else {
-		return 0;
-	}
+    PoolIt mru = std::max_element(pool_.begin(), pool_.end());
+    if (mru != pool_.end() && !mru->in_use)
+    {
+        mru->in_use = true;
+        return mru->conn;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
@@ -125,16 +131,18 @@ ConnectionPool::find_mru()
 Connection*
 ConnectionPool::grab()
 {
-	ScopedLock lock(mutex_);	// ensure we're not interfered with
-	remove_old_connections();
-	if (Connection* mru = find_mru()) {
-		return mru;
-	}
-	else {
-		// No free connections, so create and return a new one.
-		pool_.push_back(ConnectionInfo(create()));
-		return pool_.back().conn;
-	}
+    ScopedLock lock(mutex_);	// ensure we're not interfered with
+    remove_old_connections();
+    if (Connection* mru = find_mru())
+    {
+        return mru;
+    }
+    else
+    {
+        // No free connections, so create and return a new one.
+        pool_.push_back(ConnectionInfo(create()));
+        return pool_.back().conn;
+    }
 }
 
 
@@ -143,15 +151,17 @@ ConnectionPool::grab()
 void
 ConnectionPool::release(const Connection* pc)
 {
-	ScopedLock lock(mutex_);	// ensure we're not interfered with
+    ScopedLock lock(mutex_);	// ensure we're not interfered with
 
-	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
-		if (it->conn == pc) {
-			it->in_use = false;
-			it->last_used = time(0);
-			break;
-		}
-	}
+    for (PoolIt it = pool_.begin(); it != pool_.end(); ++it)
+    {
+        if (it->conn == pc)
+        {
+            it->in_use = false;
+            it->last_used = time(0);
+            break;
+        }
+    }
 }
 
 
@@ -169,23 +179,25 @@ ConnectionPool::release(const Connection* pc)
 void
 ConnectionPool::remove(const Connection* pc)
 {
-	ScopedLock lock(mutex_);	// ensure we're not interfered with
+    ScopedLock lock(mutex_);	// ensure we're not interfered with
 
-	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
-		if (it->conn == pc) {
-			remove(it);
-			return;
-		}
-	}
+    for (PoolIt it = pool_.begin(); it != pool_.end(); ++it)
+    {
+        if (it->conn == pc)
+        {
+            remove(it);
+            return;
+        }
+    }
 }
 
 void
 ConnectionPool::remove(const PoolIt& it)
 {
-	// Don't grab the mutex.  Only called from other functions that do
-	// grab it.
-	destroy(it->conn);
-	pool_.erase(it);
+    // Don't grab the mutex.  Only called from other functions that do
+    // grab it.
+    destroy(it->conn);
+    pool_.erase(it);
 }
 
 
@@ -195,12 +207,13 @@ ConnectionPool::remove(const PoolIt& it)
 void
 ConnectionPool::remove_old_connections()
 {
-	TooOld<ConnectionInfo> too_old(max_idle_time());
+    TooOld<ConnectionInfo> too_old(max_idle_time());
 
-	PoolIt it = pool_.begin();
-	while ((it = std::find_if(it, pool_.end(), too_old)) != pool_.end()) {
-		remove(it++);
-	}
+    PoolIt it = pool_.begin();
+    while ((it = std::find_if(it, pool_.end(), too_old)) != pool_.end())
+    {
+        remove(it++);
+    }
 }
 
 
@@ -209,12 +222,13 @@ ConnectionPool::remove_old_connections()
 Connection*
 ConnectionPool::safe_grab()
 {
-	Connection* pc;
-	while (!(pc = grab())->ping()) {
-		remove(pc);
-		pc = 0;
-	}
-	return pc;
+    Connection* pc;
+    while (!(pc = grab())->ping())
+    {
+        remove(pc);
+        pc = 0;
+    }
+    return pc;
 }
 
 

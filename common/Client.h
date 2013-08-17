@@ -11,20 +11,20 @@ enum State { NEW_PACKET, HEADER_OK, LENGTH_OK };
 
 class Client
 {
-    public:
-        Client();
+public:
+    Client();
 
-        SOCKET socket;
-        State phase;
+    SOCKET socket;
+    State phase;
 
-        queue<char> bufferQueue;
-        unsigned short lastMessageId;
-        unsigned short lastMessageLengthType;
-        unsigned short lastMessageLength;
+    queue<char> bufferQueue;
+    unsigned short lastMessageId;
+    unsigned short lastMessageLengthType;
+    unsigned short lastMessageLength;
 
-        char* salt;
-        unsigned int accountId;
-        char* token;
+    char* salt;
+    unsigned int accountId;
+    char* token;
 };
 
 #endif // CLIENT_H

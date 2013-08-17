@@ -13,18 +13,18 @@ using namespace std;
 
 class GameServer : public NetworkManager
 {
-    public:
-        GameServer();
+public:
+    GameServer();
 
-    private:
-        void onClientConnected(SOCKET ClientSocket);
-        void onClientDisconnected(Client* client, int i);
-        void onDataReceive(Client* client, Packet* packet);
+private:
+    void onClientConnected(SOCKET ClientSocket);
+    void onClientDisconnected(Client* client, int i);
+    void onDataReceive(Client* client, Packet* packet);
 
-        unsigned int requiredVersion;
-        unsigned int currentVersion;
-        char *key;
-        ifstream::pos_type keySize;
+    unsigned int requiredVersion;
+    unsigned int currentVersion;
+    char *key;
+    ifstream::pos_type keySize;
 };
 
 #endif // GAME_SERVER_H

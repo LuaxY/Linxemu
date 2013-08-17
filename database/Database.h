@@ -13,17 +13,17 @@ using namespace std;
 
 class Database
 {
-    public:
-        static Database* Instance();
-        void init();
-        void selectDefault();
-        mysqlpp::Connection* db;
+public:
+    static Database* Instance();
+    void init();
+    void selectDefault();
+    mysqlpp::Connection* db;
 
-    private:
-        Database(){};
-        Database(Database const&){};
-        Database& operator=(Database const&){};
-        static Database* m_pInstance;
+private:
+    Database() {};
+    Database(Database const&) {};
+    Database& operator=(Database const&) {};
+    static Database* m_pInstance;
 };
 
 #endif // DATABASE_H

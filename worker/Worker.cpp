@@ -27,8 +27,8 @@ void* Worker::handler(void *ptr)
         if(!messagesQueue.empty())
         {
             pthread_mutex_lock(&mutex_stock);
-                Message *message = messagesQueue.front();
-                messagesQueue.pop();
+            Message *message = messagesQueue.front();
+            messagesQueue.pop();
             pthread_mutex_unlock(&mutex_stock);
 
             /** Pakcet parser **/
@@ -70,7 +70,7 @@ bool Worker::addMessage(Client* client, unsigned short messageId, unsigned short
     message->packet = packet;
 
     pthread_mutex_lock(&mutex_stock);
-        messagesQueue.push(message);
+    messagesQueue.push(message);
     pthread_mutex_unlock(&mutex_stock);
 
     return true;
@@ -88,8 +88,8 @@ void Worker::clearMessagesQueue()
     while(!messagesQueue.empty())
     {
         pthread_mutex_lock(&mutex_stock);
-            Message *message = messagesQueue.front();
-            messagesQueue.pop();
+        Message *message = messagesQueue.front();
+        messagesQueue.pop();
         pthread_mutex_unlock(&mutex_stock);
 
         delete message->packet;

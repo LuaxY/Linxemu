@@ -2,34 +2,34 @@
 
 INetworkMessage* ServerSelectionMessage::getInstance() const
 {
-	return new ServerSelectionMessage(*this);
+    return new ServerSelectionMessage(*this);
 }
 
 void ServerSelectionMessage::initServerSelectionMessage(unsigned short _serverId)
 {
-	serverId = _serverId;
+    serverId = _serverId;
 }
 
 int ServerSelectionMessage::getMessageId()
 {
-	return protocolId;
+    return protocolId;
 }
 
 char* ServerSelectionMessage::getMessageName()
 {
-	return "ServerSelectionMessage";
+    return "ServerSelectionMessage";
 }
 
 void ServerSelectionMessage::pack(MessageWriter *output)
 {
-	output->WriteUShort(serverId);
+    output->WriteUShort(serverId);
 }
 
 void ServerSelectionMessage::unpack(char *buffer)
 {
-	MessageReader *input = new MessageReader(buffer);
+    MessageReader *input = new MessageReader(buffer);
 
-	serverId = input->ReadUShort();
+    serverId = input->ReadUShort();
 
-	delete input;
+    delete input;
 }

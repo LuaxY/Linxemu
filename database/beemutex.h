@@ -45,7 +45,8 @@
 
 #include "exceptions.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Wrapper around platform-specific mutexes.
 ///
@@ -57,30 +58,30 @@ namespace mysqlpp {
 class MYSQLPP_EXPORT BeecryptMutex
 {
 public:
-	/// \brief Create the mutex object
-	///
-	/// Throws a MutexFailed exception if we can't acquire the lock for
-	/// some reason.  The exception contains a message saying why.
-	BeecryptMutex() throw (MutexFailed);
+    /// \brief Create the mutex object
+    ///
+    /// Throws a MutexFailed exception if we can't acquire the lock for
+    /// some reason.  The exception contains a message saying why.
+    BeecryptMutex() throw (MutexFailed);
 
-	/// \brief Destroy the mutex
-	///
-	/// Failures are quietly ignored.
-	~BeecryptMutex();
+    /// \brief Destroy the mutex
+    ///
+    /// Failures are quietly ignored.
+    ~BeecryptMutex();
 
-	/// \brief Acquire the mutex, blocking if it can't be acquired
-	/// immediately.
-	void lock() throw (MutexFailed);
+    /// \brief Acquire the mutex, blocking if it can't be acquired
+    /// immediately.
+    void lock() throw (MutexFailed);
 
-	/// \brief Acquire the mutex immediately and return true, or return
-	/// false if it would have to block to acquire the mutex.
-	bool trylock() throw (MutexFailed);
+    /// \brief Acquire the mutex immediately and return true, or return
+    /// false if it would have to block to acquire the mutex.
+    bool trylock() throw (MutexFailed);
 
-	/// \brief Release the mutex
-	void unlock() throw (MutexFailed);
+    /// \brief Release the mutex
+    void unlock() throw (MutexFailed);
 
 private:
-	void* pmutex_;
+    void* pmutex_;
 };
 
 
@@ -95,21 +96,24 @@ private:
 class ScopedLock
 {
 public:
-	/// \brief Lock the mutex.
-	explicit ScopedLock(BeecryptMutex& mutex) :
-	mutex_(mutex)
-	{
-		mutex.lock();
-	}
+    /// \brief Lock the mutex.
+    explicit ScopedLock(BeecryptMutex& mutex) :
+        mutex_(mutex)
+    {
+        mutex.lock();
+    }
 
-	/// \brief Unlock the mutex.
-	~ScopedLock() { mutex_.unlock(); }
+    /// \brief Unlock the mutex.
+    ~ScopedLock()
+    {
+        mutex_.unlock();
+    }
 
 private:
-	ScopedLock(const ScopedLock&);				// can't copy
-	ScopedLock& operator =(const ScopedLock&);	// can't assign
+    ScopedLock(const ScopedLock&);				// can't copy
+    ScopedLock& operator =(const ScopedLock&);	// can't assign
 
-	BeecryptMutex& mutex_;	///< the mutex object we manage
+    BeecryptMutex& mutex_;	///< the mutex object we manage
 };
 
 } // end namespace mysqlpp

@@ -30,53 +30,58 @@
 
 using namespace std;
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 size_t
 SQLQueryParms::escape_string(std::string* ps, const char* original,
-		size_t length) const
+                             size_t length) const
 {
-	return parent_ ? parent_->escape_string(ps, original, length) : 0;
+    return parent_ ? parent_->escape_string(ps, original, length) : 0;
 }
 
 size_t
 SQLQueryParms::escape_string(char* escaped, const char* original,
-		size_t length) const
+                             size_t length) const
 {
-	return parent_ ? parent_->escape_string(escaped, original, length) : 0;
+    return parent_ ? parent_->escape_string(escaped, original, length) : 0;
 }
 
 SQLTypeAdapter&
 SQLQueryParms::operator [](const char* str)
 {
-	if (parent_) {
-		return operator [](parent_->parsed_nums_[str]);
-	}
-	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
+    if (parent_)
+    {
+        return operator [](parent_->parsed_nums_[str]);
+    }
+    throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
 
 const SQLTypeAdapter&
 SQLQueryParms::operator[] (const char* str) const
 {
-	if (parent_) {
-		return operator [](parent_->parsed_nums_[str]);
-	}
-	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
+    if (parent_)
+    {
+        return operator [](parent_->parsed_nums_[str]);
+    }
+    throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
 
 SQLQueryParms
 SQLQueryParms::operator +(const SQLQueryParms& other) const
 {
-	if (other.size() <= size()) {
-		return *this;
-	}
-	SQLQueryParms New = *this;
-	size_t i;
-	for (i = size(); i < other.size(); i++) {
-		New.push_back(other[i]);
-	}
+    if (other.size() <= size())
+    {
+        return *this;
+    }
+    SQLQueryParms New = *this;
+    size_t i;
+    for (i = size(); i < other.size(); i++)
+    {
+        New.push_back(other[i]);
+    }
 
-	return New;
+    return New;
 }
 
 

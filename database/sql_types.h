@@ -40,7 +40,8 @@
 #	include <stdint.h>
 #endif
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Suppress refman documentation for these typedefs, as they're
@@ -49,30 +50,30 @@ namespace mysqlpp {
 // Define C++ integer types that are most nearly equivalent to those
 // used by the MySQL server.
 #if defined(MYSQLPP_NO_STDINT_H)
-	// Boo, we're going to have to wing it.
-	typedef tiny_int<signed char>	sql_tinyint;
-	typedef tiny_int<unsigned char>	sql_tinyint_unsigned;
-	typedef signed short			sql_smallint;
-	typedef unsigned short			sql_smallint_unsigned;
-	typedef signed int				sql_int;
-	typedef unsigned int			sql_int_unsigned;
-	typedef signed int				sql_mediumint;
-	typedef unsigned int			sql_mediumint_unsigned;
-	typedef longlong				sql_bigint;
-	typedef ulonglong				sql_bigint_unsigned;
+// Boo, we're going to have to wing it.
+typedef tiny_int<signed char>	sql_tinyint;
+typedef tiny_int<unsigned char>	sql_tinyint_unsigned;
+typedef signed short			sql_smallint;
+typedef unsigned short			sql_smallint_unsigned;
+typedef signed int				sql_int;
+typedef unsigned int			sql_int_unsigned;
+typedef signed int				sql_mediumint;
+typedef unsigned int			sql_mediumint_unsigned;
+typedef longlong				sql_bigint;
+typedef ulonglong				sql_bigint_unsigned;
 #else
-	// Assume a system where C99 is supported in C++ in advance of
-	// actual standardization, so we can do this portably.
-	typedef tiny_int<int8_t>		sql_tinyint;
-	typedef tiny_int<uint8_t>		sql_tinyint_unsigned;
-	typedef int16_t					sql_smallint;
-	typedef uint16_t				sql_smallint_unsigned;
-	typedef int32_t					sql_int;
-	typedef uint32_t				sql_int_unsigned;
-	typedef int32_t					sql_mediumint;
-	typedef uint32_t				sql_mediumint_unsigned;
-	typedef int64_t					sql_bigint;
-	typedef uint64_t				sql_bigint_unsigned;
+// Assume a system where C99 is supported in C++ in advance of
+// actual standardization, so we can do this portably.
+typedef tiny_int<int8_t>		sql_tinyint;
+typedef tiny_int<uint8_t>		sql_tinyint_unsigned;
+typedef int16_t					sql_smallint;
+typedef uint16_t				sql_smallint_unsigned;
+typedef int32_t					sql_int;
+typedef uint32_t				sql_int_unsigned;
+typedef int32_t					sql_mediumint;
+typedef uint32_t				sql_mediumint_unsigned;
+typedef int64_t					sql_bigint;
+typedef uint64_t				sql_bigint_unsigned;
 #endif
 
 // Now define typedef equivalencies for the other standard MySQL
@@ -124,90 +125,94 @@ typedef sql_decimal				sql_numeric;
 // at a late stage, ensuring that end-user code does see the full set.
 #if defined(MYSQLPP_MYSTRING_H) && !defined(MYSQLPP_SQL_TYPES_H_MYSTRING) && !defined(DOXYGEN_IGNORE)
 #	define MYSQLPP_SQL_TYPES_H_MYSTRING
-	namespace mysqlpp {
-		typedef String			sql_blob;
-		typedef String			sql_tinyblob;
-		typedef String			sql_mediumblob;
-		typedef String			sql_longblob;
-		typedef sql_mediumblob	sql_long_varbinary;
-	} // end namespace mysqlpp
+namespace mysqlpp
+{
+typedef String			sql_blob;
+typedef String			sql_tinyblob;
+typedef String			sql_mediumblob;
+typedef String			sql_longblob;
+typedef sql_mediumblob	sql_long_varbinary;
+} // end namespace mysqlpp
 #endif
 
 
 #if defined(MYSQLPP_DATETIME_H) && !defined(MYSQLPP_SQL_TYPES_H_DATETIME) && !defined(DOXYGEN_IGNORE)
 #	define MYSQLPP_SQL_TYPES_H_DATETIME
-	namespace mysqlpp {
-		typedef Date			sql_date;
-		typedef Time			sql_time;
-		typedef DateTime		sql_timestamp;
-		typedef DateTime		sql_datetime;
-	} // end namespace mysqlpp
+namespace mysqlpp
+{
+typedef Date			sql_date;
+typedef Time			sql_time;
+typedef DateTime		sql_timestamp;
+typedef DateTime		sql_datetime;
+} // end namespace mysqlpp
 #endif
 
 
 #if defined(MYSQLPP_MYSET_H) && !defined(MYSQLPP_SQL_TYPES_H_SET) && !defined(DOXYGEN_IGNORE)
 #	define MYSQLPP_SQL_TYPES_H_SET
-	namespace mysqlpp {
-		typedef Set<>				sql_set;
-	} // end namespace mysqlpp
+namespace mysqlpp
+{
+typedef Set<>				sql_set;
+} // end namespace mysqlpp
 #endif
 
 #if defined(MYSQLPP_NULL_H) && !defined(MYSQLPP_SQL_TYPES_H_NULL) && !defined(DOXYGEN_IGNORE)
 #	define MYSQLPP_SQL_TYPES_H_NULL
-	// We have null.h, so define nullable versions of all the above
-	namespace mysqlpp {
-		typedef Null<sql_bigint> sql_bigint_null;
-		typedef Null<sql_bigint_unsigned> sql_bigint_unsigned_null;
-		typedef Null<sql_bool> sql_bool_null;
-		typedef Null<sql_boolean> sql_boolean_null;
-		typedef Null<sql_char> sql_char_null;
-		typedef Null<sql_character_varying> sql_character_varying_null;
-		typedef Null<sql_decimal> sql_decimal_null;
-		typedef Null<sql_double> sql_double_null;
-		typedef Null<sql_enum> sql_enum_null;
-		typedef Null<sql_fixed> sql_fixed_null;
-		typedef Null<sql_float> sql_float_null;
-		typedef Null<sql_float4> sql_float4_null;
-		typedef Null<sql_float8> sql_float8_null;
-		typedef Null<sql_int> sql_int_null;
-		typedef Null<sql_int1> sql_int1_null;
-		typedef Null<sql_int2> sql_int2_null;
-		typedef Null<sql_int3> sql_int3_null;
-		typedef Null<sql_int4> sql_int4_null;
-		typedef Null<sql_int8> sql_int8_null;
-		typedef Null<sql_int_unsigned> sql_int_unsigned_null;
-		typedef Null<sql_long> sql_long_null;
-		typedef Null<sql_longtext> sql_longtext_null;
-		typedef Null<sql_long_varchar> sql_long_varchar_null;
-		typedef Null<sql_mediumint> sql_mediumint_null;
-		typedef Null<sql_mediumint_unsigned> sql_mediumint_unsigned_null;
-		typedef Null<sql_mediumtext> sql_mediumtext_null;
-		typedef Null<sql_middleint> sql_middleint_null;
-		typedef Null<sql_numeric> sql_numeric_null;
-		typedef Null<sql_smallint> sql_smallint_null;
-		typedef Null<sql_smallint_unsigned> sql_smallint_unsigned_null;
-		typedef Null<sql_text> sql_text_null;
-		typedef Null<sql_tinyint> sql_tinyint_null;
-		typedef Null<sql_tinyint_unsigned> sql_tinyint_unsigned_null;
-		typedef Null<sql_tinytext> sql_tinytext_null;
-		typedef Null<sql_varchar> sql_varchar_null;
+// We have null.h, so define nullable versions of all the above
+namespace mysqlpp
+{
+typedef Null<sql_bigint> sql_bigint_null;
+typedef Null<sql_bigint_unsigned> sql_bigint_unsigned_null;
+typedef Null<sql_bool> sql_bool_null;
+typedef Null<sql_boolean> sql_boolean_null;
+typedef Null<sql_char> sql_char_null;
+typedef Null<sql_character_varying> sql_character_varying_null;
+typedef Null<sql_decimal> sql_decimal_null;
+typedef Null<sql_double> sql_double_null;
+typedef Null<sql_enum> sql_enum_null;
+typedef Null<sql_fixed> sql_fixed_null;
+typedef Null<sql_float> sql_float_null;
+typedef Null<sql_float4> sql_float4_null;
+typedef Null<sql_float8> sql_float8_null;
+typedef Null<sql_int> sql_int_null;
+typedef Null<sql_int1> sql_int1_null;
+typedef Null<sql_int2> sql_int2_null;
+typedef Null<sql_int3> sql_int3_null;
+typedef Null<sql_int4> sql_int4_null;
+typedef Null<sql_int8> sql_int8_null;
+typedef Null<sql_int_unsigned> sql_int_unsigned_null;
+typedef Null<sql_long> sql_long_null;
+typedef Null<sql_longtext> sql_longtext_null;
+typedef Null<sql_long_varchar> sql_long_varchar_null;
+typedef Null<sql_mediumint> sql_mediumint_null;
+typedef Null<sql_mediumint_unsigned> sql_mediumint_unsigned_null;
+typedef Null<sql_mediumtext> sql_mediumtext_null;
+typedef Null<sql_middleint> sql_middleint_null;
+typedef Null<sql_numeric> sql_numeric_null;
+typedef Null<sql_smallint> sql_smallint_null;
+typedef Null<sql_smallint_unsigned> sql_smallint_unsigned_null;
+typedef Null<sql_text> sql_text_null;
+typedef Null<sql_tinyint> sql_tinyint_null;
+typedef Null<sql_tinyint_unsigned> sql_tinyint_unsigned_null;
+typedef Null<sql_tinytext> sql_tinytext_null;
+typedef Null<sql_varchar> sql_varchar_null;
 
-		// Also do nullable versions of optional sql_* types, where possible
+// Also do nullable versions of optional sql_* types, where possible
 #		if defined(MYSQLPP_SQL_TYPES_H_MYSTRING)
-			typedef Null<sql_blob> sql_blob_null;
-			typedef Null<sql_longblob> sql_longblob_null;
-			typedef Null<sql_mediumblob> sql_mediumblob_null;
-			typedef Null<sql_tinyblob> sql_tinyblob_null;
-			typedef Null<sql_long_varbinary> sql_long_varbinary_null;
+typedef Null<sql_blob> sql_blob_null;
+typedef Null<sql_longblob> sql_longblob_null;
+typedef Null<sql_mediumblob> sql_mediumblob_null;
+typedef Null<sql_tinyblob> sql_tinyblob_null;
+typedef Null<sql_long_varbinary> sql_long_varbinary_null;
 #		endif
 #		if defined(MYSQLPP_SQL_TYPES_H_DATETIME)
-			typedef Null<sql_date> sql_date_null;
-			typedef Null<sql_datetime> sql_datetime_null;
-			typedef Null<sql_time> sql_time_null;
-			typedef Null<sql_timestamp> sql_timestamp_null;
+typedef Null<sql_date> sql_date_null;
+typedef Null<sql_datetime> sql_datetime_null;
+typedef Null<sql_time> sql_time_null;
+typedef Null<sql_timestamp> sql_timestamp_null;
 #		endif
 #		if defined(MYSQLPP_SQL_TYPES_H_SET)
-			typedef Null<sql_set> sql_set_null;
+typedef Null<sql_set> sql_set_null;
 #		endif
-	} // end namespace mysqlpp
+} // end namespace mysqlpp
 #endif

@@ -32,7 +32,8 @@
 
 #include <stddef.h>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 /// \brief Functor to call delete on the pointer you pass to it
 ///
@@ -44,8 +45,11 @@ namespace mysqlpp {
 template <class T>
 struct RefCountedPointerDestroyer
 {
-	/// \brief Functor implementation
-	void operator()(T* doomed) const { delete doomed; }
+    /// \brief Functor implementation
+    void operator()(T* doomed) const
+    {
+        delete doomed;
+    }
 };
 
 
@@ -80,184 +84,187 @@ template <class T, class Destroyer = RefCountedPointerDestroyer<T> >
 class RefCountedPointer
 {
 public:
-	typedef RefCountedPointer<T> ThisType;	///< alias for this object's type
+    typedef RefCountedPointer<T> ThisType;	///< alias for this object's type
 
-	/// \brief Default constructor
-	///
-	/// An object constructed this way is useless until you vivify it
-	/// with operator =() or assign().
-	RefCountedPointer() :
-	counted_(0),
-	refs_(0)
-	{
-	}
-	
-	/// \brief Standard constructor
-	///
-	/// \param c A pointer to the object to be managed.  If you pass 0,
-	/// it's like calling the default ctor instead, only more work: the
-	/// object's useless until you vivify it with operator =() or assign().
-	explicit RefCountedPointer(T* c) :
-	counted_(c),
-	refs_(0)
-	{
-		std::auto_ptr<T> exception_guard(counted_);
-		if (counted_) {
-			refs_ = new size_t(1);
-		}
-		exception_guard.release();	// previous new didn't throw
-	}
+    /// \brief Default constructor
+    ///
+    /// An object constructed this way is useless until you vivify it
+    /// with operator =() or assign().
+    RefCountedPointer() :
+        counted_(0),
+        refs_(0)
+    {
+    }
 
-	/// \brief Copy constructor
-	RefCountedPointer(const ThisType& other) :
-	counted_(other.counted_),
-	refs_(other.counted_ ? other.refs_ : 0)
-	{
-		if (counted_) {
-			++(*refs_);
-		}
-	}
+    /// \brief Standard constructor
+    ///
+    /// \param c A pointer to the object to be managed.  If you pass 0,
+    /// it's like calling the default ctor instead, only more work: the
+    /// object's useless until you vivify it with operator =() or assign().
+    explicit RefCountedPointer(T* c) :
+        counted_(c),
+        refs_(0)
+    {
+        std::auto_ptr<T> exception_guard(counted_);
+        if (counted_)
+        {
+            refs_ = new size_t(1);
+        }
+        exception_guard.release();	// previous new didn't throw
+    }
 
-	/// \brief Destructor
-	///
-	/// This only destroys the managed memory if the reference count
-	/// drops to 0.
-	~RefCountedPointer()
-	{
-		if (refs_ && (--(*refs_) == 0)) {
-			Destroyer()(counted_);
-			delete refs_;
-		}
-	}
+    /// \brief Copy constructor
+    RefCountedPointer(const ThisType& other) :
+        counted_(other.counted_),
+        refs_(other.counted_ ? other.refs_ : 0)
+    {
+        if (counted_)
+        {
+            ++(*refs_);
+        }
+    }
 
-	/// \brief Sets (or resets) the pointer to the counted object.
-	///
-	/// If we are managing a pointer, this decrements the refcount for
-	/// it and destroys the managed object if the refcount falls to 0.
-	///
-	/// This is a no-op if you pass the same pointer we're already
-	/// managing.
-	ThisType& assign(T* c)
-	{
-		// The create-temporary-and-swap idiom lets us keep memory
-		// allocation in the ctor and deallocation in the dtor so
-		// we don't leak in the face of an exception.
-		ThisType(c).swap(*this);
-		return *this;
-	}
+    /// \brief Destructor
+    ///
+    /// This only destroys the managed memory if the reference count
+    /// drops to 0.
+    ~RefCountedPointer()
+    {
+        if (refs_ && (--(*refs_) == 0))
+        {
+            Destroyer()(counted_);
+            delete refs_;
+        }
+    }
 
-	/// \brief Copy an existing refcounted pointer
-	///
-	/// If we are managing a pointer, this decrements the refcount for
-	/// it and destroys the managed object if the refcount falls to 0.
-	/// Then we increment the other object's reference count and copy
-	/// that refcount and the managed pointer into this object.
-	///
-	/// This is a no-op if you pass a reference to this same object.
-	ThisType& assign(const ThisType& other)
-	{
-		// The create-temporary-and-swap idiom lets us keep memory
-		// allocation in the ctor and deallocation in the dtor so
-		// we don't leak in the face of an exception.
-		ThisType(other).swap(*this);
-		return *this;
-	}
+    /// \brief Sets (or resets) the pointer to the counted object.
+    ///
+    /// If we are managing a pointer, this decrements the refcount for
+    /// it and destroys the managed object if the refcount falls to 0.
+    ///
+    /// This is a no-op if you pass the same pointer we're already
+    /// managing.
+    ThisType& assign(T* c)
+    {
+        // The create-temporary-and-swap idiom lets us keep memory
+        // allocation in the ctor and deallocation in the dtor so
+        // we don't leak in the face of an exception.
+        ThisType(c).swap(*this);
+        return *this;
+    }
 
-	/// \brief Set (or reset) the pointer to the counted object
-	///
-	/// This is essentially the same thing as assign(T*).  The choice
-	/// between the two is just a matter of syntactic preference.
-	ThisType& operator =(T* c)
-	{
-		return assign(c);
-	}
+    /// \brief Copy an existing refcounted pointer
+    ///
+    /// If we are managing a pointer, this decrements the refcount for
+    /// it and destroys the managed object if the refcount falls to 0.
+    /// Then we increment the other object's reference count and copy
+    /// that refcount and the managed pointer into this object.
+    ///
+    /// This is a no-op if you pass a reference to this same object.
+    ThisType& assign(const ThisType& other)
+    {
+        // The create-temporary-and-swap idiom lets us keep memory
+        // allocation in the ctor and deallocation in the dtor so
+        // we don't leak in the face of an exception.
+        ThisType(other).swap(*this);
+        return *this;
+    }
 
-	/// \brief Copy an existing refcounted pointer
-	///
-	/// This is essentially the same thing as assign(const ThisType&).
-	/// The choice between the two is just a matter of syntactic
-	/// preference.
-	ThisType& operator =(const ThisType& rhs)
-	{
-		return assign(rhs);
-	}
+    /// \brief Set (or reset) the pointer to the counted object
+    ///
+    /// This is essentially the same thing as assign(T*).  The choice
+    /// between the two is just a matter of syntactic preference.
+    ThisType& operator =(T* c)
+    {
+        return assign(c);
+    }
 
-	/// \brief Access the object through the smart pointer
-	T* operator ->() const
-	{
-		return counted_;
-	}	
+    /// \brief Copy an existing refcounted pointer
+    ///
+    /// This is essentially the same thing as assign(const ThisType&).
+    /// The choice between the two is just a matter of syntactic
+    /// preference.
+    ThisType& operator =(const ThisType& rhs)
+    {
+        return assign(rhs);
+    }
 
-	/// \brief Dereference the smart pointer
-	T& operator *() const
-	{
-		return *counted_;
-	}	
+    /// \brief Access the object through the smart pointer
+    T* operator ->() const
+    {
+        return counted_;
+    }
 
-	/// \brief Returns the internal raw pointer converted to void*
-	///
-	/// This isn't intended to be used directly; if you need the
-	/// pointer, call raw() instead.  It's used internally by the
-	/// compiler to implement operators bool, ==, and !=
-	///
-	/// \b WARNING: This makes it possible to say
-	/// \code
-	/// RefCountedPointer<Foo> bar(new Foo);
-	/// delete bar;
-	/// \endcode
-	///
-	/// This will almost kinda sorta do the right thing: the Foo
-	/// object held by the refcounted pointer will be destroyed as
-	/// you wanted, but then when the refcounted pointer goes out of
-	/// scope, the memory is deleted a second time, which will probably
-	/// crash your program.  This is easy to accidentally do when
-	/// converting a good ol' unmanaged pointer to a refcounted pointer
-	/// and forgetting to remove the delete calls needed previously.
-	operator void*()
-	{
-		return counted_;
-	}
+    /// \brief Dereference the smart pointer
+    T& operator *() const
+    {
+        return *counted_;
+    }
 
-	/// \brief Returns the internal raw pointer converted to const void*
-	///
-	/// \see comments for operator void*()
-	operator const void*() const
-	{
-		return counted_;
-	}
+    /// \brief Returns the internal raw pointer converted to void*
+    ///
+    /// This isn't intended to be used directly; if you need the
+    /// pointer, call raw() instead.  It's used internally by the
+    /// compiler to implement operators bool, ==, and !=
+    ///
+    /// \b WARNING: This makes it possible to say
+    /// \code
+    /// RefCountedPointer<Foo> bar(new Foo);
+    /// delete bar;
+    /// \endcode
+    ///
+    /// This will almost kinda sorta do the right thing: the Foo
+    /// object held by the refcounted pointer will be destroyed as
+    /// you wanted, but then when the refcounted pointer goes out of
+    /// scope, the memory is deleted a second time, which will probably
+    /// crash your program.  This is easy to accidentally do when
+    /// converting a good ol' unmanaged pointer to a refcounted pointer
+    /// and forgetting to remove the delete calls needed previously.
+    operator void*()
+    {
+        return counted_;
+    }
 
-	/// \brief Return the raw pointer in T* context
-	T* raw()
-	{
-		return counted_;
-	}
+    /// \brief Returns the internal raw pointer converted to const void*
+    ///
+    /// \see comments for operator void*()
+    operator const void*() const
+    {
+        return counted_;
+    }
 
-	/// \brief Return the raw pointer when used in const T* context
-	const T* raw() const
-	{
-		return counted_;
-	}
+    /// \brief Return the raw pointer in T* context
+    T* raw()
+    {
+        return counted_;
+    }
 
-	/// \brief Exchange our managed memory with another pointer.
-	///
-	/// \internal This exists primarily to implement assign() in an
-	/// exception-safe manner.
-	void swap(ThisType& other)
-	{
-		std::swap(counted_, other.counted_);
-		std::swap(refs_, other.refs_);
-	}	
+    /// \brief Return the raw pointer when used in const T* context
+    const T* raw() const
+    {
+        return counted_;
+    }
+
+    /// \brief Exchange our managed memory with another pointer.
+    ///
+    /// \internal This exists primarily to implement assign() in an
+    /// exception-safe manner.
+    void swap(ThisType& other)
+    {
+        std::swap(counted_, other.counted_);
+        std::swap(refs_, other.refs_);
+    }
 
 private:
-	/// \brief Pointer to the reference-counted object
-	T* counted_;
+    /// \brief Pointer to the reference-counted object
+    T* counted_;
 
-	/// \brief Pointer to the reference count.
-	///
-	/// We can't keep this as a plain integer because this object
-	/// allows itself to be copied.  All copies need to share this
-	/// reference count, not just the pointer to the counted object.
-	size_t* refs_;
+    /// \brief Pointer to the reference count.
+    ///
+    /// We can't keep this as a plain integer because this object
+    /// allows itself to be copied.  All copies need to share this
+    /// reference count, not just the pointer to the counted object.
+    size_t* refs_;
 };
 
 

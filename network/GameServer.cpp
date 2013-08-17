@@ -3,53 +3,53 @@
 
 GameServer::GameServer()
 {
-	Logger::Log(INFO, sLog(), "Start GameServer ", true);
+    Logger::Log(INFO, sLog(), "Start GameServer ", true);
 
-	Config* config = Config::Instance();
+    Config* config = Config::Instance();
 
 }
 
 void GameServer::onClientConnected(SOCKET ClientSocket)
 {
-	MessageWriter *data = new MessageWriter();
-	MessageWriter *packet = new MessageWriter();
+    MessageWriter *data = new MessageWriter();
+    MessageWriter *packet = new MessageWriter();
 
-	if(clients.size() >= max_user)
-	{
+    if(clients.size() >= max_user)
+    {
 
-	}
-	else
-	{
-		Client *newClient = new Client;
-		newClient->socket = ClientSocket;
-		clients.push_back(newClient);
+    }
+    else
+    {
+        Client *newClient = new Client;
+        newClient->socket = ClientSocket;
+        clients.push_back(newClient);
 
-		Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
+        Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
 
-		/** ProtocolRequired **/
-		ProtocolRequired pr;
-		pr.initProtocolRequired(requiredVersion, currentVersion);
-		pr.pack(data);
+        /** ProtocolRequired **/
+        ProtocolRequired pr;
+        pr.initProtocolRequired(requiredVersion, currentVersion);
+        pr.pack(data);
 
-		writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
-		sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), pr.getInstance());
+        writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
+        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), pr.getInstance());
 
-		/** Clear packet **/
-		data->reset();
-		packet->reset();
+        /** Clear packet **/
+        data->reset();
+        packet->reset();
 
-		/** HelloGameMessage **/
-		HelloGameMessage hgm;
-		hgm.initHelloGameMessage();
-		hgm.pack(data);
+        /** HelloGameMessage **/
+        HelloGameMessage hgm;
+        hgm.initHelloGameMessage();
+        hgm.pack(data);
 
-		writePacket(packet, hgm.getMessageId(), data->getBuffer(), data->getPosition());
-		sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), hgm.getInstance());
+        writePacket(packet, hgm.getMessageId(), data->getBuffer(), data->getPosition());
+        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), hgm.getInstance());
 
-		/** Delete packet **/
-		delete data;
-		delete packet;
-	}
+        /** Delete packet **/
+        delete data;
+        delete packet;
+    }
 }
 
 void GameServer::onClientDisconnected(Client* client, int i)

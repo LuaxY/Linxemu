@@ -31,29 +31,32 @@
 
 using namespace std;
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 static const char* common_complaint =
-		"WindowsNamedPipeConnection only works on Windows";
+    "WindowsNamedPipeConnection only works on Windows";
 
 
 bool
 WindowsNamedPipeConnection::connect(const char* db, const char* user,
-		const char* pass)
+                                    const char* pass)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
-	return Connection::connect(db, ".", user, pass);
+    return Connection::connect(db, ".", user, pass);
 #else
-	(void)db;
-	(void)user;
-	(void)pass;
-	error_message_ = common_complaint;
-	if (throw_exceptions()) {
-		throw ConnectionFailed(error_message_.c_str());
-	}
-	else {
-		return false;
-	}
+    (void)db;
+    (void)user;
+    (void)pass;
+    error_message_ = common_complaint;
+    if (throw_exceptions())
+    {
+        throw ConnectionFailed(error_message_.c_str());
+    }
+    else
+    {
+        return false;
+    }
 #endif
 }
 
@@ -62,10 +65,10 @@ bool
 WindowsNamedPipeConnection::is_wnp(const char* server)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
-	return server && (strcmp(server, ".") == 0);
+    return server && (strcmp(server, ".") == 0);
 #else
-	(void)server;
-	return false;
+    (void)server;
+    return false;
 #endif
 }
 

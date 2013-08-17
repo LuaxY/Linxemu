@@ -8,19 +8,19 @@
 using namespace std;
 
 template <class T> class PrototypeNet
- {
-    public:
-        virtual ~PrototypeNet(){}
-        virtual T* getInstance() const = 0;
- };
+{
+public:
+    virtual ~PrototypeNet() {}
+    virtual T* getInstance() const = 0;
+};
 
 class INetworkMessage : public PrototypeNet<INetworkMessage>
 {
-    public:
-        virtual int getMessageId() = 0;
-        virtual char* getMessageName() = 0;
-        virtual void pack(MessageWriter *output) = 0;
-        virtual void unpack(char *buffer) = 0;
+public:
+    virtual int getMessageId() = 0;
+    virtual char* getMessageName() = 0;
+    virtual void pack(MessageWriter *output) = 0;
+    virtual void unpack(char *buffer) = 0;
 };
 
 #endif // INETWORK_MESSAGE_H

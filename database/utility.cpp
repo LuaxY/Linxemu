@@ -25,23 +25,27 @@
 
 #include "utility.h"
 
-namespace mysqlpp {
-	namespace internal {
-		void str_to_lwr(std::string& s)
-		{
-			std::string::iterator it;
-			for (it = s.begin(); it != s.end(); ++it) {
-				*it = tolower(*it);
-			}
-		}
+namespace mysqlpp
+{
+namespace internal
+{
+void str_to_lwr(std::string& s)
+{
+    std::string::iterator it;
+    for (it = s.begin(); it != s.end(); ++it)
+    {
+        *it = tolower(*it);
+    }
+}
 
-		void str_to_lwr(std::string& ls, const char* mcs)
-		{
-			ls.reserve(strlen(mcs));
-			while (mcs && *mcs) {
-				ls += tolower(*mcs++);
-			}
-		}
-	} // end namespace internal
+void str_to_lwr(std::string& ls, const char* mcs)
+{
+    ls.reserve(strlen(mcs));
+    while (mcs && *mcs)
+    {
+        ls += tolower(*mcs++);
+    }
+}
+} // end namespace internal
 } // end namespace mysqlpp
 

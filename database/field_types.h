@@ -32,7 +32,8 @@
 
 #include <vector>
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
@@ -43,40 +44,40 @@ class MYSQLPP_EXPORT ResultBase;
 class FieldTypes : public std::vector<mysql_type_info>
 {
 public:
-	/// \brief Default constructor
-	FieldTypes() { }
-	
-	/// \brief Create list of field types from a result set
-	FieldTypes(const ResultBase* res)
-	{
-		init(res);
-	}
+    /// \brief Default constructor
+    FieldTypes() { }
 
-	/// \brief Create fixed-size list of uninitialized field types
-	FieldTypes(int i) :
-	std::vector<mysql_type_info>(i)
-	{
-	}
+    /// \brief Create list of field types from a result set
+    FieldTypes(const ResultBase* res)
+    {
+        init(res);
+    }
 
-	/// \brief Initialize field list based on a result set
-	FieldTypes& operator =(const ResultBase* res)
-	{
-		init(res);
-		return *this;
-	}
+    /// \brief Create fixed-size list of uninitialized field types
+    FieldTypes(int i) :
+        std::vector<mysql_type_info>(i)
+    {
+    }
 
-	/// \brief Insert a given number of uninitialized field type
-	/// objects at the beginning of the list
-	///
-	/// \param i number of field type objects to insert
-	FieldTypes& operator =(int i)
-	{
-		insert(begin(), i, mysql_type_info());
-		return *this;
-	}
+    /// \brief Initialize field list based on a result set
+    FieldTypes& operator =(const ResultBase* res)
+    {
+        init(res);
+        return *this;
+    }
+
+    /// \brief Insert a given number of uninitialized field type
+    /// objects at the beginning of the list
+    ///
+    /// \param i number of field type objects to insert
+    FieldTypes& operator =(int i)
+    {
+        insert(begin(), i, mysql_type_info());
+        return *this;
+    }
 
 private:
-	void init(const ResultBase* res);
+    void init(const ResultBase* res);
 };
 
 } // end namespace mysqlpp

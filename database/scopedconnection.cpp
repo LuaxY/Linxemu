@@ -27,11 +27,12 @@
 
 #include "cpool.h"
 
-namespace mysqlpp {
+namespace mysqlpp
+{
 
 ScopedConnection::ScopedConnection(ConnectionPool& pool, bool safe) :
-pool_(pool),
-connection_(safe ? pool.safe_grab() : pool.grab())
+    pool_(pool),
+    connection_(safe ? pool.safe_grab() : pool.grab())
 {
 }
 

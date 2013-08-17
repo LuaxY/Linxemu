@@ -19,14 +19,14 @@ enum LOG_NAME
 
 class Logger
 {
-    public:
-        static void Log(LOG_NAME logName, string location, string message, bool newLine = true);
-        static bool isDebugLogEnabled();
+public:
+    static void Log(LOG_NAME logName, string location, string message, bool newLine = true);
+    static bool isDebugLogEnabled();
 
-    private:
-        static string getCurrentTime();
-        static const bool debugLog = true;
-        static const bool timeLog = true;
+private:
+    static string getCurrentTime();
+    static const bool debugLog = true;
+    static const bool timeLog = true;
 };
 
 #endif // LOGGER_H
