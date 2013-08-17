@@ -17,6 +17,7 @@ private:
     MessageWriter *packet;
 
     void processMessage(AuthenticationTicketMessage* message, Client* client);
+    void processMessage(CharactersListRequestMessage* message, Client* client);
 };
 
 #endif // GAME_SERVER_APPROACH_FRAME_H

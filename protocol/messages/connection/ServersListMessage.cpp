@@ -23,9 +23,9 @@ char* ServersListMessage::getMessageName()
 void ServersListMessage::pack(MessageWriter *output)
 {
     output->WriteUShort(servers.size());
-    for(GameServerInformations entry : servers)
+    for(GameServerInformations* entry : servers)
     {
-        entry.pack(output);
+        entry->pack(output);
     }
 }
 

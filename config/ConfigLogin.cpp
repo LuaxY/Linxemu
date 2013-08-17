@@ -25,4 +25,5 @@ void Config::init(string config_file)
     username = reader.Get("database", "username", "root");
     password = reader.Get("database", "password", "");
     database = reader.Get("database", "database", "linxemu_login");
+    login_db = reader.Get("database", "database", "linxemu_login");
 }

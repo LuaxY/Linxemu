@@ -1,15 +1,5 @@
 #include "GameServerInformations.h"
 
-GameServerInformations::GameServerInformations(GameServerInformations* message)
-{
-    id = message->id;
-    status = message->status;
-    completion = message->completion;
-    isSelectable = message->isSelectable;
-    charactersCount = message->charactersCount;
-    date = message->date;
-}
-
 void GameServerInformations::initGameServerInformations(unsigned short _id, char _status, char _completion, bool _isSelectable, char _charactersCount, long _date)
 {
     id = _id;
@@ -37,17 +27,4 @@ void GameServerInformations::pack(MessageWriter *output)
 
 void GameServerInformations::unpack(char *buffer)
 {
-    MessageReader *input = new MessageReader(buffer);
-
-    delete input;
-}
-
-void GameServerInformations::reset()
-{
-    id = 0;
-    status = 1;
-    completion = 0;
-    isSelectable = false;
-    charactersCount = 0;
-    date = 0;
 }

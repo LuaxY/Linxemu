@@ -17,6 +17,7 @@ void MessageReceiver::Register()
     FactoryMessage::registerClass(110, new AuthenticationTicketMessage);
     FactoryMessage::registerClass(111, new AuthenticationTicketAcceptedMessage);
     FactoryMessage::registerClass(112, new AuthenticationTicketRefusedMessage);
+    FactoryMessage::registerClass(150, new CharactersListRequestMessage);
     FactoryMessage::registerClass(182, new BasicPingMessage);
     FactoryMessage::registerClass(183, new BasicPongMessage);
     FactoryMessage::registerClass(888, new ClearIdentificationMessage);

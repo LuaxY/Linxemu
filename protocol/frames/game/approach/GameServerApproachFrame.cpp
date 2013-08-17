@@ -23,6 +23,11 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
         processMessage((AuthenticationTicketMessage*)message, client);
         state = true;
         break;
+
+    case 150:
+        processMessage((CharactersListRequestMessage*)message, client);
+        state = true;
+        break;
     }
 
     delete data;
@@ -38,7 +43,6 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
 
     try
     {
-        // need to select login DB
         database->db->select_db(config->login_db);
 
         mysqlpp::Query queryUser = database->db->query("SELECT id FROM accounts WHERE token = %0q");
@@ -72,4 +76,9 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
     {
         Logger::Log(ERROR, sLog(), e.what());
     }
+}
+
+void GameServerApproachFrame::processMessage(CharactersListRequestMessage* message, Client* client)
+{
+    cout << "Tas des personnages ?" << endl;
 }

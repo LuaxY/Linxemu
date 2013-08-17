@@ -14,6 +14,7 @@
 #include "game/approach/AuthenticationTicketMessage.h" // 110
 #include "game/approach/AuthenticationTicketAcceptedMessage.h" // 111
 #include "game/approach/AuthenticationTicketRefusedMessage.h" // 112
+#include "game/character/choice/CharactersListRequestMessage.h" // 150
 #include "common/basic/BasicPingMessage.h" // 182
 #include "common/basic/BasicPongMessage.h" // 183
 #include "connection/ClearIdentificationMessage.h" // 888
