@@ -144,13 +144,13 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
                             gsi->initGameServerInformations(serverId, status, 0, true, count, 0);
                             servers.push_back(gsi);
                         }
-                        catch(const mysqlpp::BadQuery &e)
+                        catch(const mysqlpp::Exception& e)
                         {
                             Logger::Log(ERROR, sLog(), e.what());
                         }
                     }
 
-                    database->selectLogin();
+                    database->selectDefault();
 
                     ServersListMessage slm;
                     slm.initServersListMessage(servers);
@@ -158,8 +158,22 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
 
                     NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
                     NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), slm.getInstance());
+
+                    try
+					{
+						client->accountId = accountId;
+						client->token = genToken(10);
+
+						mysqlpp::Query queryStockToken = database->db->query("UPDATE accounts SET token = %1q WHERE id = %0");
+						queryStockToken.parse();
+						mysqlpp::SimpleResult resStockToken = queryStockToken.execute(client->accountId, client->token);
+					}
+					catch(const mysqlpp::Exception& e)
+					{
+						Logger::Log(ERROR, sLog(), e.what());
+					}
                 }
-                catch(const mysqlpp::BadQuery &e)
+                catch(const mysqlpp::Exception& e)
                 {
                     Logger::Log(ERROR, sLog(), e.what());
                 }
@@ -168,7 +182,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
         else
             reason = WRONG_CREDENTIALS;
     }
-    catch(const mysqlpp::BadQuery &e)
+    catch(const mysqlpp::Exception& e)
     {
         Logger::Log(ERROR, sLog(), e.what());
     }
@@ -200,13 +214,13 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
             unsigned short serverPort = resSelectedServer[0]["port"];
 
             SelectedServerDataMessage ssdm;
-            ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, genToken(10));
+            ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, client->token);
             ssdm.pack(data);
 
             NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
             NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssdm.getInstance());
 
-            shutdown(client->socket, 2);
+			shutdown(client->socket, 2);
         }
         else
         {
@@ -218,7 +232,7 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
             NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssrm.getInstance());
         }
     }
-    catch(const mysqlpp::BadQuery &e)
+    catch(const mysqlpp::Exception& e)
     {
         Logger::Log(ERROR, sLog(), e.what());
     }

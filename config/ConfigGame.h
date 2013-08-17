@@ -22,6 +22,7 @@ class Config
 		string username;
 		string password;
 		string database;
+		string login_db;
 
 	private:
 		Config(){};

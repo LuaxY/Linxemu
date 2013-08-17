@@ -33,12 +33,43 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
 
 void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* message, Client* client)
 {
-	cout << message->lang << " " << message->ticket << endl;
+	Database* database = Database::Instance();
+	Config* config = Config::Instance();
 
-	AuthenticationTicketAcceptedMessage atacm;
-	atacm.initAuthenticationTicketAcceptedMessage();
-	atacm.pack(data);
+	try
+	{
+		// need to select login DB
+		database->db->select_db(config->login_db);
 
-	NetworkManager::writePacket(packet, atacm.getMessageId(), data->getBuffer(), data->getPosition());
-	NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atacm.getInstance());
+		mysqlpp::Query queryUser = database->db->query("SELECT id FROM accounts WHERE token = %0q");
+		queryUser.parse();
+		mysqlpp::StoreQueryResult resUser = queryUser.store(message->ticket);
+
+		database->selectDefault();
+
+		if(!resUser.empty())
+		{
+			client->accountId = resUser[0]["id"];
+
+			AuthenticationTicketAcceptedMessage atam;
+			atam.initAuthenticationTicketAcceptedMessage();
+			atam.pack(data);
+
+			NetworkManager::writePacket(packet, atam.getMessageId(), data->getBuffer(), data->getPosition());
+			NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atam.getInstance());
+		}
+		else
+		{
+			AuthenticationTicketRefusedMessage atrm;
+			atrm.initAuthenticationTicketRefusedMessage();
+			atrm.pack(data);
+
+			NetworkManager::writePacket(packet, atrm.getMessageId(), data->getBuffer(), data->getPosition());
+			NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atrm.getInstance());
+		}
+	}
+	catch(const mysqlpp::Exception& e)
+	{
+		Logger::Log(ERROR, sLog(), e.what());
+	}
 }

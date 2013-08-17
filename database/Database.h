@@ -16,7 +16,7 @@ class Database
     public:
         static Database* Instance();
         void init();
-        void selectLogin();
+        void selectDefault();
         mysqlpp::Connection* db;
 
     private:

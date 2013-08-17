@@ -23,6 +23,8 @@ class Client
         unsigned short lastMessageLength;
 
         char* salt;
+        unsigned int accountId;
+        char* token;
 };
 
 #endif // CLIENT_H

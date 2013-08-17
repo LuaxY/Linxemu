@@ -27,7 +27,7 @@ void Database::init()
     }
 }
 
-void Database::selectLogin()
+void Database::selectDefault()
 {
     Config* config = Config::Instance();
     db->select_db(config->database);
