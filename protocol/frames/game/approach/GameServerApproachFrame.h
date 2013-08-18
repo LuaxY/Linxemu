@@ -4,6 +4,8 @@
 #include "../../../../utils/utils.h"
 #include "../../../../database/Database.h"
 #include "../../IFrame.h"
+#include "../../../types/game/character/choice/CharacterBaseInformations.h"
+#include "../../../types/game/look/EntityLook.h"
 
 class GameServerApproachFrame : public IFrame
 {

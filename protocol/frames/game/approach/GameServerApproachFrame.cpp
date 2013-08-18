@@ -80,5 +80,42 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
 
 void GameServerApproachFrame::processMessage(CharactersListRequestMessage* message, Client* client)
 {
-    cout << "Tas des personnages ?" << endl;
+    vector<CharacterBaseInformations*> characters;
+
+    /** LOOP **/
+    EntityLook* entityLook = new EntityLook;
+    vector<int> skins;
+    vector<int> indexedColors;
+    vector<int> scales;
+    vector<SubEntity*> subentities;
+
+    skins.push_back(1664);
+    skins.push_back(2246);
+    skins.push_back(460);
+    skins.push_back(461);
+    skins.push_back(462);
+    skins.push_back(1250);
+
+    indexedColors.push_back(0x01fed192);
+    indexedColors.push_back(0x02fbf1bf);
+    indexedColors.push_back(0x0334271a);
+    indexedColors.push_back(0x04f9e79f);
+    indexedColors.push_back(0x05ab8a50);
+
+    scales.push_back(160);
+
+    entityLook->initEntityLook(1, skins, indexedColors, scales, subentities);
+
+    CharacterBaseInformations* player1 = new CharacterBaseInformations;
+    player1->initCharacterBaseInformations(1, 50, "Yena", entityLook, 0, true);
+
+    characters.push_back(player1);
+    /** END LOOP **/
+
+    CharactersListMessage clm;
+    clm.initCharactersListMessage(false, characters);
+    clm.pack(data);
+
+    NetworkManager::writePacket(packet, clm.getMessageId(), data->getBuffer(), data->getPosition());
+    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), clm.getInstance());
 }

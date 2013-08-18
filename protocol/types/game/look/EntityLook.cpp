@@ -21,13 +21,19 @@ void EntityLook::pack(MessageWriter *output)
     output->WriteUShort(skins.size());
     for(int entry : skins)
     {
-        output->WriteInt(entry);
+        output->WriteShort(entry);
     }
 
     output->WriteUShort(indexedColors.size());
     for(int entry : indexedColors)
     {
         output->WriteInt(entry);
+    }
+
+    output->WriteUShort(scales.size());
+    for(int entry : scales)
+    {
+        output->WriteShort(entry);
     }
 
     output->WriteUShort(subentities.size());
