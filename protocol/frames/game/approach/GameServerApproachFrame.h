@@ -6,6 +6,7 @@
 #include "../../IFrame.h"
 #include "../../../types/game/character/choice/CharacterBaseInformations.h"
 #include "../../../types/game/look/EntityLook.h"
+#include "../../../enums/CharacterInventoryPositionEnum.h"
 
 class GameServerApproachFrame : public IFrame
 {

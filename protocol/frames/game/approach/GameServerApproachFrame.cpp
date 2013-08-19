@@ -80,37 +80,80 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
 
 void GameServerApproachFrame::processMessage(CharactersListRequestMessage* message, Client* client)
 {
+    Database* database = Database::Instance();
     vector<CharacterBaseInformations*> characters;
 
-    /** LOOP **/
-    EntityLook* entityLook = new EntityLook;
-    vector<int> skins;
-    vector<int> indexedColors;
-    vector<int> scales;
-    vector<SubEntity*> subentities;
+    try
+    {
+        mysqlpp::Query queryCharactersList = database->db->query("SELECT * FROM characters WHERE accountId = %0");
+        queryCharactersList.parse();
+        mysqlpp::StoreQueryResult resCharactersList = queryCharactersList.store(client->accountId);
 
-    skins.push_back(1664);
-    skins.push_back(2246);
-    skins.push_back(460);
-    skins.push_back(461);
-    skins.push_back(462);
-    skins.push_back(1250);
+        for(size_t i = 0; i < resCharactersList.num_rows(); ++i)
+        {
+            int characterId = resCharactersList[i]["id"];
+            const char* _name = resCharactersList[i]["name"];
+            int breed = resCharactersList[i]["class"];
+            int sex = resCharactersList[i]["sex"];
+            int level = resCharactersList[i]["level"];
+            int skin = resCharactersList[i]["skin"];
+            int cosmetic = resCharactersList[i]["cosmetic"];
 
-    indexedColors.push_back(0x01fed192);
-    indexedColors.push_back(0x02fbf1bf);
-    indexedColors.push_back(0x0334271a);
-    indexedColors.push_back(0x04f9e79f);
-    indexedColors.push_back(0x05ab8a50);
+            int color1 = resCharactersList[i]["color1"];
+            int color2 = resCharactersList[i]["color2"];
+            int color3 = resCharactersList[i]["color3"];
+            int color4 = resCharactersList[i]["color4"];
+            int color5 = resCharactersList[i]["color5"];
 
-    scales.push_back(160);
+            EntityLook* entityLook = new EntityLook;
+            vector<int> skins;
+            vector<int> indexedColors;
+            vector<int> scales;
+            vector<SubEntity*> subentities;
 
-    entityLook->initEntityLook(1, skins, indexedColors, scales, subentities);
+            char* name = new char[strlen(_name)];
+            strcpy(name, _name);
 
-    CharacterBaseInformations* player1 = new CharacterBaseInformations;
-    player1->initCharacterBaseInformations(1, 50, "Yena", entityLook, 0, true);
+            skins.push_back(skin);
+            skins.push_back(cosmetic);
 
-    characters.push_back(player1);
-    /** END LOOP **/
+            try
+            {
+                mysqlpp::Query queryCharactersItemsList = database->db->query("SELECT skinId FROM items WHERE characterId = %0 AND position IN (%1, %2, %3)");
+                queryCharactersItemsList.parse();
+                mysqlpp::StoreQueryResult resCharactersItemsList = queryCharactersItemsList.store(characterId, ACCESSORY_POSITION_HAT, ACCESSORY_POSITION_CAPE, ACCESSORY_POSITION_SHIELD);
+
+                for(size_t j = 0; j < resCharactersItemsList.num_rows(); ++j)
+                {
+                    int skinId = resCharactersItemsList[j]["skinId"];
+                    skins.push_back(skinId);
+                }
+            }
+            catch(const mysqlpp::Exception& e)
+            {
+                Logger::Log(ERROR, sLog(), e.what());
+            }
+
+            indexedColors.push_back(color1 + 0x01000000);
+            indexedColors.push_back(color2 + 0x02000000);
+            indexedColors.push_back(color3 + 0x03000000);
+            indexedColors.push_back(color4 + 0x04000000);
+            indexedColors.push_back(color5 + 0x05000000);
+
+            scales.push_back(160);
+
+            entityLook->initEntityLook(1, skins, indexedColors, scales, subentities);
+
+            CharacterBaseInformations* character = new CharacterBaseInformations;
+            character->initCharacterBaseInformations(characterId, level, (char*)name, entityLook, breed, sex == 1 ? true : false);
+
+            characters.push_back(character);
+        }
+    }
+    catch(const mysqlpp::Exception& e)
+    {
+        Logger::Log(ERROR, sLog(), e.what());
+    }
 
     CharactersListMessage clm;
     clm.initCharactersListMessage(false, characters);
