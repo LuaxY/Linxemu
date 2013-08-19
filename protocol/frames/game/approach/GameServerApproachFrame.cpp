@@ -61,6 +61,26 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
 
             NetworkManager::writePacket(packet, atam.getMessageId(), data->getBuffer(), data->getPosition());
             NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atam.getInstance());
+
+            data->reset();
+            packet->reset();
+
+            ServerSettingsMessage ssm;
+            ssm.initServerSettingsMessage("fr", 0, 0);
+            ssm.pack(data);
+
+            NetworkManager::writePacket(packet, ssm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssm.getInstance());
+
+            data->reset();
+            packet->reset();
+
+            AccountCapabilitiesMessage acm;
+            acm.initAccountCapabilitiesMessage(client->accountId, false, 0x7FFF, 0x7FFF, 0); // 0x7FFF = 15 bits à 1 en binaire, représentant les 15 classes
+            acm.pack(data);
+
+            NetworkManager::writePacket(packet, acm.getMessageId(), data->getBuffer(), data->getPosition());
+            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), acm.getInstance());
         }
         else
         {

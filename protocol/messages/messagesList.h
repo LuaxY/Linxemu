@@ -19,6 +19,7 @@
 #include "common/basic/BasicPingMessage.h" // 182
 #include "common/basic/BasicPongMessage.h" // 183
 #include "connection/ClearIdentificationMessage.h" // 888
+#include "game/approach/AccountCapabilitiesMessage.h" // 6216
 #include "security/RawDataMessage.h" // 6253
 #include "game/approach/ServerSettingsMessage.h" // 6340
 

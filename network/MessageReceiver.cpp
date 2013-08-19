@@ -22,6 +22,7 @@ void MessageReceiver::Register()
     FactoryMessage::registerClass(182, new BasicPingMessage);
     FactoryMessage::registerClass(183, new BasicPongMessage);
     FactoryMessage::registerClass(888, new ClearIdentificationMessage);
+    FactoryMessage::registerClass(6216, new AccountCapabilitiesMessage);
     FactoryMessage::registerClass(6253, new RawDataMessage);
     FactoryMessage::registerClass(6340, new ServerSettingsMessage);
 }
