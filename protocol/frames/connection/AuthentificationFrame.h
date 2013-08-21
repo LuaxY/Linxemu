@@ -18,9 +18,6 @@ public:
     bool process(INetworkMessage* message, Client* client);
 
 private:
-    MessageWriter *data;
-    MessageWriter *packet;
-
     void processMessage(IdentificationMessage* message, Client* client);
     void processMessage(ClearIdentificationMessage* message, Client* client);
     void processMessage(ServerSelectionMessage* message, Client* client);

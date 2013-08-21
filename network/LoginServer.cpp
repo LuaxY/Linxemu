@@ -25,17 +25,11 @@ LoginServer::LoginServer()
 
 void LoginServer::onClientConnected(SOCKET ClientSocket)
 {
-    MessageWriter *data = new MessageWriter();
-    MessageWriter *packet = new MessageWriter();
-
     if(clients.size() >= max_user)
     {
         IdentificationFailedMessage ifm;
         ifm.initIdentificationFailedMessage(5);
-        ifm.pack(data);
-
-        writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
-        sendTo(ClientSocket, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+        sendTo(ClientSocket, ifm.getInstance());
     }
     else
     {
@@ -45,31 +39,15 @@ void LoginServer::onClientConnected(SOCKET ClientSocket)
 
         Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
 
-        /** ProtocolRequired **/
         ProtocolRequired pr;
         pr.initProtocolRequired(requiredVersion, currentVersion);
-        pr.pack(data);
+        sendTo(newClient->socket, pr.getInstance());
 
-        writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
-        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), pr.getInstance());
-
-        /** Clear packet **/
-        data->reset();
-        packet->reset();
-
-        /** HelloConnectMessage **/
         newClient->salt = genSalt(32);
 
         HelloConnectMessage hcm;
         hcm.initHelloConnectMessage(newClient->salt, key, keySize);
-        hcm.pack(data);
-
-        writePacket(packet, hcm.getMessageId(), data->getBuffer(), data->getPosition());
-        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), hcm.getInstance());
-
-        /** Delete packet **/
-        delete data;
-        delete packet;
+        sendTo(newClient->socket, hcm.getInstance());
     }
 }
 

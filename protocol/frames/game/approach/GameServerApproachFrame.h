@@ -16,9 +16,6 @@ public:
     bool process(INetworkMessage* message, Client* client);
 
 private:
-    MessageWriter *data;
-    MessageWriter *packet;
-
     void processMessage(AuthenticationTicketMessage* message, Client* client);
     void processMessage(CharactersListRequestMessage* message, Client* client);
 };

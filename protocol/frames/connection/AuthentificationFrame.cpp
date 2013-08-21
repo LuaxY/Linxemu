@@ -14,9 +14,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
 {
     bool state = false;
 
-    data = new MessageWriter();
-    packet = new MessageWriter();
-
     switch(message->getMessageId())
     {
     case 4:
@@ -34,9 +31,6 @@ bool AuthentificationFrame::process(INetworkMessage* message, Client* client)
         state = true;
         break;
     }
-
-    delete data;
-    delete packet;
 
     return state;
 }
@@ -61,10 +55,7 @@ void AuthentificationFrame::processMessage(IdentificationMessage* message, Clien
 
     RawDataMessage rdm;
     rdm.initRawDataMessage(newPacket, size);
-    rdm.pack(data);
-
-    NetworkManager::writePacket(packet, rdm.getMessageId(), data->getBuffer(), data->getPosition());
-    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), rdm.getInstance());
+    NetworkManager::sendTo(client->socket, rdm.getInstance());
 }
 
 void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, Client* client)
@@ -105,13 +96,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
 
                 IdentificationSuccessMessage ism;
                 ism.initIdentificationSuccessMessage(login, nickname, accountId, 0, hasRights, "Question ?", hasRights ? 0 : subscriptionEndDate*1000, false, accountCreation*1000);
-                ism.pack(data);
-
-                NetworkManager::writePacket(packet, ism.getMessageId(), data->getBuffer(), data->getPosition());
-                NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ism.getInstance());
-
-                data->reset();
-                packet->reset();
+                NetworkManager::sendTo(client->socket, ism.getInstance());
 
                 try
                 {
@@ -154,10 +139,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
 
                     ServersListMessage slm;
                     slm.initServersListMessage(servers);
-                    slm.pack(data);
-
-                    NetworkManager::writePacket(packet, slm.getMessageId(), data->getBuffer(), data->getPosition());
-                    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), slm.getInstance());
+                    NetworkManager::sendTo(client->socket, slm.getInstance());
 
                     try
                     {
@@ -191,10 +173,7 @@ void AuthentificationFrame::processMessage(ClearIdentificationMessage* message, 
     {
         IdentificationFailedMessage ifm;
         ifm.initIdentificationFailedMessage(reason);
-        ifm.pack(data);
-
-        NetworkManager::writePacket(packet, ifm.getMessageId(), data->getBuffer(), data->getPosition());
-        NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ifm.getInstance());
+        NetworkManager::sendTo(client->socket, ifm.getInstance());
     }
 }
 
@@ -215,10 +194,7 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
 
             SelectedServerDataMessage ssdm;
             ssdm.initSelectedServerDataMessage(message->serverId, (char*)serverIP, serverPort, true, client->token);
-            ssdm.pack(data);
-
-            NetworkManager::writePacket(packet, ssdm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssdm.getInstance());
+            NetworkManager::sendTo(client->socket, ssdm.getInstance());
 
             shutdown(client->socket, 2);
         }
@@ -226,10 +202,7 @@ void AuthentificationFrame::processMessage(ServerSelectionMessage* message, Clie
         {
             SelectedServerRefusedMessage ssrm;
             ssrm.initSelectedServerRefusedMessage(message->serverId, SERVER_CONNECTION_ERROR_NO_REASON, STATUS_UNKNOWN);
-            ssrm.pack(data);
-
-            NetworkManager::writePacket(packet, ssrm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssrm.getInstance());
+            NetworkManager::sendTo(client->socket, ssrm.getInstance());
         }
     }
     catch(const mysqlpp::Exception& e)

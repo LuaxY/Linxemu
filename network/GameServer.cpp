@@ -11,9 +11,6 @@ GameServer::GameServer()
 
 void GameServer::onClientConnected(SOCKET ClientSocket)
 {
-    MessageWriter *data = new MessageWriter();
-    MessageWriter *packet = new MessageWriter();
-
     if(clients.size() >= max_user)
     {
 
@@ -26,29 +23,13 @@ void GameServer::onClientConnected(SOCKET ClientSocket)
 
         Logger::Log(INFO, sLog(), "Client connected (" + getClientIP(ClientSocket) + ":" + getClientPort(ClientSocket) + ")", true);
 
-        /** ProtocolRequired **/
         ProtocolRequired pr;
         pr.initProtocolRequired(requiredVersion, currentVersion);
-        pr.pack(data);
+        sendTo(newClient->socket, pr.getInstance());
 
-        writePacket(packet, pr.getMessageId(), data->getBuffer(), data->getPosition());
-        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), pr.getInstance());
-
-        /** Clear packet **/
-        data->reset();
-        packet->reset();
-
-        /** HelloGameMessage **/
         HelloGameMessage hgm;
         hgm.initHelloGameMessage();
-        hgm.pack(data);
-
-        writePacket(packet, hgm.getMessageId(), data->getBuffer(), data->getPosition());
-        sendTo(newClient->socket, packet->getBuffer(), packet->getPosition(), hgm.getInstance());
-
-        /** Delete packet **/
-        delete data;
-        delete packet;
+        sendTo(newClient->socket, hgm.getInstance());
     }
 }
 

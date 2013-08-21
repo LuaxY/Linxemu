@@ -68,7 +68,8 @@ public:
     static void writePacket(MessageWriter *output, int msgId, char* data, unsigned int len);
     static unsigned int computeTypeLen(unsigned int len);
     static unsigned int subComputeStaticHeader(unsigned int msgId, unsigned int typeLen);
-    static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
+    //static void sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage);
+    static void sendTo(SOCKET socket, INetworkMessage* netMessage);
 
 private:
     void PacketParser(Client* client);
@@ -81,7 +82,6 @@ protected:
     virtual void onClientDisconnected(Client* client, int i) = 0;
     virtual void onDataReceive(Client* client, Packet* packet) = 0;
 
-    //Client *clients; // OLD
     vector<Client*> clients;
     unsigned short max_user;
 };

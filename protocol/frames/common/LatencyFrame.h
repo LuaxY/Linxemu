@@ -13,9 +13,6 @@ public:
     bool process(INetworkMessage* message, Client* client);
 
 private:
-    MessageWriter *data;
-    MessageWriter *packet;
-
     void processMessage(BasicPingMessage* message, Client* client);
 };
 

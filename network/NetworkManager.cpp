@@ -313,10 +313,28 @@ unsigned int NetworkManager::subComputeStaticHeader(unsigned int msgId, unsigned
     return msgId << 2 | typeLen;
 }
 
-void NetworkManager::sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage)
+/*void NetworkManager::sendTo(SOCKET socket, char* buffer, int length, INetworkMessage* netMessage)
 {
     Logger::Log(DEBUG, sLog(), "[SND] ", false);
     cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << length << " bytes to " << getClientIP(socket) << ":" << getClientPort(socket) << endl;
 
     send(socket, buffer, length, 0);
+}*/
+
+void NetworkManager::sendTo(SOCKET socket, INetworkMessage* netMessage)
+{
+    MessageWriter* data = new MessageWriter();
+    MessageWriter* packet = new MessageWriter();
+
+    netMessage->pack(data);
+    writePacket(packet, netMessage->getMessageId(), data->getBuffer(), data->getPosition());
+
+    Logger::Log(DEBUG, sLog(), "[SND] ", false);
+    cout << netMessage->getMessageName() << " (" << netMessage->getMessageId() << "), " << packet->getPosition() << " bytes to " << getClientIP(socket) << ":" << getClientPort(socket) << endl;
+
+    send(socket, packet->getBuffer(), packet->getPosition(), 0);
+
+    delete netMessage;
+    delete data;
+    delete packet;
 }

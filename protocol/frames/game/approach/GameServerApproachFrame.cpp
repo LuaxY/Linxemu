@@ -14,9 +14,6 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
 {
     bool state = false;
 
-    data = new MessageWriter();
-    packet = new MessageWriter();
-
     switch(message->getMessageId())
     {
     case 110:
@@ -29,9 +26,6 @@ bool GameServerApproachFrame::process(INetworkMessage* message, Client* client)
         state = true;
         break;
     }
-
-    delete data;
-    delete packet;
 
     return state;
 }
@@ -57,39 +51,21 @@ void GameServerApproachFrame::processMessage(AuthenticationTicketMessage* messag
 
             AuthenticationTicketAcceptedMessage atam;
             atam.initAuthenticationTicketAcceptedMessage();
-            atam.pack(data);
-
-            NetworkManager::writePacket(packet, atam.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atam.getInstance());
-
-            data->reset();
-            packet->reset();
+            NetworkManager::sendTo(client->socket, atam.getInstance());
 
             ServerSettingsMessage ssm;
             ssm.initServerSettingsMessage("fr", 0, 0);
-            ssm.pack(data);
-
-            NetworkManager::writePacket(packet, ssm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), ssm.getInstance());
-
-            data->reset();
-            packet->reset();
+            NetworkManager::sendTo(client->socket, ssm.getInstance());
 
             AccountCapabilitiesMessage acm;
             acm.initAccountCapabilitiesMessage(client->accountId, false, 0x7FFF, 0x7FFF, 0); // 0x7FFF = 15 bits à 1 en binaire, représentant les 15 classes
-            acm.pack(data);
-
-            NetworkManager::writePacket(packet, acm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), acm.getInstance());
+            NetworkManager::sendTo(client->socket, acm.getInstance());
         }
         else
         {
             AuthenticationTicketRefusedMessage atrm;
             atrm.initAuthenticationTicketRefusedMessage();
-            atrm.pack(data);
-
-            NetworkManager::writePacket(packet, atrm.getMessageId(), data->getBuffer(), data->getPosition());
-            NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), atrm.getInstance());
+            NetworkManager::sendTo(client->socket, atrm.getInstance());
         }
     }
     catch(const mysqlpp::Exception& e)
@@ -177,8 +153,5 @@ void GameServerApproachFrame::processMessage(CharactersListRequestMessage* messa
 
     CharactersListMessage clm;
     clm.initCharactersListMessage(false, characters);
-    clm.pack(data);
-
-    NetworkManager::writePacket(packet, clm.getMessageId(), data->getBuffer(), data->getPosition());
-    NetworkManager::sendTo(client->socket, packet->getBuffer(), packet->getPosition(), clm.getInstance());
+    NetworkManager::sendTo(client->socket, clm.getInstance());
 }
